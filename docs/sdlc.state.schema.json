@@ -1,0 +1,447 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SDLC State",
+  "description": "Source of truth for iterative SDLC planning - tracks checkpoints, artifacts, and validation status",
+  "type": "object",
+  "required": ["version", "project", "modules", "checkpoints", "personas"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "project": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "type": ["string", "null"],
+          "enum": ["web", "mobile", "api", "library", "enterprise", "academic", null]
+        },
+        "description": { "type": ["string", "null"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "planning": {
+      "type": "object",
+      "description": "Planning session tracking",
+      "properties": {
+        "startedAt": { "type": ["string", "null"], "format": "date-time" },
+        "completedAt": { "type": ["string", "null"], "format": "date-time" },
+        "currentStage": {
+          "type": ["string", "null"],
+          "enum": [
+            "kickoff",
+            "requirements",
+            "scenarios",
+            "useCases",
+            "domainModel",
+            "dataModel",
+            "apiContract",
+            "prototypes",
+            "supporting",
+            "signoff",
+            null
+          ]
+        }
+      }
+    },
+    "modules": {
+      "type": "object",
+      "description": "Active SDLC modules",
+      "properties": {
+        "core": {
+          "type": "array",
+          "description": "Always-active modules",
+          "items": { "type": "string" }
+        },
+        "contextual": {
+          "type": "array",
+          "description": "Modules inferred from project context",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "checkpoints": {
+      "type": "object",
+      "description": "Iterative validation checkpoints - each must be confirmed before dependent work proceeds",
+      "properties": {
+        "kickoff": { "$ref": "#/definitions/checkpoint" },
+        "scenarios": { "$ref": "#/definitions/checkpoint" },
+        "useCases": { "$ref": "#/definitions/checkpoint" },
+        "domainModel": { "$ref": "#/definitions/checkpoint" },
+        "dataModel": { "$ref": "#/definitions/checkpoint" },
+        "apiContract": { "$ref": "#/definitions/checkpoint" },
+        "prototypes": { "$ref": "#/definitions/checkpoint" },
+        "supporting": { "$ref": "#/definitions/checkpoint" },
+        "signoff": { "$ref": "#/definitions/checkpoint" }
+      }
+    },
+    "personas": {
+      "type": "array",
+      "description": "User personas (2-5 specific users)",
+      "items": { "$ref": "#/definitions/persona" }
+    },
+    "scenarios": {
+      "type": "object",
+      "description": "Concrete stories of use",
+      "properties": {
+        "asIs": {
+          "type": "array",
+          "description": "Current reality scenarios",
+          "items": { "$ref": "#/definitions/scenario" }
+        },
+        "visionary": {
+          "type": "array",
+          "description": "Future state scenarios",
+          "items": { "$ref": "#/definitions/scenario" }
+        },
+        "evaluation": {
+          "type": "array",
+          "description": "Scenarios for usability evaluation",
+          "items": { "$ref": "#/definitions/scenario" }
+        }
+      }
+    },
+    "useCases": {
+      "type": "array",
+      "description": "Abstracted use cases from scenarios",
+      "items": { "$ref": "#/definitions/useCase" }
+    },
+    "journeys": {
+      "type": "array",
+      "description": "User journeys (persona-scoped)",
+      "items": { "$ref": "#/definitions/journey" }
+    },
+    "requirements": {
+      "type": "object",
+      "properties": {
+        "functional": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/requirement" }
+        },
+        "nonFunctional": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/requirement" }
+        },
+        "traceabilityMatrix": {
+          "type": "array",
+          "description": "Requirement -> Design -> Test linkages",
+          "items": { "$ref": "#/definitions/traceabilityEntry" }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "description": "Generated artifacts with their checkpoint stage",
+      "items": { "$ref": "#/definitions/artifact" }
+    },
+    "evaluation": {
+      "type": "object",
+      "description": "Evaluation planning and results",
+      "properties": {
+        "participants": { "type": "array" },
+        "sessions": { "type": "array" },
+        "findings": { "type": "array" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generatedBy": { "type": "string" },
+        "pluginVersion": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "checkpoint": {
+      "type": "object",
+      "description": "A validation checkpoint in the iterative planning process",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "in-progress", "confirmed", "needs-revision"],
+          "description": "pending=not started, in-progress=being worked on, confirmed=client approved, needs-revision=client requested changes"
+        },
+        "confirmedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "notes": {
+          "type": ["string", "null"],
+          "description": "Client feedback or revision notes"
+        },
+        "iterations": {
+          "type": "number",
+          "description": "Number of revision cycles"
+        }
+      }
+    },
+    "persona": {
+      "type": "object",
+      "required": ["id", "name", "role", "goals"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier (kebab-case)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Persona name (e.g., 'Sarah Chen')"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role/archetype (e.g., 'Project Manager')"
+        },
+        "confirmed": {
+          "type": "boolean",
+          "description": "Whether this persona has been validated by client"
+        },
+        "demographics": {
+          "type": "object",
+          "properties": {
+            "age": { "type": "string" },
+            "location": { "type": "string" },
+            "experience": { "type": "string" }
+          }
+        },
+        "goals": {
+          "type": "array",
+          "description": "Primary goals (top outcomes they want)",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "context": {
+          "type": "object",
+          "description": "Context of use",
+          "properties": {
+            "environment": { "type": "string" },
+            "devices": { "type": "array", "items": { "type": "string" } },
+            "constraints": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "painPoints": {
+          "type": "array",
+          "description": "Current pain points and fears",
+          "items": { "type": "string" }
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "technicalExpertise": {
+              "type": "string",
+              "enum": ["novice", "intermediate", "advanced", "expert"]
+            },
+            "domainKnowledge": { "type": "string" },
+            "cognitiveLoad": { "type": "string" },
+            "timeAvailable": { "type": "string" }
+          }
+        },
+        "accessibility": {
+          "type": "object",
+          "properties": {
+            "visualNeeds": { "type": "string" },
+            "auditoryNeeds": { "type": "string" },
+            "motorNeeds": { "type": "string" },
+            "cognitiveNeeds": { "type": "string" },
+            "assistiveTech": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "topTasks": {
+          "type": "array",
+          "description": "Top 3-7 tasks they perform",
+          "items": {
+            "type": "object",
+            "required": ["id", "description", "frequency"],
+            "properties": {
+              "id": { "type": "string" },
+              "description": { "type": "string" },
+              "frequency": {
+                "type": "string",
+                "enum": ["daily", "weekly", "monthly", "occasionally"]
+              },
+              "importance": {
+                "type": "string",
+                "enum": ["critical", "high", "medium", "low"]
+              }
+            }
+          },
+          "minItems": 3,
+          "maxItems": 7
+        },
+        "quote": {
+          "type": "string",
+          "description": "Memorable quote capturing their attitude"
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["id", "title", "personaId", "goal"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["as-is", "visionary", "evaluation", "training"]
+        },
+        "personaId": {
+          "type": "string",
+          "description": "References persona.id"
+        },
+        "goal": { "type": "string" },
+        "preconditions": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step": { "type": "number" },
+              "action": { "type": "string" },
+              "systemResponse": { "type": "string" }
+            }
+          }
+        },
+        "postconditions": { "type": "string" },
+        "exceptions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "confirmed": { "type": "boolean" },
+        "artifactPath": { "type": "string" }
+      }
+    },
+    "useCase": {
+      "type": "object",
+      "required": ["id", "title", "actor", "goal"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^UC-[0-9]{3}$",
+          "description": "Use case ID (e.g., UC-001)"
+        },
+        "title": { "type": "string" },
+        "actor": { "type": "string" },
+        "goal": { "type": "string" },
+        "preconditions": { "type": "string" },
+        "postconditions": { "type": "string" },
+        "mainScenario": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "extensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step": { "type": "string" },
+              "condition": { "type": "string" },
+              "action": { "type": "string" }
+            }
+          }
+        },
+        "derivedFrom": {
+          "type": "array",
+          "description": "Scenario IDs this use case was derived from",
+          "items": { "type": "string" }
+        },
+        "confirmed": { "type": "boolean" },
+        "artifactPath": { "type": "string" }
+      }
+    },
+    "journey": {
+      "type": "object",
+      "required": ["id", "title", "personaId", "scenario", "steps"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "personaId": { "type": "string" },
+        "scenario": { "type": "string" },
+        "successCriteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step": { "type": "number" },
+              "action": { "type": "string" },
+              "expected": { "type": "string" },
+              "touchpoint": { "type": "string" },
+              "emotion": {
+                "type": "string",
+                "enum": ["frustrated", "neutral", "satisfied", "delighted"]
+              },
+              "issues": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "required": ["id", "description"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["functional", "non-functional"]
+        },
+        "personaIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "useCaseIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["must-have", "should-have", "could-have", "wont-have"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["proposed", "approved", "implemented", "verified"]
+        }
+      }
+    },
+    "traceabilityEntry": {
+      "type": "object",
+      "properties": {
+        "requirementId": { "type": "string" },
+        "useCaseId": { "type": "string" },
+        "designArtifact": { "type": "string" },
+        "testCase": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "designed", "implemented", "tested", "verified"]
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["path", "stage"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Relative path from docs/"
+        },
+        "stage": {
+          "type": "string",
+          "description": "Checkpoint stage this artifact belongs to"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["markdown", "mermaid", "yaml", "json", "mdx", "csv"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "confirmed": { "type": "boolean" }
+      }
+    }
+  }
+}

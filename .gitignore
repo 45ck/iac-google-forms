@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.pnpm-debug.log
+
+# Build outputs
+dist/
+build/
+storybook-static/
+*.log
+*.tgz
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Testing
+coverage/
+.nyc_output/
+test-results/
+*.lcov
+
+# Temporary files
+*.tmp
+.temp/
+.cache/
+
+# Build tools
+.turbo/
+.vercel/
+.next/
+
+# Storybook
+storybook-static/

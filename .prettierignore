@@ -1,0 +1,8 @@
+dist
+coverage
+node_modules
+storybook-static
+.husky
+pnpm-lock.yaml
+*.min.js
+*.min.css

@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Quick Start" />
+
+# Quick Start Guide
+
+## Development Workflow
+
+### 1. Start the Planning Hub
+
+```bash
+pnpm dev:storybook
+```
+
+Opens at http://localhost:6006
+
+### 2. Plan a Feature
+
+```bash
+/sdlc:plan
+```
+
+Follow the interactive wizard to generate planning artifacts.
+
+### 3. Implement
+
+Build your feature according to the plan.
+
+### 4. Update Progress
+
+```bash
+/sdlc:update
+```
+
+Syncs artifacts with implementation status.
+
+## Available Commands
+
+### Planning Hub
+
+- `pnpm dev:storybook` - Start development server
+- `pnpm build:storybook` - Build static site
+- `pnpm sync:artifacts` - Manually sync docs/ to Storybook
+- `pnpm sync:artifacts:watch` - Watch for changes
+
+### Formatting
+
+- `pnpm format` - Format all files with Prettier
+
+## Project Structure
+
+```
+├── docs/                  # Source artifacts (edit these)
+│   ├── req/              # Requirements
+│   ├── arch/             # Architecture
+│   ├── ux/               # UX & Design
+│   └── test/             # Testing
+├── packages/
+│   ├── planning-hub/     # This Storybook site
+│   └── ui/               # Design system
+└── package.json
+```
+
+## Tips
+
+- **Edit in docs/**: All artifacts live in the docs/ folder
+- **Auto-reload**: Changes in docs/ trigger Storybook reload
+- **Commit often**: Track artifact evolution in git
+- **Share the hub**: Deploy Storybook for team collaboration
+
+---
+
+**Need Help?** Check the SDLC plugin README for troubleshooting.

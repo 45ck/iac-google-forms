@@ -1,0 +1,90 @@
+{
+  "$schema": "./sdlc.state.schema.json",
+  "version": "1.0.0",
+  "project": {
+    "name": "iac-google-forms",
+    "type": null,
+    "description": null,
+    "createdAt": "2026-01-25T00:00:00.000Z",
+    "updatedAt": "2026-01-25T00:00:00.000Z"
+  },
+  "planning": {
+    "startedAt": null,
+    "completedAt": null,
+    "currentStage": null
+  },
+  "modules": {
+    "core": ["requirements", "architecture", "ux", "testing"],
+    "contextual": []
+  },
+  "checkpoints": {
+    "kickoff": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "scenarios": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "useCases": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "domainModel": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "dataModel": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "apiContract": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "prototypes": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "supporting": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "signoff": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    }
+  },
+  "personas": [],
+  "scenarios": {
+    "asIs": [],
+    "visionary": [],
+    "evaluation": []
+  },
+  "useCases": [],
+  "journeys": [],
+  "requirements": {
+    "functional": [],
+    "nonFunctional": [],
+    "traceabilityMatrix": []
+  },
+  "artifacts": [],
+  "evaluation": {
+    "participants": [],
+    "sessions": [],
+    "findings": []
+  },
+  "metadata": {
+    "generatedBy": "sdlc-plugin",
+    "pluginVersion": "1.0.0"
+  }
+}

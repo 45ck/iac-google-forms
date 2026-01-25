@@ -1,0 +1,65 @@
+{
+  "name": "iac-google-forms",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Infrastructure as Code for Google Forms with output integrations (Google Sheets, etc.)",
+  "packageManager": "pnpm@10.28.1",
+  "scripts": {
+    "dev:storybook": "pnpm --filter planning-hub storybook",
+    "build:storybook": "pnpm --filter planning-hub build",
+    "format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx,yaml,yml}\"",
+    "format:write": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx,yaml,yml}\"",
+    "validate": "pnpm --filter planning-hub validate:openapi",
+    "sync:artifacts": "pnpm --filter planning-hub sync:artifacts",
+    "sync:artifacts:watch": "pnpm --filter planning-hub sync:artifacts:watch",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "depcruise": "depcruise packages --config .dependency-cruiser.js",
+    "knip": "knip --production",
+    "check": "pnpm format && pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm depcruise && pnpm knip",
+    "validate:packages": "node scripts/validate-packages.js",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.0",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "@eslint/js": "latest",
+    "@vitest/coverage-v8": "latest",
+    "@vitejs/plugin-react": "latest",
+    "dependency-cruiser": "latest",
+    "eslint": "latest",
+    "eslint-import-resolver-typescript": "latest",
+    "eslint-plugin-eslint-comments": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-no-only-tests": "latest",
+    "eslint-plugin-unused-imports": "latest",
+    "husky": "latest",
+    "knip": "latest",
+    "lint-staged": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "latest",
+    "vitest": "latest",
+    "glob": "^11.0.0",
+    "fs-extra": "^11.2.0"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,yml,yaml}": [
+      "prettier --write --ignore-unknown"
+    ],
+    "**/*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "eslint --fix --max-warnings=0"
+    ]
+  },
+  "keywords": [
+    "sdlc",
+    "planning",
+    "documentation",
+    "storybook",
+    "google-forms",
+    "iac",
+    "infrastructure-as-code"
+  ]
+}
