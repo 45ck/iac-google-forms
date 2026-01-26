@@ -14,7 +14,12 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.json', './packages/*/tsconfig.json'],
+        project: [
+          './tsconfig.json',
+          './packages/gforms/tsconfig.json',
+          './packages/gforms/tsconfig.test.json',
+          './packages/ui/tsconfig.json',
+        ],
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -81,9 +86,13 @@ export default tseslint.config(
     // Test files get relaxed limits
     files: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx'],
     rules: {
-      'max-lines-per-function': ['error', { max: 120 }],
-      'max-statements': ['error', { max: 60 }],
+      'max-lines-per-function': 'off',
+      'max-statements': 'off',
+      'max-lines': 'off',
+      'max-nested-callbacks': ['error', { max: 5 }],
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
       'no-console': 'off',
     },
   },
@@ -103,6 +112,10 @@ export default tseslint.config(
       '**/*.config.mjs',
       '**/scripts/**/*.js',
       '.dependency-cruiser.js',
+      'vitest.workspace.ts',
+      '**/vitest.config.ts',
+      'docs/**/*.ts',
+      'packages/planning-hub/**',
     ],
   }
 );

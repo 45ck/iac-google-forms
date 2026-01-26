@@ -1,0 +1,139 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="UX/Form Examples" />
+
+# Form Definition Examples
+
+## Basic Form
+
+```typescript
+import { defineForm } from 'iac-google-forms';
+
+export default defineForm({
+  title: 'Quick Survey',
+  questions: [
+    {
+      id: 'feedback',
+      type: 'text',
+      title: 'Any feedback for us?',
+    },
+  ],
+});
+```
+
+## Customer Feedback Form
+
+```typescript
+export default defineForm({
+  title: 'Customer Feedback',
+  description: 'Help us improve by sharing your experience.',
+
+  questions: [
+    {
+      id: 'email',
+      type: 'email',
+      title: 'Your email address',
+      required: true,
+    },
+    {
+      id: 'satisfaction',
+      type: 'scale',
+      title: 'How satisfied are you?',
+      min: 1,
+      max: 5,
+      minLabel: 'Very Unsatisfied',
+      maxLabel: 'Very Satisfied',
+      required: true,
+    },
+    {
+      id: 'department',
+      type: 'choice',
+      title: 'Which department?',
+      options: ['Sales', 'Support', 'Billing'],
+      allowOther: true,
+    },
+    {
+      id: 'comments',
+      type: 'text',
+      title: 'Additional comments',
+      paragraph: true,
+    },
+  ],
+
+  integrations: [
+    { type: 'sheets', spreadsheetName: 'Feedback Responses' },
+  ],
+});
+```
+
+## NPS Survey with Conditionals
+
+```typescript
+export default defineForm({
+  title: 'NPS Survey',
+
+  questions: [
+    {
+      id: 'nps',
+      type: 'scale',
+      title: 'How likely to recommend?',
+      min: 0,
+      max: 10,
+      required: true,
+    },
+    {
+      type: 'section',
+      title: 'We\'d love to improve',
+      showIf: { field: 'nps', in: ['0','1','2','3','4','5','6'] },
+      questions: [
+        {
+          id: 'improvement',
+          type: 'text',
+          title: 'What could we do better?',
+          paragraph: true,
+        },
+      ],
+    },
+  ],
+
+  integrations: [
+    { type: 'sheets', spreadsheetName: 'NPS' },
+    {
+      type: 'email',
+      to: ['support@company.com'],
+      subject: 'Detractor Alert',
+      condition: { field: 'nps', in: ['0','1','2','3','4','5','6'] },
+    },
+  ],
+});
+```
+
+## Event Registration with Webhook
+
+```typescript
+export default defineForm({
+  title: 'Tech Meetup Registration',
+
+  questions: [
+    { id: 'name', type: 'text', title: 'Full Name', required: true },
+    { id: 'email', type: 'email', title: 'Email', required: true },
+    {
+      id: 'dietary',
+      type: 'choice',
+      title: 'Dietary Requirements',
+      options: ['None', 'Vegetarian', 'Vegan', 'Gluten-free'],
+      allowOther: true,
+    },
+  ],
+
+  integrations: [
+    { type: 'sheets', spreadsheetName: 'Registrations' },
+    {
+      type: 'webhook',
+      url: 'https://api.example.com/registrations',
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ${API_KEY}' },
+    },
+  ],
+});
+```

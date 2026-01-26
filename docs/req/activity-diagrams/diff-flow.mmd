@@ -1,0 +1,45 @@
+%%{init: {'theme': 'default'}}%%
+flowchart TD
+    A[Start: gforms diff] --> B[Load form definition]
+    B --> C{Valid TypeScript?}
+    C -->|No| D[Show validation errors]
+    D --> E[Exit with error]
+
+    C -->|Yes| F[Authenticate with Google]
+    F --> G{Auth successful?}
+    G -->|No| H[Show auth error]
+    H --> E
+
+    G -->|Yes| I[Check state file for form ID]
+    I --> J{Form ID exists?}
+
+    J -->|No| K[Form is NEW]
+    K --> L[Show full form as additions]
+
+    J -->|Yes| M[Fetch remote form]
+    M --> N{Fetch successful?}
+    N -->|No| O[Show network error]
+    O --> E
+
+    N -->|Yes| P[Compare local vs remote]
+    P --> Q[Calculate question changes]
+    Q --> R[Calculate integration changes]
+
+    R --> S{Any changes?}
+    S -->|No| T[No changes detected]
+    T --> U[Exit code 0]
+
+    S -->|Yes| V[Format diff output]
+    L --> V
+
+    V --> W{--ci flag?}
+    W -->|Yes| X[Output machine-readable format]
+    X --> Y[Exit code 1 - changes exist]
+
+    W -->|No| Z[Output human-readable format]
+    Z --> Y
+
+    style A fill:#e1f5fe
+    style U fill:#c8e6c9
+    style Y fill:#fff9c4
+    style E fill:#ffcdd2

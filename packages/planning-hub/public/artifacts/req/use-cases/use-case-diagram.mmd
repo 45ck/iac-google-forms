@@ -1,0 +1,45 @@
+%%{init: {'theme': 'default'}}%%
+graph TB
+    subgraph Actors
+        PE[Platform Engineer]
+        CI[CI/CD System]
+        GAPI[Google APIs]
+    end
+
+    subgraph "Core Use Cases"
+        UC001[UC-001: Define Form]
+        UC002[UC-002: Diff Form]
+        UC003[UC-003: Deploy Form]
+        UC004[UC-004: Configure Authentication]
+    end
+
+    subgraph "Integration Use Cases"
+        UC005[UC-005: Link to Sheets]
+        UC006[UC-006: Configure Notifications]
+        UC007[UC-007: Configure Webhooks]
+    end
+
+    subgraph "Workflow Use Cases"
+        UC008[UC-008: Initialize Project]
+        UC009[UC-009: Validate Form Config]
+    end
+
+    PE --> UC001
+    PE --> UC002
+    PE --> UC003
+    PE --> UC004
+    PE --> UC008
+
+    UC001 --> UC009
+    UC002 --> GAPI
+    UC003 --> GAPI
+    UC003 --> UC005
+    UC003 --> UC006
+    UC003 --> UC007
+
+    CI --> UC002
+    CI --> UC003
+
+    UC005 --> GAPI
+    UC006 --> GAPI
+    UC007 --> GAPI

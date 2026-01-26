@@ -1,0 +1,55 @@
+%%{init: {'theme': 'default', 'sequence': {'showSequenceNumbers': true}}}%%
+sequenceDiagram
+    autonumber
+    participant User
+    participant CLI
+    participant ConfigLoader
+    participant StateFile
+    participant DiffEngine
+    participant GoogleClient
+    participant FormsAPI as Google Forms API
+    participant SheetsAPI as Google Sheets API
+
+    User->>CLI: gforms deploy forms/feedback.ts
+
+    CLI->>ConfigLoader: loadFormDefinition(path)
+    ConfigLoader->>ConfigLoader: parseTypeScript()
+    ConfigLoader->>ConfigLoader: validateSchema()
+    ConfigLoader-->>CLI: FormDefinition
+
+    CLI->>StateFile: loadState()
+    StateFile-->>CLI: { forms: { "feedback.ts": { formId: "abc123" } } }
+
+    CLI->>GoogleClient: authenticate()
+    GoogleClient->>GoogleClient: loadCredentials()
+    GoogleClient-->>CLI: AuthClient
+
+    CLI->>GoogleClient: getForm("abc123")
+    GoogleClient->>FormsAPI: GET /forms/abc123
+    FormsAPI-->>GoogleClient: RemoteForm
+    GoogleClient-->>CLI: RemoteForm
+
+    CLI->>DiffEngine: calculateDiff(local, remote)
+    DiffEngine->>DiffEngine: compareQuestions()
+    DiffEngine->>DiffEngine: compareIntegrations()
+    DiffEngine-->>CLI: DiffResult { hasChanges: true, questions: [...] }
+
+    CLI->>User: Display diff, prompt confirmation
+    User->>CLI: Confirm (Y)
+
+    CLI->>GoogleClient: updateForm("abc123", FormDefinition)
+    GoogleClient->>FormsAPI: PATCH /forms/abc123
+    FormsAPI-->>GoogleClient: UpdatedForm
+    GoogleClient-->>CLI: success
+
+    alt Has Sheets Integration
+        CLI->>GoogleClient: linkToSheets(formId, sheetsConfig)
+        GoogleClient->>SheetsAPI: Create/link spreadsheet
+        SheetsAPI-->>GoogleClient: SpreadsheetId
+        GoogleClient-->>CLI: success
+    end
+
+    CLI->>StateFile: updateState(formId, spreadsheetId)
+    StateFile->>StateFile: save()
+
+    CLI->>User: Display success + URLs

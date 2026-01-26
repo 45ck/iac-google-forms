@@ -1,0 +1,127 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Requirements/Use Cases" />
+
+# Use Cases
+
+## Use Case Diagram
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     iac-google-forms                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────┐      ┌─────────────────────────────┐     │
+│   │   Platform  │──────│  UC-001: Define Form        │     │
+│   │   Engineer  │      └─────────────────────────────┘     │
+│   │             │      ┌─────────────────────────────┐     │
+│   │             │──────│  UC-002: Diff Form          │     │
+│   │             │      └─────────────────────────────┘     │
+│   │             │      ┌─────────────────────────────┐     │
+│   │             │──────│  UC-003: Deploy Form        │     │
+│   │             │      └─────────────────────────────┘     │
+│   │             │      ┌─────────────────────────────┐     │
+│   │             │──────│  UC-004: Configure Auth     │     │
+│   └─────────────┘      └─────────────────────────────┘     │
+│                                                             │
+│   ┌─────────────┐      ┌─────────────────────────────┐     │
+│   │    CI/CD    │──────│  UC-002: Diff Form          │     │
+│   │   Pipeline  │      └─────────────────────────────┘     │
+│   │             │      ┌─────────────────────────────┐     │
+│   │             │──────│  UC-003: Deploy Form        │     │
+│   └─────────────┘      └─────────────────────────────┘     │
+│                                                             │
+│   ┌─────────────┐      ┌─────────────────────────────┐     │
+│   │   System    │──────│  UC-005: Link to Sheets     │     │
+│   │             │      └─────────────────────────────┘     │
+│   │             │      ┌─────────────────────────────┐     │
+│   │             │──────│  UC-006: Configure Email    │     │
+│   │             │      └─────────────────────────────┘     │
+│   │             │      ┌─────────────────────────────┐     │
+│   │             │──────│  UC-007: Configure Webhooks │     │
+│   └─────────────┘      └─────────────────────────────┘     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## UC-001: Define Form
+
+| Field | Value |
+|-------|-------|
+| **Actor** | Platform Engineer |
+| **Goal** | Create form definition in TypeScript |
+| **Preconditions** | Project initialized with `gforms init` |
+| **Postconditions** | Valid form definition file exists |
+
+**Main Success Scenario:**
+1. Engineer creates TypeScript file in `forms/` directory
+2. Engineer defines form structure using `defineForm()` helper
+3. Engineer adds questions with appropriate types
+4. Engineer runs `gforms validate` to check syntax
+5. System confirms form is valid
+
+---
+
+## UC-002: Diff Form
+
+| Field | Value |
+|-------|-------|
+| **Actor** | Platform Engineer, CI/CD |
+| **Goal** | Compare local vs deployed form |
+| **Preconditions** | Valid form definition, authenticated |
+
+**Main Success Scenario:**
+1. Actor runs `gforms diff forms/feedback.ts`
+2. System loads local form definition
+3. System fetches remote form (if exists)
+4. System calculates differences
+5. System displays formatted diff
+
+---
+
+## UC-003: Deploy Form
+
+| Field | Value |
+|-------|-------|
+| **Actor** | Platform Engineer, CI/CD |
+| **Goal** | Apply form changes to Google Forms |
+| **Preconditions** | Valid form, authenticated, diff reviewed |
+
+**Main Success Scenario:**
+1. Actor runs `gforms deploy forms/feedback.ts`
+2. System shows diff and prompts for confirmation
+3. Actor confirms deployment
+4. System creates/updates form via API
+5. System updates state file
+6. System displays success with URLs
+
+---
+
+## UC-004: Configure Authentication
+
+| Field | Value |
+|-------|-------|
+| **Actor** | Platform Engineer |
+| **Goal** | Set up Google API credentials |
+
+**Main Success Scenario (OAuth):**
+1. Engineer runs `gforms auth login`
+2. System opens browser to Google consent
+3. Engineer grants permissions
+4. System stores tokens locally
+
+**Alternative (Service Account):**
+1. Engineer sets `GOOGLE_APPLICATION_CREDENTIALS`
+2. System automatically uses service account
+
+---
+
+## UC-005 to UC-007: Integrations
+
+These use cases are triggered automatically by the system during deploy when integrations are configured in the form definition.
+
+| UC | Integration | Trigger |
+|----|-------------|---------|
+| UC-005 | Sheets | `type: 'sheets'` in integrations |
+| UC-006 | Email | `type: 'email'` in integrations |
+| UC-007 | Webhook | `type: 'webhook'` in integrations |

@@ -5,6 +5,7 @@
   },
   "include": [],
   "references": [
+    { "path": "./packages/gforms" },
     { "path": "./packages/planning-hub" },
     { "path": "./packages/ui" }
   ]

@@ -1,0 +1,70 @@
+%%{init: {'theme': 'default'}}%%
+erDiagram
+    %% Form Definition (stored as TypeScript/JSON files)
+    FORM_DEFINITION {
+        string title PK "Form title"
+        string description "Optional description"
+        json settings "Form behavior settings"
+    }
+
+    QUESTION {
+        string id PK "Unique question ID"
+        string type "text|email|choice|dropdown|scale|section"
+        string title "Question text"
+        string description "Help text"
+        boolean required "Is required"
+        json typeSpecificProps "Type-specific properties"
+    }
+
+    SECTION {
+        string id PK "Section ID"
+        string title "Section header"
+        json showIf "Conditional logic"
+    }
+
+    INTEGRATION {
+        string type PK "sheets|email|webhook"
+        json config "Type-specific configuration"
+    }
+
+    %% State File (.gforms/state.json)
+    STATE_FILE {
+        string version PK "Schema version"
+        datetime lastModified "Last update time"
+    }
+
+    FORM_STATE {
+        string localPath PK "Path to definition file"
+        string formId "Google Form ID"
+        string formUrl "Edit URL"
+        string responseUrl "Respondent URL"
+        string spreadsheetId "Linked sheet ID"
+        datetime lastDeployed "Deploy timestamp"
+        string contentHash "SHA-256 hash"
+        string revisionId "Remote revision"
+    }
+
+    %% Google API Resources (remote)
+    GOOGLE_FORM {
+        string formId PK "Google Form ID"
+        string title "Form title"
+        string revisionId "Current revision"
+        datetime createdTime "Creation time"
+    }
+
+    GOOGLE_SHEET {
+        string spreadsheetId PK "Spreadsheet ID"
+        string title "Spreadsheet name"
+        string sheetName "Response sheet name"
+    }
+
+    %% Relationships
+    FORM_DEFINITION ||--|{ QUESTION : "contains"
+    FORM_DEFINITION ||--o{ INTEGRATION : "has"
+    SECTION ||--|{ QUESTION : "groups"
+
+    STATE_FILE ||--o{ FORM_STATE : "tracks"
+    FORM_STATE ||--o| GOOGLE_FORM : "maps to"
+    FORM_STATE ||--o| GOOGLE_SHEET : "links to"
+
+    GOOGLE_FORM ||--o| GOOGLE_SHEET : "responses go to"

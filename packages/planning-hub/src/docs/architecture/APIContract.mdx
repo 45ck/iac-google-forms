@@ -1,0 +1,87 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Architecture/API Contract" />
+
+# API Contract
+
+## CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| gforms init | Initialize new project |
+| gforms auth login | Authenticate with Google |
+| gforms auth logout | Remove credentials |
+| gforms auth status | Show auth status |
+| gforms validate FILE | Validate form definition |
+| gforms diff FILE | Show changes vs deployed |
+| gforms deploy FILE | Deploy form to Google |
+| gforms list | List tracked forms |
+| gforms destroy FILE | Delete form |
+
+## Command Details
+
+### gforms deploy
+
+```
+gforms deploy FILE [options]
+
+Options:
+  --auto-approve   Skip confirmation prompt
+  --dry-run        Show diff without deploying
+  --verbose        Detailed output
+```
+
+**Exit Codes:**
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | Deployment failed |
+| 2 | Validation error |
+| 3 | User cancelled |
+
+### gforms diff
+
+```
+gforms diff FILE [options]
+
+Options:
+  --format FORMAT  Output format (console, markdown, json)
+  --ci             Exit 1 if changes detected
+```
+
+## Programmatic API
+
+```typescript
+import { deploy, diff, AuthManager } from 'iac-google-forms';
+
+// Deploy a form
+const result = await deploy('forms/feedback.ts', {
+  autoApprove: true,
+});
+console.log(result.formUrl);
+
+// Calculate diff
+const diffResult = await diff('forms/feedback.ts');
+if (diffResult.hasChanges) {
+  console.log('Changes:', diffResult.questions.length);
+}
+```
+
+## Google API Mapping
+
+| gforms Operation | Google API |
+|------------------|------------|
+| Create form | POST /forms |
+| Update form | POST /forms/ID:batchUpdate |
+| Get form | GET /forms/ID |
+| Link Sheets | Sheets API + Forms updateSettings |
+
+## Required OAuth Scopes
+
+```
+https://www.googleapis.com/auth/forms.body
+https://www.googleapis.com/auth/forms.responses.readonly
+https://www.googleapis.com/auth/spreadsheets
+https://www.googleapis.com/auth/drive.file
+```

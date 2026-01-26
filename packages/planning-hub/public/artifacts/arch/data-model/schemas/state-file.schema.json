@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iac-google-forms/schemas/state-file.json",
+  "title": "StateFile",
+  "description": "Schema for .gforms/state.json - tracks deployed form state",
+  "type": "object",
+  "required": ["version", "forms"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "State file format version",
+      "pattern": "^\\d+\\.\\d+$",
+      "examples": ["1.0"]
+    },
+    "forms": {
+      "type": "object",
+      "description": "Map of local file paths to form state",
+      "additionalProperties": {
+        "$ref": "#/$defs/FormState"
+      }
+    }
+  },
+  "$defs": {
+    "FormState": {
+      "type": "object",
+      "required": ["localPath"],
+      "properties": {
+        "localPath": {
+          "type": "string",
+          "description": "Relative path to the form definition file"
+        },
+        "formId": {
+          "type": "string",
+          "description": "Google Forms ID (after first deploy)",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "formUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to view/edit the form"
+        },
+        "responseUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL for respondents to fill out the form"
+        },
+        "spreadsheetId": {
+          "type": "string",
+          "description": "Linked Google Sheets ID (if Sheets integration enabled)"
+        },
+        "spreadsheetUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the linked spreadsheet"
+        },
+        "lastDeployed": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of last deployment"
+        },
+        "lastDeployedBy": {
+          "type": "string",
+          "description": "Email or identifier of deployer"
+        },
+        "contentHash": {
+          "type": "string",
+          "description": "SHA-256 hash of deployed form definition",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "remoteRevisionId": {
+          "type": "string",
+          "description": "Google Forms revision ID for conflict detection"
+        }
+      }
+    }
+  }
+}

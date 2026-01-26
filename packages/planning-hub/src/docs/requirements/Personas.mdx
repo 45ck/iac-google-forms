@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Requirements/Personas" />
+
+# User Personas
+
+## Alex Chen - Platform Engineer
+
+**Role:** Platform Engineer at a mid-size tech company
+
+**Background:**
+- 5 years experience in DevOps/Platform Engineering
+- Manages internal tooling and developer experience
+- Familiar with IaC tools (Terraform, Pulumi)
+- Comfortable with TypeScript and CLI tools
+
+### Goals
+
+1. **Define forms as code** - Use TypeScript with full type safety
+2. **Version control** - Store form definitions in Git alongside other infrastructure
+3. **Preview changes** - See what will change before deploying
+4. **Eliminate manual work** - Stop clicking through Google Forms UI
+
+### Pain Points
+
+- Currently creates forms manually in Google Forms UI
+- No way to track changes or roll back
+- Must update forms separately in dev/staging/prod
+- No code review process for form changes
+
+### Top Tasks
+
+| Task | Frequency | Importance |
+|------|-----------|------------|
+| Create new forms | Weekly | Critical |
+| Update existing forms | Weekly | High |
+| Configure integrations | Weekly | High |
+| Review form changes | Daily | Medium |
+
+### Quote
+
+> "I want to manage Google Forms the same way I manage everything else - as code in Git with proper review and deployment processes."

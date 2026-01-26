@@ -7,6 +7,7 @@ node_modules/
 dist/
 build/
 storybook-static/
+*.tsbuildinfo
 *.log
 *.tgz
 
@@ -21,6 +22,7 @@ storybook-static/
 .DS_Store
 Thumbs.db
 desktop.ini
+nul
 
 # IDE
 .vscode/

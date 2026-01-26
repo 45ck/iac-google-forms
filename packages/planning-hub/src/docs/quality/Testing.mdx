@@ -1,0 +1,72 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Quality/Testing" />
+
+# Test Strategy
+
+## Test Pyramid
+
+**E2E Tests** - Few, slow, high confidence
+
+**Integration Tests** - Some, medium speed
+
+**Unit Tests** - Many, fast, isolated
+
+| Level | Count | Speed | Scope |
+|-------|-------|-------|-------|
+| Unit | ~200 | under 1ms each | Single function |
+| Integration | ~50 | under 100ms each | Module boundaries |
+| E2E | ~20 | under 30s each | Full CLI workflows |
+
+## Coverage Targets
+
+| Metric | Threshold |
+|--------|-----------|
+| Statements | 95% or higher |
+| Branches | 90% or higher |
+| Functions | 95% or higher |
+| Lines | 95% or higher |
+
+## Test Categories
+
+### Unit Tests
+
+| Component | Focus |
+|-----------|-------|
+| ConfigLoader | Parsing, validation |
+| DiffEngine | Diff calculation |
+| StateManager | Read/write state |
+| AuthManager | Token handling |
+| Formatters | Output formatting |
+
+### Integration Tests
+
+| Boundary | Focus |
+|----------|-------|
+| Config to State | Load form, check state |
+| Auth to API | Token refresh, API calls |
+| Diff to Deploy | Update generation |
+
+### E2E Tests
+
+| Workflow | Verification |
+|----------|--------------|
+| Init to Auth to Deploy | New user journey |
+| Deploy to Diff to Deploy | Update workflow |
+| Deploy to Destroy | Cleanup workflow |
+
+## Running Tests
+
+```bash
+# Unit tests
+pnpm test:unit
+
+# Integration tests
+pnpm test:integration
+
+# E2E tests (requires credentials)
+pnpm test:e2e
+
+# All tests with coverage
+pnpm test:coverage
+```

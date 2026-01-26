@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Requirements/Non-Functional Requirements" />
+
+# Non-Functional Requirements
+
+## Performance
+
+| ID | Requirement | Target |
+|----|-------------|--------|
+| NFR-PERF-001 | CLI response time (local) | under 2 seconds |
+| NFR-PERF-002 | Memory usage | under 256MB heap |
+| NFR-PERF-003 | Startup time | under 500ms |
+
+## Reliability
+
+| ID | Requirement | Target |
+|----|-------------|--------|
+| NFR-REL-001 | Operations must be idempotent | 100% |
+| NFR-REL-002 | State file integrity | Never corrupted |
+| NFR-REL-003 | Graceful degradation | Helpful errors |
+
+## Security
+
+| ID | Requirement | Target |
+|----|-------------|--------|
+| NFR-SEC-001 | Credentials never in logs | 100% |
+| NFR-SEC-002 | TLS for all communication | TLS 1.2+ |
+| NFR-SEC-003 | Minimal OAuth scopes | Only required |
+
+## Maintainability
+
+| ID | Requirement | Target |
+|----|-------------|--------|
+| NFR-MAINT-001 | Cyclomatic complexity | 10 or less per function |
+| NFR-MAINT-002 | Test coverage | 95% or higher |
+| NFR-MAINT-003 | JSDoc on public APIs | 100% |
+
+## Portability
+
+| ID | Requirement | Target |
+|----|-------------|--------|
+| NFR-PORT-001 | Node.js versions | 18, 20, 22 |
+| NFR-PORT-002 | Operating systems | Windows, macOS, Linux |
+| NFR-PORT-003 | No native dependencies | Yes |
+
+## Usability
+
+| ID | Requirement | Target |
+|----|-------------|--------|
+| NFR-USE-001 | Error messages include fix | 100% |
+| NFR-USE-002 | Help text for all commands | 100% |
+| NFR-USE-003 | Consistent exit codes | Documented |

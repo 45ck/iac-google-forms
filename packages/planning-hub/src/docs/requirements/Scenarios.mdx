@@ -1,0 +1,103 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Requirements/Scenarios" />
+
+# User Scenarios
+
+## As-Is Scenarios (Current State)
+
+### AS-001: Manual Form Creation
+
+**Persona:** Alex Chen (Platform Engineer)
+**Goal:** Create a new customer feedback form
+
+**Current Process:**
+1. Open Google Forms in browser
+2. Click through UI to add each question
+3. Configure settings manually
+4. Set up Sheets integration through menus
+5. Share form URL via email/Slack
+6. No record of what was configured
+
+**Pain Points:**
+- Time-consuming manual process
+- No version control
+- Easy to make mistakes
+- Can't review changes before applying
+
+---
+
+### AS-002: Form Update Process
+
+**Persona:** Alex Chen
+**Goal:** Add a new question to an existing form
+
+**Current Process:**
+1. Find the form in Google Drive
+2. Open and edit in browser
+3. Remember to update in all environments (dev, staging, prod)
+4. Hope nothing breaks
+5. No diff or preview available
+
+**Pain Points:**
+- Triple work across environments
+- No audit trail
+- Risk of inconsistency
+
+---
+
+## Visionary Scenarios (Future State)
+
+### VS-001: Define New Form in TypeScript
+
+**Goal:** Create a form with questions, validation, and integrations via code
+
+**Process:**
+1. Create `forms/feedback.ts`
+2. Define form structure with TypeScript
+3. Run `gforms validate` to check
+4. Commit to Git, create PR
+5. Run `gforms deploy` after approval
+
+**Benefits:**
+- Type-safe configuration
+- Code review process
+- Version history in Git
+
+---
+
+### VS-002: Preview and Deploy Changes
+
+**Goal:** Modify a form and deploy safely
+
+**Process:**
+1. Edit form definition file
+2. Run `gforms diff` to see changes
+3. Review the diff output
+4. Run `gforms deploy` with confirmation
+5. State file updated automatically
+
+---
+
+### VS-003: Configure Multiple Integrations
+
+**Goal:** Set up Sheets, email, and webhook integrations
+
+**Process:**
+1. Add integrations array to form definition
+2. Configure each integration type
+3. Deploy - integrations set up automatically
+
+---
+
+### VS-004: Version Control Workflow
+
+**Goal:** Use Git, code review, and CI/CD for form changes
+
+**Process:**
+1. Create feature branch
+2. Make form changes
+3. Push and create PR
+4. CI runs `gforms diff --ci`
+5. Team reviews diff in PR
+6. Merge triggers deployment

@@ -1,0 +1,122 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Architecture/Data Model" />
+
+# Data Model
+
+## Overview
+
+The data model covers three main areas:
+
+1. **Form Definition** - User-authored TypeScript/JSON configuration
+2. **State File** - Local tracking of deployed forms
+3. **API Types** - Interfaces for Google APIs
+
+## Form Definition Schema
+
+```typescript
+interface FormDefinition {
+  title: string;
+  description?: string;
+  questions: Question[];
+  integrations?: Integration[];
+  settings?: FormSettings;
+}
+
+type Question =
+  | TextQuestion
+  | EmailQuestion
+  | ChoiceQuestion
+  | DropdownQuestion
+  | ScaleQuestion
+  | Section;
+```
+
+### Example Form
+
+```typescript
+export default defineForm({
+  title: 'Customer Feedback',
+  questions: [
+    {
+      id: 'satisfaction',
+      type: 'scale',
+      title: 'How satisfied are you?',
+      min: 1,
+      max: 5,
+      required: true,
+    },
+    {
+      id: 'comments',
+      type: 'text',
+      title: 'Additional comments',
+      paragraph: true,
+    },
+  ],
+  integrations: [
+    { type: 'sheets', spreadsheetName: 'Feedback' },
+  ],
+});
+```
+
+## State File Schema
+
+Location: `.gforms/state.json`
+
+```json
+{
+  "version": "1.0",
+  "forms": {
+    "forms/feedback.ts": {
+      "localPath": "forms/feedback.ts",
+      "formId": "1BxiMVs0XRA5...",
+      "formUrl": "https://docs.google.com/forms/d/.../edit",
+      "spreadsheetId": "1abc...",
+      "lastDeployed": "2024-01-15T10:30:00Z",
+      "contentHash": "sha256:a1b2c3..."
+    }
+  }
+}
+```
+
+## Entity-Relationship Diagram
+
+```
+┌─────────────────┐     ┌─────────────────┐
+│ FORM_DEFINITION │────▶│    QUESTION     │
+│                 │     │                 │
+│ - title         │     │ - id            │
+│ - description   │     │ - type          │
+│ - settings      │     │ - title         │
+└─────────────────┘     │ - required      │
+        │               └─────────────────┘
+        │
+        ▼
+┌─────────────────┐     ┌─────────────────┐
+│   INTEGRATION   │     │   FORM_STATE    │
+│                 │     │                 │
+│ - type          │     │ - localPath     │
+│ - config        │     │ - formId        │
+└─────────────────┘     │ - lastDeployed  │
+                        │ - contentHash   │
+                        └─────────────────┘
+                               │
+                               ▼
+                        ┌─────────────────┐
+                        │  GOOGLE_FORM    │
+                        │                 │
+                        │ - formId        │
+                        │ - revisionId    │
+                        └─────────────────┘
+```
+
+## Validation Rules
+
+| Rule | Constraint |
+|------|------------|
+| Title length | 1-200 characters |
+| Question ID format | `^[a-zA-Z][a-zA-Z0-9_-]*$` |
+| Scale min | 0 or 1 |
+| Scale max | 2-10 |
+| Minimum questions | At least 1 |
+| Unique question IDs | Enforced at runtime |

@@ -1,0 +1,170 @@
+%%{init: {'theme': 'default'}}%%
+classDiagram
+    direction TB
+
+    %% Core Form Definition
+    class FormDefinition {
+        +string title
+        +string? description
+        +Question[] questions
+        +Integration[] integrations
+        +FormSettings? settings
+    }
+
+    class Question {
+        <<interface>>
+        +string id
+        +string title
+        +string? description
+        +boolean? required
+        +QuestionType type
+    }
+
+    class TextQuestion {
+        +boolean paragraph
+        +number? maxLength
+        +ValidationRule? validation
+    }
+
+    class EmailQuestion {
+        +ValidationRule validation
+    }
+
+    class ChoiceQuestion {
+        +string[] options
+        +boolean allowOther
+    }
+
+    class DropdownQuestion {
+        +string[] options
+    }
+
+    class ScaleQuestion {
+        +number min
+        +number max
+        +string? minLabel
+        +string? maxLabel
+    }
+
+    class Section {
+        +string title
+        +Question[] questions
+        +ConditionalLogic? showIf
+    }
+
+    class ConditionalLogic {
+        +string field
+        +string? equals
+        +string[]? in
+    }
+
+    %% Integrations
+    class Integration {
+        <<interface>>
+        +IntegrationType type
+    }
+
+    class SheetsIntegration {
+        +string? spreadsheetName
+        +string? spreadsheetId
+        +boolean createIfMissing
+        +string? folderId
+    }
+
+    class EmailIntegration {
+        +string[] to
+        +string? subject
+        +ConditionalLogic? condition
+    }
+
+    class WebhookIntegration {
+        +string url
+        +string method
+        +Record~string,string~ headers
+        +object? payload
+        +RetryConfig? retry
+    }
+
+    %% State Management
+    class FormState {
+        +string localPath
+        +string? formId
+        +string? spreadsheetId
+        +DateTime? lastDeployed
+        +string? contentHash
+    }
+
+    class StateFile {
+        +string version
+        +Record~string,FormState~ forms
+        +save()
+        +load()
+    }
+
+    %% Diff Engine
+    class DiffResult {
+        +DiffStatus status
+        +QuestionDiff[] questions
+        +IntegrationDiff[] integrations
+        +boolean hasChanges
+    }
+
+    class QuestionDiff {
+        +DiffAction action
+        +Question? local
+        +Question? remote
+        +string[] changes
+    }
+
+    %% API Client
+    class GoogleFormsClient {
+        +AuthClient auth
+        +createForm(FormDefinition) Form
+        +updateForm(formId, FormDefinition) Form
+        +getForm(formId) Form
+        +linkToSheets(formId, sheetsConfig) void
+    }
+
+    class AuthClient {
+        <<interface>>
+        +getAccessToken() string
+        +getScopes() string[]
+    }
+
+    class ServiceAccountAuth {
+        +string keyFilePath
+        +getAccessToken() string
+    }
+
+    class OAuthAuth {
+        +string clientId
+        +string clientSecret
+        +TokenStore tokens
+        +login() void
+        +refresh() void
+        +getAccessToken() string
+    }
+
+    %% Relationships
+    FormDefinition "1" *-- "1..*" Question : contains
+    FormDefinition "1" *-- "0..*" Integration : has
+    Question <|-- TextQuestion
+    Question <|-- EmailQuestion
+    Question <|-- ChoiceQuestion
+    Question <|-- DropdownQuestion
+    Question <|-- ScaleQuestion
+    Question <|-- Section
+    Section "1" *-- "1..*" Question : groups
+    Section "1" *-- "0..1" ConditionalLogic : conditional
+
+    Integration <|-- SheetsIntegration
+    Integration <|-- EmailIntegration
+    Integration <|-- WebhookIntegration
+    EmailIntegration "1" *-- "0..1" ConditionalLogic : filtered by
+
+    StateFile "1" *-- "0..*" FormState : tracks
+    DiffResult "1" *-- "0..*" QuestionDiff : contains
+
+    GoogleFormsClient "1" --> "1" AuthClient : uses
+    AuthClient <|-- ServiceAccountAuth
+    AuthClient <|-- OAuthAuth

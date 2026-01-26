@@ -1,0 +1,94 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Quality/Coding Standards" />
+
+# Coding Standards
+
+## TypeScript Configuration
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true
+  }
+}
+```
+
+## ESLint Rules
+
+| Rule | Setting |
+|------|---------|
+| Complexity | max 10 |
+| Max depth | 4 |
+| Lines per function | 50 |
+| Max params | 4 |
+| No explicit any | error |
+
+## Naming Conventions
+
+| Element | Convention | Example |
+|---------|------------|---------|
+| Variables | camelCase | `formState` |
+| Constants | SCREAMING_SNAKE | `MAX_RETRIES` |
+| Functions | camelCase | `calculateDiff()` |
+| Classes | PascalCase | `DiffEngine` |
+| Interfaces | PascalCase | `FormDefinition` |
+| Files | kebab-case | `diff-engine.ts` |
+
+## Error Handling
+
+```typescript
+// Define specific error classes
+class GFormsError extends Error {
+  constructor(
+    message: string,
+    public readonly code: string,
+    public readonly cause?: Error
+  ) {
+    super(message);
+  }
+}
+
+class AuthError extends GFormsError { ... }
+class ValidationError extends GFormsError { ... }
+```
+
+## Git Commit Format
+
+```
+<type>(<scope>): <subject>
+
+[optional body]
+
+[optional footer]
+```
+
+| Type | Description |
+|------|-------------|
+| feat | New feature |
+| fix | Bug fix |
+| docs | Documentation |
+| refactor | Code change |
+| test | Adding tests |
+| chore | Maintenance |
+
+## Quality Gates
+
+### Pre-Commit
+- ESLint passes
+- TypeScript compiles
+- Unit tests pass
+
+### Pre-Merge
+- All tests pass
+- Coverage ≥ 95%
+- No security vulnerabilities
+
+### Pre-Release
+- E2E tests pass
+- Performance benchmarks pass
+- CHANGELOG updated

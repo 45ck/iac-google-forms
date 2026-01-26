@@ -1,0 +1,95 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="UX/CLI Design" />
+
+# CLI Design
+
+## Design Principles
+
+| Principle | Implementation |
+|-----------|----------------|
+| **Clarity** | Show diffs before changes, require confirmation |
+| **Progressive Disclosure** | Essential info default, `--verbose` for details |
+| **Visual Language** | `✓` success, `✗` error, `+/-/~` diff symbols |
+| **CI-Friendly** | Exit codes, `--auto-approve`, markdown output |
+| **Helpful Errors** | What, Why, How to fix |
+
+## Terminal Mockups
+
+### gforms deploy (New Form)
+
+```
+$ gforms deploy forms/feedback.ts
+
+Deploying forms/feedback.ts...
+
+This will create a new Google Form:
+  Title:        Customer Feedback
+  Questions:    5
+  Integrations: sheets
+
+Proceed? [y/N] y
+
+Creating form...
+  ✓ Form created
+  ✓ Questions added (5)
+  ✓ Spreadsheet linked
+  ✓ State saved
+
+✓ Deployment complete!
+
+  Form URL:     https://docs.google.com/forms/d/1Bxi.../edit
+  Response URL: https://docs.google.com/forms/d/e/.../viewform
+  Spreadsheet:  https://docs.google.com/spreadsheets/d/1abc...
+```
+
+### gforms diff (With Changes)
+
+```
+$ gforms diff forms/feedback.ts
+
+Comparing forms/feedback.ts with deployed form...
+
+Form: Customer Feedback
+ID:   1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms
+
+~ Title
+  - "Customer Feedback"
+  + "Customer Feedback Form"
+
+Questions:
+  ~ satisfaction (scale)
+    - maxLabel: "Very Satisfied"
+    + maxLabel: "Extremely Satisfied"
+
+  + comments (text)
+    paragraph: true
+
+  - legacy_field (text)
+    This question will be removed
+
+Summary: 1 modified, 1 added, 1 removed
+```
+
+### Error States
+
+```
+$ gforms deploy forms/feedback.ts
+
+✗ Error: Not authenticated
+
+  Run 'gforms auth login' to authenticate with Google.
+
+  For CI/CD, set the GOOGLE_APPLICATION_CREDENTIALS
+  environment variable to your service account key path.
+```
+
+## Color Usage
+
+| Color | Usage |
+|-------|-------|
+| Green | Success, additions |
+| Red | Errors, removals |
+| Yellow | Warnings, modifications |
+| Cyan | URLs, hints |
+| Gray | Secondary info |

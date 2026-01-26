@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactElement, type ReactNode } from 'react';
 
 export interface TextProps {
   children: ReactNode;
@@ -12,7 +12,7 @@ export function Text({
   as: Component = 'p',
   size = 'base',
   weight = 'normal',
-}: TextProps): JSX.Element {
+}: TextProps): ReactElement {
   return (
     <Component
       style={{

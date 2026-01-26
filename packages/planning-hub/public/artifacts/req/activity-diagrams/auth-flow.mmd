@@ -1,0 +1,48 @@
+%%{init: {'theme': 'default'}}%%
+flowchart TD
+    A[Start: Authentication needed] --> B{GOOGLE_APPLICATION_CREDENTIALS set?}
+
+    B -->|Yes| C[Load service account JSON]
+    C --> D{JSON valid?}
+    D -->|No| E[Show invalid credentials error]
+    E --> F[Exit with error]
+
+    D -->|Yes| G[Create JWT client]
+    G --> H[Authenticate with Google]
+    H --> I{Auth successful?}
+    I -->|No| J[Show auth failure]
+    J --> F
+
+    I -->|Yes| K[Return authenticated client]
+
+    B -->|No| L{~/.gforms/credentials.json exists?}
+    L -->|Yes| M[Load OAuth tokens]
+    M --> N{Token valid?}
+
+    N -->|No - expired| O{Refresh token available?}
+    O -->|Yes| P[Refresh access token]
+    P --> Q{Refresh successful?}
+    Q -->|Yes| R[Save new token]
+    R --> K
+    Q -->|No| S[Prompt: gforms auth login]
+    S --> F
+
+    O -->|No| S
+
+    N -->|Yes| K
+
+    L -->|No| T{Interactive mode?}
+    T -->|No| U[Error: No credentials]
+    U --> F
+
+    T -->|Yes| V[Start OAuth flow]
+    V --> W[Open browser for consent]
+    W --> X[User grants permission]
+    X --> Y[Receive OAuth code]
+    Y --> Z[Exchange for tokens]
+    Z --> AA[Save tokens to ~/.gforms/credentials.json]
+    AA --> K
+
+    style A fill:#e1f5fe
+    style K fill:#c8e6c9
+    style F fill:#ffcdd2

@@ -1,0 +1,53 @@
+%%{init: {'theme': 'default'}}%%
+flowchart TD
+    A[Start: gforms deploy] --> B[Load form definition]
+    B --> C{Valid TypeScript?}
+    C -->|No| D[Show validation errors]
+    D --> E[Exit with error]
+
+    C -->|Yes| F[Authenticate with Google]
+    F --> G{Auth successful?}
+    G -->|No| H[Show auth error]
+    H --> E
+
+    G -->|Yes| I[Check if form exists]
+    I --> J{Form ID in state?}
+
+    J -->|No| K[Mark as NEW form]
+    J -->|Yes| L[Fetch remote form state]
+
+    L --> M{Fetch successful?}
+    M -->|No| N[Show network error]
+    N --> E
+
+    M -->|Yes| O[Calculate diff]
+    K --> O
+
+    O --> P{Changes detected?}
+    P -->|No| Q[No changes to deploy]
+    Q --> R[Exit success]
+
+    P -->|Yes| S[Display diff]
+    S --> T{--yes flag?}
+
+    T -->|Yes| U[Proceed to deploy]
+    T -->|No| V{User confirms?}
+
+    V -->|No| W[Aborted by user]
+    W --> R
+
+    V -->|Yes| U
+
+    U --> X[Apply form changes]
+    X --> Y{Form updated?}
+    Y -->|No| Z[Show API error]
+    Z --> E
+
+    Y -->|Yes| AA[Configure integrations]
+    AA --> AB[Update state file]
+    AB --> AC[Display URLs]
+    AC --> R
+
+    style A fill:#e1f5fe
+    style R fill:#c8e6c9
+    style E fill:#ffcdd2

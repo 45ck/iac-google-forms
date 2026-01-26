@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactElement, type ReactNode } from 'react';
 
 export interface ButtonProps {
   children: ReactNode;
@@ -12,7 +12,7 @@ export function Button({
   onClick,
   variant = 'primary',
   disabled = false,
-}: ButtonProps): JSX.Element {
+}: ButtonProps): ReactElement {
   return (
     <button
       onClick={onClick}

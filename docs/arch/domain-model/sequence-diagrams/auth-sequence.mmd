@@ -1,0 +1,63 @@
+%%{init: {'theme': 'default', 'sequence': {'showSequenceNumbers': true}}}%%
+sequenceDiagram
+    autonumber
+    participant User
+    participant CLI
+    participant AuthManager
+    participant TokenStore
+    participant Browser
+    participant GoogleOAuth as Google OAuth Server
+    participant ServiceAccount
+
+    User->>CLI: gforms auth login
+
+    CLI->>AuthManager: initiateOAuth()
+
+    AuthManager->>AuthManager: generateCodeVerifier()
+    AuthManager->>AuthManager: generateAuthUrl(scopes)
+
+    AuthManager->>Browser: Open auth URL
+    Browser->>GoogleOAuth: GET /authorize?scope=...&redirect_uri=localhost
+    GoogleOAuth->>User: Show consent screen
+
+    User->>GoogleOAuth: Grant permissions
+    GoogleOAuth->>Browser: Redirect to localhost:PORT?code=AUTH_CODE
+    Browser->>AuthManager: Receive auth code
+
+    AuthManager->>GoogleOAuth: POST /token (code, code_verifier)
+    GoogleOAuth-->>AuthManager: { access_token, refresh_token, expires_in }
+
+    AuthManager->>TokenStore: saveTokens(tokens)
+    TokenStore->>TokenStore: write ~/.gforms/credentials.json
+
+    AuthManager-->>CLI: Success
+    CLI->>User: "Authenticated successfully"
+
+    Note over User,ServiceAccount: Alternative: Service Account
+
+    User->>CLI: GOOGLE_APPLICATION_CREDENTIALS=key.json gforms deploy
+
+    CLI->>AuthManager: getAuthClient()
+    AuthManager->>AuthManager: checkEnvVar()
+
+    alt Service Account env var set
+        AuthManager->>ServiceAccount: loadKeyFile()
+        ServiceAccount-->>AuthManager: KeyData
+        AuthManager->>ServiceAccount: createJWT(scopes)
+        ServiceAccount->>GoogleOAuth: Exchange JWT for access token
+        GoogleOAuth-->>ServiceAccount: { access_token }
+        ServiceAccount-->>AuthManager: AuthClient
+    else No env var, check token store
+        AuthManager->>TokenStore: loadTokens()
+        alt Token exists and valid
+            TokenStore-->>AuthManager: Tokens
+        else Token expired
+            AuthManager->>GoogleOAuth: POST /token (refresh_token)
+            GoogleOAuth-->>AuthManager: New tokens
+            AuthManager->>TokenStore: saveTokens()
+        else No token
+            AuthManager-->>CLI: Error: Run 'gforms auth login'
+        end
+    end
+
+    AuthManager-->>CLI: AuthClient

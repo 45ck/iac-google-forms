@@ -2,6 +2,7 @@
   "name": "iac-google-forms",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "Infrastructure as Code for Google Forms with output integrations (Google Sheets, etc.)",
   "packageManager": "pnpm@10.28.1",
   "scripts": {

@@ -1,0 +1,56 @@
+%%{init: {'theme': 'default', 'sequence': {'showSequenceNumbers': true}}}%%
+sequenceDiagram
+    autonumber
+    participant User
+    participant CLI
+    participant ConfigLoader
+    participant StateFile
+    participant GoogleClient
+    participant FormsAPI as Google Forms API
+    participant DiffEngine
+    participant Formatter
+
+    User->>CLI: gforms diff forms/feedback.ts
+
+    CLI->>ConfigLoader: loadFormDefinition(path)
+    ConfigLoader->>ConfigLoader: parseTypeScript()
+    ConfigLoader->>ConfigLoader: validateSchema()
+    alt Validation fails
+        ConfigLoader-->>CLI: ValidationError
+        CLI->>User: Show validation errors
+    else Validation passes
+        ConfigLoader-->>CLI: FormDefinition
+    end
+
+    CLI->>StateFile: loadState()
+    StateFile-->>CLI: FormState | null
+
+    alt Form ID exists in state
+        CLI->>GoogleClient: authenticate()
+        GoogleClient-->>CLI: AuthClient
+
+        CLI->>GoogleClient: getForm(formId)
+        GoogleClient->>FormsAPI: GET /forms/{formId}
+        FormsAPI-->>GoogleClient: RemoteForm
+        GoogleClient-->>CLI: RemoteForm
+
+        CLI->>DiffEngine: calculateDiff(local, remote)
+        DiffEngine->>DiffEngine: diffQuestions(local.questions, remote.questions)
+        DiffEngine->>DiffEngine: diffIntegrations(local.integrations, remote.integrations)
+        DiffEngine-->>CLI: DiffResult
+
+    else No form ID (new form)
+        CLI->>DiffEngine: createNewFormDiff(local)
+        DiffEngine-->>CLI: DiffResult { status: NEW }
+    end
+
+    CLI->>Formatter: formatDiff(diffResult, options)
+
+    alt CI mode (--ci flag)
+        Formatter-->>CLI: MarkdownTable
+        CLI->>User: Output for PR comment
+        CLI->>CLI: exit(diffResult.hasChanges ? 1 : 0)
+    else Interactive mode
+        Formatter-->>CLI: ColoredOutput
+        CLI->>User: Display formatted diff
+    end

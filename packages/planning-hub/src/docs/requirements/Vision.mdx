@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Requirements/Vision" />
+
+# Project Vision
+
+## iac-google-forms
+
+**Infrastructure as Code for Google Forms** - Define forms in TypeScript, version control them, and deploy with diff preview.
+
+### Problem Statement
+
+Platform and DevOps teams currently manage Google Forms manually through the UI, leading to:
+- No version control for form definitions
+- Manual, error-prone updates across environments
+- No way to preview changes before applying
+- Difficulty maintaining consistency across teams
+
+### Solution
+
+A CLI tool that enables:
+- **Define forms as code** - TypeScript configuration with full type safety
+- **Version control** - Store form definitions in Git
+- **Diff before deploy** - Preview changes like `terraform plan`
+- **Multiple integrations** - Connect to Sheets, email, webhooks
+
+### Target Users
+
+- DevOps Engineers
+- Platform Engineers
+- SRE Teams
+
+### Key Features
+
+| Feature | Description |
+|---------|-------------|
+| TypeScript Config | Define forms with full IDE support |
+| `gforms diff` | Compare local vs deployed |
+| `gforms deploy` | Apply changes with confirmation |
+| Sheets Integration | Auto-link form responses to spreadsheets |
+| Dual Auth | OAuth for dev, Service Account for CI |

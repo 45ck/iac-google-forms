@@ -1,0 +1,399 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iac-google-forms/schemas/form-definition.json",
+  "title": "FormDefinition",
+  "description": "Schema for defining a Google Form as code",
+  "type": "object",
+  "required": ["title", "questions"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The form title displayed to respondents",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional form description",
+      "maxLength": 2000
+    },
+    "questions": {
+      "type": "array",
+      "description": "List of questions in the form",
+      "items": { "$ref": "#/$defs/Question" },
+      "minItems": 1
+    },
+    "integrations": {
+      "type": "array",
+      "description": "Optional integrations (Sheets, email, webhooks)",
+      "items": { "$ref": "#/$defs/Integration" }
+    },
+    "settings": {
+      "$ref": "#/$defs/FormSettings"
+    }
+  },
+  "$defs": {
+    "Question": {
+      "oneOf": [
+        { "$ref": "#/$defs/TextQuestion" },
+        { "$ref": "#/$defs/EmailQuestion" },
+        { "$ref": "#/$defs/ChoiceQuestion" },
+        { "$ref": "#/$defs/DropdownQuestion" },
+        { "$ref": "#/$defs/ScaleQuestion" },
+        { "$ref": "#/$defs/Section" }
+      ]
+    },
+    "BaseQuestion": {
+      "type": "object",
+      "required": ["id", "title"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"
+        },
+        "title": {
+          "type": "string",
+          "description": "Question text displayed to respondents",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional help text for the question"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether the question must be answered",
+          "default": false
+        }
+      }
+    },
+    "TextQuestion": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseQuestion" },
+        {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "text" },
+            "paragraph": {
+              "type": "boolean",
+              "description": "If true, shows multi-line text area",
+              "default": false
+            },
+            "maxLength": {
+              "type": "integer",
+              "description": "Maximum character length",
+              "minimum": 1
+            },
+            "validation": {
+              "$ref": "#/$defs/TextValidation"
+            }
+          }
+        }
+      ]
+    },
+    "EmailQuestion": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseQuestion" },
+        {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "email" }
+          }
+        }
+      ]
+    },
+    "ChoiceQuestion": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseQuestion" },
+        {
+          "type": "object",
+          "required": ["type", "options"],
+          "properties": {
+            "type": { "const": "choice" },
+            "options": {
+              "type": "array",
+              "description": "List of choices",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "allowOther": {
+              "type": "boolean",
+              "description": "Allow 'Other' free-text option",
+              "default": false
+            },
+            "multiple": {
+              "type": "boolean",
+              "description": "Allow multiple selections (checkboxes)",
+              "default": false
+            }
+          }
+        }
+      ]
+    },
+    "DropdownQuestion": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseQuestion" },
+        {
+          "type": "object",
+          "required": ["type", "options"],
+          "properties": {
+            "type": { "const": "dropdown" },
+            "options": {
+              "type": "array",
+              "description": "List of dropdown options",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "ScaleQuestion": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseQuestion" },
+        {
+          "type": "object",
+          "required": ["type", "min", "max"],
+          "properties": {
+            "type": { "const": "scale" },
+            "min": {
+              "type": "integer",
+              "description": "Minimum scale value",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "max": {
+              "type": "integer",
+              "description": "Maximum scale value",
+              "minimum": 2,
+              "maximum": 10
+            },
+            "minLabel": {
+              "type": "string",
+              "description": "Label for minimum value"
+            },
+            "maxLabel": {
+              "type": "string",
+              "description": "Label for maximum value"
+            }
+          }
+        }
+      ]
+    },
+    "Section": {
+      "type": "object",
+      "required": ["type", "title", "questions"],
+      "properties": {
+        "type": { "const": "section" },
+        "title": {
+          "type": "string",
+          "description": "Section header text"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional section description"
+        },
+        "questions": {
+          "type": "array",
+          "description": "Questions within this section",
+          "items": { "$ref": "#/$defs/Question" },
+          "minItems": 1
+        },
+        "showIf": {
+          "$ref": "#/$defs/ConditionalLogic"
+        }
+      }
+    },
+    "ConditionalLogic": {
+      "type": "object",
+      "required": ["field"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "Question ID to evaluate"
+        },
+        "equals": {
+          "type": "string",
+          "description": "Show if field equals this value"
+        },
+        "in": {
+          "type": "array",
+          "description": "Show if field value is in this list",
+          "items": { "type": "string" }
+        },
+        "notEquals": {
+          "type": "string",
+          "description": "Show if field does not equal this value"
+        }
+      },
+      "oneOf": [
+        { "required": ["equals"] },
+        { "required": ["in"] },
+        { "required": ["notEquals"] }
+      ]
+    },
+    "TextValidation": {
+      "type": "object",
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "description": "Regex pattern for validation"
+        },
+        "patternError": {
+          "type": "string",
+          "description": "Error message when pattern fails"
+        }
+      }
+    },
+    "Integration": {
+      "oneOf": [
+        { "$ref": "#/$defs/SheetsIntegration" },
+        { "$ref": "#/$defs/EmailIntegration" },
+        { "$ref": "#/$defs/WebhookIntegration" }
+      ]
+    },
+    "SheetsIntegration": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "sheets" },
+        "spreadsheetName": {
+          "type": "string",
+          "description": "Name for new spreadsheet"
+        },
+        "spreadsheetId": {
+          "type": "string",
+          "description": "ID of existing spreadsheet to link"
+        },
+        "createIfMissing": {
+          "type": "boolean",
+          "description": "Create spreadsheet if not exists",
+          "default": true
+        },
+        "folderId": {
+          "type": "string",
+          "description": "Google Drive folder ID for new spreadsheet"
+        }
+      }
+    },
+    "EmailIntegration": {
+      "type": "object",
+      "required": ["type", "to"],
+      "properties": {
+        "type": { "const": "email" },
+        "to": {
+          "type": "array",
+          "description": "Email addresses to notify",
+          "items": {
+            "type": "string",
+            "format": "email"
+          },
+          "minItems": 1
+        },
+        "subject": {
+          "type": "string",
+          "description": "Email subject template"
+        },
+        "condition": {
+          "$ref": "#/$defs/ConditionalLogic"
+        }
+      }
+    },
+    "WebhookIntegration": {
+      "type": "object",
+      "required": ["type", "url"],
+      "properties": {
+        "type": { "const": "webhook" },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Webhook endpoint URL"
+        },
+        "method": {
+          "type": "string",
+          "enum": ["POST", "PUT"],
+          "default": "POST"
+        },
+        "headers": {
+          "type": "object",
+          "description": "Custom HTTP headers",
+          "additionalProperties": { "type": "string" }
+        },
+        "secret": {
+          "type": "string",
+          "description": "Secret for HMAC signature"
+        },
+        "retry": {
+          "$ref": "#/$defs/RetryConfig"
+        }
+      }
+    },
+    "RetryConfig": {
+      "type": "object",
+      "properties": {
+        "maxAttempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "default": 3
+        },
+        "backoffMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 60000,
+          "default": 1000
+        }
+      }
+    },
+    "FormSettings": {
+      "type": "object",
+      "properties": {
+        "collectEmail": {
+          "type": "boolean",
+          "description": "Collect respondent email addresses",
+          "default": false
+        },
+        "limitOneResponse": {
+          "type": "boolean",
+          "description": "Limit to one response per user",
+          "default": false
+        },
+        "editAfterSubmit": {
+          "type": "boolean",
+          "description": "Allow editing after submission",
+          "default": false
+        },
+        "confirmationMessage": {
+          "type": "string",
+          "description": "Message shown after submission"
+        },
+        "quiz": {
+          "$ref": "#/$defs/QuizSettings"
+        }
+      }
+    },
+    "QuizSettings": {
+      "type": "object",
+      "properties": {
+        "isQuiz": {
+          "type": "boolean",
+          "description": "Enable quiz mode",
+          "default": false
+        },
+        "showScore": {
+          "type": "boolean",
+          "description": "Show score after submission",
+          "default": true
+        },
+        "showCorrectAnswers": {
+          "type": "boolean",
+          "description": "Show correct answers after submission",
+          "default": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "iac-google-forms",
+  "version": "0.1.0",
+  "description": "Infrastructure as Code for Google Forms - define forms in TypeScript, version control, and deploy with diff preview",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "gforms": "./dist/cli/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "import": "./dist/schema/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest",
+    "test:unit": "vitest run --dir src",
+    "test:integration": "vitest run --dir tests/integration",
+    "test:coverage": "vitest run --coverage",
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch"
+  },
+  "dependencies": {
+    "zod": "^3.24.0",
+    "commander": "^12.0.0",
+    "chalk": "^5.3.0",
+    "googleapis": "^144.0.0",
+    "open": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "google-forms",
+    "iac",
+    "infrastructure-as-code",
+    "forms",
+    "automation",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/iac-google-forms"
+  },
+  "license": "MIT"
+}
