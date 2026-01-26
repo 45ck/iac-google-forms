@@ -44,10 +44,3 @@ export function applyGlobalOptions(opts: Record<string, unknown>): void {
 export function getGlobalOptions(): Readonly<GlobalOptions> {
   return currentOptions;
 }
-
-/**
- * Reset global options to defaults (for testing)
- */
-export function resetGlobalOptions(): void {
-  currentOptions = { ...defaults };
-}

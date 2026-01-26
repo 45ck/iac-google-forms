@@ -12,48 +12,48 @@ import { Meta } from '@storybook/blocks';
 
 **Unit Tests** - Many, fast, isolated
 
-| Level | Count | Speed | Scope |
-|-------|-------|-------|-------|
-| Unit | ~200 | under 1ms each | Single function |
-| Integration | ~50 | under 100ms each | Module boundaries |
-| E2E | ~20 | under 30s each | Full CLI workflows |
+| Level       | Count | Speed            | Scope              |
+| ----------- | ----- | ---------------- | ------------------ |
+| Unit        | ~200  | under 1ms each   | Single function    |
+| Integration | ~50   | under 100ms each | Module boundaries  |
+| E2E         | ~20   | under 30s each   | Full CLI workflows |
 
 ## Coverage Targets
 
-| Metric | Threshold |
-|--------|-----------|
+| Metric     | Threshold     |
+| ---------- | ------------- |
 | Statements | 95% or higher |
-| Branches | 90% or higher |
-| Functions | 95% or higher |
-| Lines | 95% or higher |
+| Branches   | 90% or higher |
+| Functions  | 95% or higher |
+| Lines      | 95% or higher |
 
 ## Test Categories
 
 ### Unit Tests
 
-| Component | Focus |
-|-----------|-------|
+| Component    | Focus               |
+| ------------ | ------------------- |
 | ConfigLoader | Parsing, validation |
-| DiffEngine | Diff calculation |
-| StateManager | Read/write state |
-| AuthManager | Token handling |
-| Formatters | Output formatting |
+| DiffEngine   | Diff calculation    |
+| StateManager | Read/write state    |
+| AuthManager  | Token handling      |
+| Formatters   | Output formatting   |
 
 ### Integration Tests
 
-| Boundary | Focus |
-|----------|-------|
-| Config to State | Load form, check state |
-| Auth to API | Token refresh, API calls |
-| Diff to Deploy | Update generation |
+| Boundary        | Focus                    |
+| --------------- | ------------------------ |
+| Config to State | Load form, check state   |
+| Auth to API     | Token refresh, API calls |
+| Diff to Deploy  | Update generation        |
 
 ### E2E Tests
 
-| Workflow | Verification |
-|----------|--------------|
-| Init to Auth to Deploy | New user journey |
-| Deploy to Diff to Deploy | Update workflow |
-| Deploy to Destroy | Cleanup workflow |
+| Workflow                 | Verification     |
+| ------------------------ | ---------------- |
+| Init to Auth to Deploy   | New user journey |
+| Deploy to Diff to Deploy | Update workflow  |
+| Deploy to Destroy        | Cleanup workflow |
 
 ## Running Tests
 

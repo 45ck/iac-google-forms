@@ -6,27 +6,27 @@ This directory contains the API specifications for iac-google-forms, covering th
 
 ## Documents
 
-| Document | Description |
-|----------|-------------|
-| [cli-specification.md](./cli-specification.md) | Complete CLI command reference |
-| [internal-api.md](./internal-api.md) | Programmatic Node.js API |
+| Document                                         | Description                                |
+| ------------------------------------------------ | ------------------------------------------ |
+| [cli-specification.md](./cli-specification.md)   | Complete CLI command reference             |
+| [internal-api.md](./internal-api.md)             | Programmatic Node.js API                   |
 | [google-api-mapping.md](./google-api-mapping.md) | Maps gforms operations to Google API calls |
 
 ## Quick Reference
 
 ### CLI Commands
 
-| Command | Description |
-|---------|-------------|
-| `gforms init` | Initialize new project |
-| `gforms auth login` | Authenticate with Google |
-| `gforms auth logout` | Remove credentials |
-| `gforms auth status` | Show auth status |
+| Command                  | Description              |
+| ------------------------ | ------------------------ |
+| `gforms init`            | Initialize new project   |
+| `gforms auth login`      | Authenticate with Google |
+| `gforms auth logout`     | Remove credentials       |
+| `gforms auth status`     | Show auth status         |
 | `gforms validate <file>` | Validate form definition |
-| `gforms diff <file>` | Show changes vs deployed |
-| `gforms deploy <file>` | Deploy form to Google |
-| `gforms list` | List tracked forms |
-| `gforms destroy <file>` | Delete form |
+| `gforms diff <file>`     | Show changes vs deployed |
+| `gforms deploy <file>`   | Deploy form to Google    |
+| `gforms list`            | List tracked forms       |
+| `gforms destroy <file>`  | Delete form              |
 
 ### Programmatic API
 
@@ -50,30 +50,30 @@ console.log(result.formUrl);
 
 ### Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| 0 | Success |
-| 1 | Operation failed / Changes detected (CI mode) |
-| 2 | Validation error |
-| 3 | User cancelled |
+| Code | Meaning                                       |
+| ---- | --------------------------------------------- |
+| 0    | Success                                       |
+| 1    | Operation failed / Changes detected (CI mode) |
+| 2    | Validation error                              |
+| 3    | User cancelled                                |
 
 ### Environment Variables
 
-| Variable | Description |
-|----------|-------------|
+| Variable                         | Description              |
+| -------------------------------- | ------------------------ |
 | `GOOGLE_APPLICATION_CREDENTIALS` | Service account key path |
-| `GFORMS_CONFIG` | Config file path |
-| `GFORMS_STATE_DIR` | State directory |
-| `NO_COLOR` | Disable colors |
-| `CI` | CI mode behaviors |
+| `GFORMS_CONFIG`                  | Config file path         |
+| `GFORMS_STATE_DIR`               | State directory          |
+| `NO_COLOR`                       | Disable colors           |
+| `CI`                             | CI mode behaviors        |
 
 ## Google APIs
 
-| API | Purpose |
-|-----|---------|
-| Forms API v1 | Form CRUD operations |
+| API           | Purpose                      |
+| ------------- | ---------------------------- |
+| Forms API v1  | Form CRUD operations         |
 | Sheets API v4 | Response spreadsheet linking |
-| Drive API v3 | File management, permissions |
+| Drive API v3  | File management, permissions |
 
 ### Required OAuth Scopes
 

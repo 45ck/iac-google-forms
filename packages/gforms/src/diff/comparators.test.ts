@@ -1,56 +1,67 @@
 /**
  * Tests for diff comparator functions
- * Covers arraysEqual, getQuestionChanges, and getIntegrationChanges
+ * Covers getQuestionChanges and getIntegrationChanges
  */
 
-import { describe, it, expect } from 'vitest';
-import { arraysEqual, getQuestionChanges, getIntegrationChanges } from './comparators.js';
-import type { Question, Integration } from '../schema/index.js';
-
-describe('arraysEqual', () => {
-  it('should return true for identical arrays', () => {
-    expect(arraysEqual([1, 2, 3], [1, 2, 3])).toBe(true);
-  });
-
-  it('should return true for empty arrays', () => {
-    expect(arraysEqual([], [])).toBe(true);
-  });
-
-  it('should return false for different lengths', () => {
-    expect(arraysEqual([1, 2], [1, 2, 3])).toBe(false);
-  });
-
-  it('should return false for different values', () => {
-    expect(arraysEqual([1, 2, 3], [1, 2, 4])).toBe(false);
-  });
-
-  it('should return false for different order', () => {
-    expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(false);
-  });
-
-  it('should work with string arrays', () => {
-    expect(arraysEqual(['a', 'b'], ['a', 'b'])).toBe(true);
-    expect(arraysEqual(['a', 'b'], ['a', 'c'])).toBe(false);
-  });
-});
+import { describe, expect, it } from 'vitest';
+import type { Integration, Question } from '../schema/index.js';
+import { getIntegrationChanges, getQuestionChanges } from './comparators.js';
 
 describe('getQuestionChanges', () => {
   describe('common properties', () => {
     it('should detect title change', () => {
-      const local: Question = { id: 'q1', type: 'text', title: 'New', required: true, paragraph: false };
-      const remote: Question = { id: 'q1', type: 'text', title: 'Old', required: true, paragraph: false };
+      const local: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'New',
+        required: true,
+        paragraph: false,
+      };
+      const remote: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Old',
+        required: true,
+        paragraph: false,
+      };
       expect(getQuestionChanges(local, remote)).toContain('title');
     });
 
     it('should detect required change', () => {
-      const local: Question = { id: 'q1', type: 'text', title: 'Q', required: true, paragraph: false };
-      const remote: Question = { id: 'q1', type: 'text', title: 'Q', required: false, paragraph: false };
+      const local: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Q',
+        required: true,
+        paragraph: false,
+      };
+      const remote: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Q',
+        required: false,
+        paragraph: false,
+      };
       expect(getQuestionChanges(local, remote)).toContain('required');
     });
 
     it('should detect description change', () => {
-      const local: Question = { id: 'q1', type: 'text', title: 'Q', required: true, paragraph: false, description: 'New' };
-      const remote: Question = { id: 'q1', type: 'text', title: 'Q', required: true, paragraph: false, description: 'Old' };
+      const local: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Q',
+        required: true,
+        paragraph: false,
+        description: 'New',
+      };
+      const remote: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Q',
+        required: true,
+        paragraph: false,
+        description: 'Old',
+      };
       expect(getQuestionChanges(local, remote)).toContain('description');
     });
 
@@ -62,14 +73,40 @@ describe('getQuestionChanges', () => {
 
   describe('text questions', () => {
     it('should detect paragraph change', () => {
-      const local: Question = { id: 'q1', type: 'text', title: 'Q', required: true, paragraph: true };
-      const remote: Question = { id: 'q1', type: 'text', title: 'Q', required: true, paragraph: false };
+      const local: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Q',
+        required: true,
+        paragraph: true,
+      };
+      const remote: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Q',
+        required: true,
+        paragraph: false,
+      };
       expect(getQuestionChanges(local, remote)).toContain('paragraph');
     });
 
     it('should detect maxLength change', () => {
-      const local: Question = { id: 'q1', type: 'text', title: 'Q', required: true, paragraph: false, maxLength: 100 };
-      const remote: Question = { id: 'q1', type: 'text', title: 'Q', required: true, paragraph: false, maxLength: 200 };
+      const local: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Q',
+        required: true,
+        paragraph: false,
+        maxLength: 100,
+      };
+      const remote: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Q',
+        required: true,
+        paragraph: false,
+        maxLength: 200,
+      };
       expect(getQuestionChanges(local, remote)).toContain('maxLength');
     });
   });
@@ -112,13 +149,31 @@ describe('getQuestionChanges', () => {
 
   describe('dropdown questions', () => {
     it('should detect options change in dropdown', () => {
-      const local: Question = { id: 'q1', type: 'dropdown', title: 'Q', required: false, options: ['X', 'Y'] };
-      const remote: Question = { id: 'q1', type: 'dropdown', title: 'Q', required: false, options: ['X', 'Z'] };
+      const local: Question = {
+        id: 'q1',
+        type: 'dropdown',
+        title: 'Q',
+        required: false,
+        options: ['X', 'Y'],
+      };
+      const remote: Question = {
+        id: 'q1',
+        type: 'dropdown',
+        title: 'Q',
+        required: false,
+        options: ['X', 'Z'],
+      };
       expect(getQuestionChanges(local, remote)).toContain('options');
     });
 
     it('should return no changes for identical dropdown questions', () => {
-      const q: Question = { id: 'q1', type: 'dropdown', title: 'Q', required: false, options: ['X', 'Y'] };
+      const q: Question = {
+        id: 'q1',
+        type: 'dropdown',
+        title: 'Q',
+        required: false,
+        options: ['X', 'Y'],
+      };
       expect(getQuestionChanges(q, q)).toEqual([]);
     });
   });
@@ -166,8 +221,22 @@ describe('getQuestionChanges', () => {
 
   describe('cross-type', () => {
     it('should not detect type-specific changes for mismatched types', () => {
-      const text: Question = { id: 'q1', type: 'text', title: 'Q', required: true, paragraph: false };
-      const choice: Question = { id: 'q1', type: 'choice', title: 'Q', required: true, options: ['A'], allowOther: false, multiple: false };
+      const text: Question = {
+        id: 'q1',
+        type: 'text',
+        title: 'Q',
+        required: true,
+        paragraph: false,
+      };
+      const choice: Question = {
+        id: 'q1',
+        type: 'choice',
+        title: 'Q',
+        required: true,
+        options: ['A'],
+        allowOther: false,
+        multiple: false,
+      };
       // Only common prop comparisons apply; type-specific comparisons short-circuit
       const changes = getQuestionChanges(text, choice);
       expect(changes).not.toContain('paragraph');

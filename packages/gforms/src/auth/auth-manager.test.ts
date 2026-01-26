@@ -5,16 +5,17 @@
  * TDD: These tests define the expected behavior for authentication.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as fs from 'node:fs/promises';
-import * as path from 'node:path';
 import * as os from 'node:os';
-import {
-  AuthManager,
-  AuthError,
-  TokenStore,
-  type OAuthTokens,
-} from './auth-manager.js';
+import * as path from 'node:path';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { AuthError, AuthManager, TokenStore, type OAuthTokens } from './auth-manager.js';
+
+// Make ESM module namespace configurable so vi.spyOn works
+vi.mock('node:fs/promises', async (importOriginal) => {
+  const actual = await importOriginal<typeof fs>();
+  return { ...actual };
+});
 
 describe('AuthManager', () => {
   let tempDir: string;
@@ -32,6 +33,7 @@ describe('AuthManager', () => {
 
   afterEach(async () => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
     await fs.rm(tempDir, { recursive: true, force: true });
   });
 
@@ -240,10 +242,7 @@ describe('AuthManager', () => {
   describe('TC-AUTH-005: Invalid credentials handling', () => {
     it('should handle malformed credentials file gracefully', async () => {
       // Write invalid JSON to credentials file
-      await fs.writeFile(
-        path.join(tempDir, 'credentials.json'),
-        'invalid json {{'
-      );
+      await fs.writeFile(path.join(tempDir, 'credentials.json'), 'invalid json {{');
 
       const loaded = await tokenStore.load();
 
@@ -367,6 +366,132 @@ describe('AuthManager', () => {
 
       // Has service account configured (even if file doesn't exist)
       expect(status.method).toBe('service-account');
+    });
+
+    it('should return expired OAuth status when tokens are expired', async () => {
+      await tokenStore.save({
+        accessToken: 'old-access',
+        refreshToken: 'refresh',
+        expiresAt: new Date(Date.now() - 3600000).toISOString(),
+        tokenType: 'Bearer',
+        scope: 'forms.body',
+      });
+
+      const status = await authManager.getStatus();
+
+      expect(status.method).toBe('oauth');
+      expect(status.isAuthenticated).toBe(false);
+      expect(status.expiresAt).toBeDefined();
+      expect(status.scopes).toEqual(['forms.body']);
+    });
+  });
+
+  // ==========================================================================
+  // getAccessToken branch coverage
+  // ==========================================================================
+  describe('getAccessToken', () => {
+    it('should return access token when valid tokens exist', async () => {
+      await tokenStore.save({
+        accessToken: 'valid-access-token',
+        refreshToken: 'refresh',
+        expiresAt: new Date(Date.now() + 3600000).toISOString(),
+        tokenType: 'Bearer',
+        scope: 'forms.body',
+      });
+
+      const token = await authManager.getAccessToken();
+
+      expect(token).toBe('valid-access-token');
+    });
+
+    it('should throw AuthError when tokens are expired', async () => {
+      await tokenStore.save({
+        accessToken: 'expired-access',
+        refreshToken: 'refresh',
+        expiresAt: new Date(Date.now() - 3600000).toISOString(),
+        tokenType: 'Bearer',
+        scope: 'forms.body',
+      });
+
+      await expect(authManager.getAccessToken()).rejects.toThrow(AuthError);
+      await expect(authManager.getAccessToken()).rejects.toThrow(/expired/i);
+    });
+
+    it('should throw AuthError when service account is configured but not implemented', async () => {
+      vi.stubEnv('GOOGLE_APPLICATION_CREDENTIALS', '/path/to/key.json');
+
+      const manager = new AuthManager({
+        tokenStore: new TokenStore(path.join(tempDir, 'empty.json')),
+        scopes: ['https://www.googleapis.com/auth/forms.body'],
+      });
+
+      await expect(manager.getAccessToken()).rejects.toThrow(AuthError);
+      await expect(manager.getAccessToken()).rejects.toThrow(/service account/i);
+    });
+  });
+
+  // ==========================================================================
+  // isTokenExpired edge cases
+  // ==========================================================================
+  describe('isTokenExpired edge cases', () => {
+    it('should return true when no tokens exist', async () => {
+      const expired = await authManager.isTokenExpired();
+      expect(expired).toBe(true);
+    });
+  });
+
+  // ==========================================================================
+  // getScopes
+  // ==========================================================================
+  describe('getScopes', () => {
+    it('should return a copy of configured scopes', () => {
+      const scopes = authManager.getScopes();
+      expect(scopes).toEqual(['https://www.googleapis.com/auth/forms.body']);
+      // Should be a copy, not the original
+      scopes.push('extra');
+      expect(authManager.getScopes()).toEqual(['https://www.googleapis.com/auth/forms.body']);
+    });
+  });
+
+  // ==========================================================================
+  // getAuthMethod
+  // ==========================================================================
+  describe('getAuthMethod', () => {
+    it('should return null when no auth is configured', () => {
+      expect(authManager.getAuthMethod()).toBeNull();
+    });
+  });
+
+  // ==========================================================================
+  // TokenStore.load edge cases
+  // ==========================================================================
+  describe('TokenStore.load edge cases', () => {
+    it('should return null when file contains a non-object JSON value', async () => {
+      await fs.writeFile(path.join(tempDir, 'credentials.json'), '"just a string"');
+      const loaded = await tokenStore.load();
+      expect(loaded).toBeNull();
+    });
+
+    it('should return null when file contains JSON null', async () => {
+      await fs.writeFile(path.join(tempDir, 'credentials.json'), 'null');
+      const loaded = await tokenStore.load();
+      expect(loaded).toBeNull();
+    });
+  });
+
+  // ==========================================================================
+  // TokenStore.clear edge cases
+  // ==========================================================================
+  describe('TokenStore.clear error handling', () => {
+    it('should rethrow non-ENOENT errors on clear', async () => {
+      // Mock fs.unlink to throw a permission error
+      const unlinkSpy = vi
+        .spyOn(fs, 'unlink')
+        .mockRejectedValueOnce(Object.assign(new Error('Permission denied'), { code: 'EACCES' }));
+
+      await expect(tokenStore.clear()).rejects.toThrow('Permission denied');
+
+      unlinkSpy.mockRestore();
     });
   });
 });

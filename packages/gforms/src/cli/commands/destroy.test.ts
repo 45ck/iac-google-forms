@@ -2,9 +2,9 @@
  * Tests for destroy CLI command
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createDestroyCommand } from './destroy.js';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FormsApiError } from '../../api/forms-client.js';
+import { createDestroyCommand } from './destroy.js';
 
 const mockGetFormState = vi.fn();
 const mockRemoveFormState = vi.fn();
@@ -33,7 +33,7 @@ vi.mock('../../api/forms-client.js', () => ({
     constructor(
       message: string,
       public readonly statusCode: number,
-      public readonly details?: unknown,
+      public readonly details?: unknown
     ) {
       super(message);
       this.name = 'FormsApiError';

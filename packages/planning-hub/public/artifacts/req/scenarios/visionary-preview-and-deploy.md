@@ -12,16 +12,16 @@
 
 ## Steps
 
-| Step | Actor | Action | System Response |
-|------|-------|--------|-----------------|
-| 1 | Alex | Opens `forms/customer-feedback.ts` in IDE | Existing form definition loads |
-| 2 | Alex | Adds new dropdown question after `company_size` | IDE validates types |
-| 3 | Alex | Runs `gforms diff forms/customer-feedback.ts` | CLI fetches current form from Google, compares |
-| 4 | System | Shows detailed diff of changes | Clear before/after comparison |
-| 5 | Alex | Reviews diff, confirms changes are correct | - |
-| 6 | Alex | Runs `gforms deploy forms/customer-feedback.ts` | CLI applies changes |
-| 7 | System | Updates form via Google Forms API | Only changed parts updated |
-| 8 | Alex | Commits TypeScript file to git | Change recorded in history |
+| Step | Actor  | Action                                          | System Response                                |
+| ---- | ------ | ----------------------------------------------- | ---------------------------------------------- |
+| 1    | Alex   | Opens `forms/customer-feedback.ts` in IDE       | Existing form definition loads                 |
+| 2    | Alex   | Adds new dropdown question after `company_size` | IDE validates types                            |
+| 3    | Alex   | Runs `gforms diff forms/customer-feedback.ts`   | CLI fetches current form from Google, compares |
+| 4    | System | Shows detailed diff of changes                  | Clear before/after comparison                  |
+| 5    | Alex   | Reviews diff, confirms changes are correct      | -                                              |
+| 6    | Alex   | Runs `gforms deploy forms/customer-feedback.ts` | CLI applies changes                            |
+| 7    | System | Updates form via Google Forms API               | Only changed parts updated                     |
+| 8    | Alex   | Commits TypeScript file to git                  | Change recorded in history                     |
 
 ## Code Change
 
@@ -127,10 +127,10 @@ Done in 1.2s
 
 ## Benefits
 
-| Aspect | Description |
-|--------|-------------|
-| **Preview** | See exactly what will change before applying |
-| **Incremental** | Only modified parts are updated |
-| **Reversible** | Git revert + redeploy to rollback |
-| **Auditable** | Git history shows who changed what when |
-| **Safe** | No accidental changes - explicit deploy required |
+| Aspect          | Description                                      |
+| --------------- | ------------------------------------------------ |
+| **Preview**     | See exactly what will change before applying     |
+| **Incremental** | Only modified parts are updated                  |
+| **Reversible**  | Git revert + redeploy to rollback                |
+| **Auditable**   | Git history shows who changed what when          |
+| **Safe**        | No accidental changes - explicit deploy required |

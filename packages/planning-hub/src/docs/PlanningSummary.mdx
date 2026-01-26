@@ -13,6 +13,7 @@ import { Meta } from '@storybook/blocks';
 ## What's Been Planned
 
 ### Requirements (Stage 1-3)
+
 - ✅ 1 Persona (Platform Engineer)
 - ✅ 2 As-Is Scenarios
 - ✅ 4 Visionary Scenarios
@@ -21,6 +22,7 @@ import { Meta } from '@storybook/blocks';
 - ✅ Non-Functional Requirements
 
 ### Architecture (Stage 4-6)
+
 - ✅ Class Diagram
 - ✅ 3 Sequence Diagrams
 - ✅ ERD
@@ -31,10 +33,12 @@ import { Meta } from '@storybook/blocks';
 - ✅ 3 ADRs
 
 ### Design (Stage 7)
+
 - ✅ Terminal Mockups
 - ✅ 7 Form Examples
 
 ### Security & Quality (Stage 8)
+
 - ✅ Threat Model
 - ✅ Auth Design
 - ✅ Quality Model
@@ -44,49 +48,54 @@ import { Meta } from '@storybook/blocks';
 - ✅ Tech Debt Register
 
 ### Closeout (Stage 9)
+
 - ✅ Requirements Traceability Matrix
 - ✅ This Planning Summary
 
 ## Key Decisions
 
-| Decision | Choice |
-|----------|--------|
-| Config Format | TypeScript |
-| State Storage | Local JSON file |
-| Auth Methods | OAuth + Service Account |
-| Runtime | Node.js 18+ |
+| Decision      | Choice                  |
+| ------------- | ----------------------- |
+| Config Format | TypeScript              |
+| State Storage | Local JSON file         |
+| Auth Methods  | OAuth + Service Account |
+| Runtime       | Node.js 18+             |
 
 ## Implementation Roadmap
 
 ### Phase 1: Core CLI (MVP)
+
 - Project scaffolding
 - Form definition loader
 - OAuth authentication
 - `gforms init/auth/validate`
 
 ### Phase 2: Deploy & Diff
+
 - Google Forms API client
 - State file management
 - `gforms diff/deploy`
 
 ### Phase 3: Integrations
+
 - Sheets integration
 - Email notifications
 - Webhooks
 
 ### Phase 4: Production
+
 - Service account auth
 - CI/CD documentation
 - npm publishing
 
 ## Success Criteria
 
-| Metric | Target |
-|--------|--------|
-| Test Coverage | 95% or higher |
-| CLI Response | under 2s |
-| Documentation | 100% |
-| Security | 0 vulnerabilities |
+| Metric        | Target            |
+| ------------- | ----------------- |
+| Test Coverage | 95% or higher     |
+| CLI Response  | under 2s          |
+| Documentation | 100%              |
+| Security      | 0 vulnerabilities |
 
 ## Next Steps
 

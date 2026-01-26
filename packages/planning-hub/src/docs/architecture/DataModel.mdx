@@ -53,9 +53,7 @@ export default defineForm({
       paragraph: true,
     },
   ],
-  integrations: [
-    { type: 'sheets', spreadsheetName: 'Feedback' },
-  ],
+  integrations: [{ type: 'sheets', spreadsheetName: 'Feedback' }],
 });
 ```
 
@@ -112,11 +110,11 @@ Location: `.gforms/state.json`
 
 ## Validation Rules
 
-| Rule | Constraint |
-|------|------------|
-| Title length | 1-200 characters |
-| Question ID format | `^[a-zA-Z][a-zA-Z0-9_-]*$` |
-| Scale min | 0 or 1 |
-| Scale max | 2-10 |
-| Minimum questions | At least 1 |
-| Unique question IDs | Enforced at runtime |
+| Rule                | Constraint                 |
+| ------------------- | -------------------------- |
+| Title length        | 1-200 characters           |
+| Question ID format  | `^[a-zA-Z][a-zA-Z0-9_-]*$` |
+| Scale min           | 0 or 1                     |
+| Scale max           | 2-10                       |
+| Minimum questions   | At least 1                 |
+| Unique question IDs | Enforced at runtime        |

@@ -35,51 +35,50 @@ This document defines coding standards for iac-google-forms to ensure consistenc
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
-  eslint.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  {
-    rules: {
-      // Complexity
-      'complexity': ['error', 10],
-      'max-depth': ['error', 4],
-      'max-lines-per-function': ['error', 50],
-      'max-params': ['error', 4],
+export default tseslint.config(eslint.configs.recommended, ...tseslint.configs.strictTypeChecked, {
+  rules: {
+    // Complexity
+    complexity: ['error', 10],
+    'max-depth': ['error', 4],
+    'max-lines-per-function': ['error', 50],
+    'max-params': ['error', 4],
 
-      // TypeScript specific
-      '@typescript-eslint/explicit-function-return-type': 'error',
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/prefer-nullish-coalescing': 'error',
-      '@typescript-eslint/prefer-optional-chain': 'error',
+    // TypeScript specific
+    '@typescript-eslint/explicit-function-return-type': 'error',
+    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/prefer-nullish-coalescing': 'error',
+    '@typescript-eslint/prefer-optional-chain': 'error',
 
-      // Import order
-      'import/order': ['error', {
-        'groups': ['builtin', 'external', 'internal', 'parent', 'sibling'],
+    // Import order
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling'],
         'newlines-between': 'always',
-        'alphabetize': { order: 'asc' }
-      }],
-    },
-  }
-);
+        alphabetize: { order: 'asc' },
+      },
+    ],
+  },
+});
 ```
 
 ## Code Style
 
 ### Naming Conventions
 
-| Element | Convention | Example |
-|---------|------------|---------|
-| Variables | camelCase | `formState`, `authClient` |
-| Constants | SCREAMING_SNAKE | `MAX_RETRIES`, `API_BASE_URL` |
-| Functions | camelCase | `calculateDiff()`, `loadForm()` |
-| Classes | PascalCase | `DiffEngine`, `StateManager` |
-| Interfaces | PascalCase | `FormDefinition`, `AuthClient` |
-| Types | PascalCase | `Question`, `DiffResult` |
-| Enums | PascalCase | `DiffAction`, `QuestionType` |
-| Enum values | PascalCase | `DiffAction.Add`, `DiffAction.Remove` |
-| Files | kebab-case | `diff-engine.ts`, `state-manager.ts` |
-| Test files | *.test.ts | `diff-engine.test.ts` |
+| Element     | Convention      | Example                               |
+| ----------- | --------------- | ------------------------------------- |
+| Variables   | camelCase       | `formState`, `authClient`             |
+| Constants   | SCREAMING_SNAKE | `MAX_RETRIES`, `API_BASE_URL`         |
+| Functions   | camelCase       | `calculateDiff()`, `loadForm()`       |
+| Classes     | PascalCase      | `DiffEngine`, `StateManager`          |
+| Interfaces  | PascalCase      | `FormDefinition`, `AuthClient`        |
+| Types       | PascalCase      | `Question`, `DiffResult`              |
+| Enums       | PascalCase      | `DiffAction`, `QuestionType`          |
+| Enum values | PascalCase      | `DiffAction.Add`, `DiffAction.Remove` |
+| Files       | kebab-case      | `diff-engine.ts`, `state-manager.ts`  |
+| Test files  | \*.test.ts      | `diff-engine.test.ts`                 |
 
 ### File Organization
 
@@ -194,20 +193,13 @@ async function loadFormDefinition(path: string): Promise<FormDefinition> {
   try {
     content = await readFile(path, 'utf-8');
   } catch (error) {
-    throw new GFormsError(
-      `Failed to read file: ${path}`,
-      'FILE_READ_ERROR',
-      error as Error
-    );
+    throw new GFormsError(`Failed to read file: ${path}`, 'FILE_READ_ERROR', error as Error);
   }
 
   const result = validateDefinition(content);
 
   if (!result.valid) {
-    throw new ValidationError(
-      `Invalid form definition in ${path}`,
-      result.errors
-    );
+    throw new ValidationError(`Invalid form definition in ${path}`, result.errors);
   }
 
   return result.data;
@@ -219,10 +211,7 @@ async function loadFormDefinition(path: string): Promise<FormDefinition> {
 ```typescript
 // Good: Parallel when independent
 async function loadProject(): Promise<ProjectData> {
-  const [config, state] = await Promise.all([
-    loadConfig(),
-    loadState(),
-  ]);
+  const [config, state] = await Promise.all([loadConfig(), loadState()]);
 
   return { config, state };
 }
@@ -237,10 +226,7 @@ async function deployForm(path: string): Promise<DeployResult> {
 }
 
 // Good: Error handling with try-catch
-async function safeLoad<T>(
-  fn: () => Promise<T>,
-  fallback: T
-): Promise<T> {
+async function safeLoad<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {
     return await fn();
   } catch {
@@ -336,16 +322,16 @@ it('should create new spreadsheet when createIfMissing is true', () => {});
 
 ### Types
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, missing semicolons |
+| Type       | Description                             |
+| ---------- | --------------------------------------- |
+| `feat`     | New feature                             |
+| `fix`      | Bug fix                                 |
+| `docs`     | Documentation only                      |
+| `style`    | Formatting, missing semicolons          |
 | `refactor` | Code change that neither fixes nor adds |
-| `perf` | Performance improvement |
-| `test` | Adding tests |
-| `chore` | Maintenance tasks |
+| `perf`     | Performance improvement                 |
+| `test`     | Adding tests                            |
+| `chore`    | Maintenance tasks                       |
 
 ### Examples
 
@@ -377,13 +363,13 @@ API error. Now shows a clear message asking user to re-login.
 
 ### Approved Dependencies
 
-| Category | Package | Purpose |
-|----------|---------|---------|
-| CLI | `commander` | Command parsing |
-| Validation | `zod` | Schema validation |
-| HTTP | `undici` | Fetch implementation |
-| Testing | `vitest` | Test framework |
-| Testing | `msw` | API mocking |
+| Category   | Package     | Purpose              |
+| ---------- | ----------- | -------------------- |
+| CLI        | `commander` | Command parsing      |
+| Validation | `zod`       | Schema validation    |
+| HTTP       | `undici`    | Fetch implementation |
+| Testing    | `vitest`    | Test framework       |
+| Testing    | `msw`       | API mocking          |
 
 ## Performance Guidelines
 

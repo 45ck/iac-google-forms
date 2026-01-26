@@ -2,12 +2,12 @@
 
 ## Overview
 
-| Attribute | Value |
-|-----------|-------|
-| **ID** | UC-003 |
-| **Title** | Deploy Form |
-| **Actor** | Platform Engineer, CI/CD System |
-| **Priority** | Must Have |
+| Attribute        | Value                                           |
+| ---------------- | ----------------------------------------------- |
+| **ID**           | UC-003                                          |
+| **Title**        | Deploy Form                                     |
+| **Actor**        | Platform Engineer, CI/CD System                 |
+| **Priority**     | Must Have                                       |
 | **Derived From** | visionary-define-form, visionary-preview-deploy |
 
 ## Goal
@@ -30,30 +30,30 @@ Apply the local form definition to Google Forms, creating or updating the form a
 
 ## Main Success Scenario
 
-| Step | Actor | Action | System Response |
-|------|-------|--------|-----------------|
-| 1 | Engineer | Runs `gforms deploy <file>` | CLI starts |
-| 2 | System | Loads and validates form definition | Config loaded |
-| 3 | System | Authenticates with Google APIs | Auth successful |
-| 4 | System | Calculates diff (same as UC-002) | Changes determined |
-| 5 | System | Displays changes and prompts for confirmation | User sees changes |
-| 6 | Engineer | Confirms deployment (Y/Enter) | Deployment proceeds |
-| 7 | System | Creates/updates form via Google Forms API | Form created/updated |
-| 8 | System | Configures integrations | Integrations set up |
-| 9 | System | Updates local state file | State persisted |
-| 10 | System | Displays success message with URLs | Complete |
+| Step | Actor    | Action                                        | System Response      |
+| ---- | -------- | --------------------------------------------- | -------------------- |
+| 1    | Engineer | Runs `gforms deploy <file>`                   | CLI starts           |
+| 2    | System   | Loads and validates form definition           | Config loaded        |
+| 3    | System   | Authenticates with Google APIs                | Auth successful      |
+| 4    | System   | Calculates diff (same as UC-002)              | Changes determined   |
+| 5    | System   | Displays changes and prompts for confirmation | User sees changes    |
+| 6    | Engineer | Confirms deployment (Y/Enter)                 | Deployment proceeds  |
+| 7    | System   | Creates/updates form via Google Forms API     | Form created/updated |
+| 8    | System   | Configures integrations                       | Integrations set up  |
+| 9    | System   | Updates local state file                      | State persisted      |
+| 10   | System   | Displays success message with URLs            | Complete             |
 
 ## Extensions
 
-| Step | Condition | Action |
-|------|-----------|--------|
-| 2a | Invalid TypeScript | CLI shows validation errors, exits |
-| 3a | Auth fails | CLI shows auth error with fix instructions |
-| 4a | No changes | CLI shows "No changes to deploy", exits |
-| 6a | User declines | CLI exits without changes |
-| 7a | API error | CLI shows error, suggests retry, exits |
-| 7b | Rate limited | CLI waits and retries automatically |
-| 8a | Integration fails | CLI shows partial success, lists failures |
+| Step | Condition          | Action                                     |
+| ---- | ------------------ | ------------------------------------------ |
+| 2a   | Invalid TypeScript | CLI shows validation errors, exits         |
+| 3a   | Auth fails         | CLI shows auth error with fix instructions |
+| 4a   | No changes         | CLI shows "No changes to deploy", exits    |
+| 6a   | User declines      | CLI exits without changes                  |
+| 7a   | API error          | CLI shows error, suggests retry, exits     |
+| 7b   | Rate limited       | CLI waits and retries automatically        |
+| 8a   | Integration fails  | CLI shows partial success, lists failures  |
 
 ## CLI Interface
 
@@ -112,12 +112,12 @@ Done in 3.2s
 
 ## Error Handling
 
-| Error | Behavior |
-|-------|----------|
-| Network failure | Retry 3 times with backoff |
-| Partial success | Show what succeeded, list failures |
-| Rate limit | Wait and retry automatically |
-| Permission denied | Show which permission is missing |
+| Error             | Behavior                           |
+| ----------------- | ---------------------------------- |
+| Network failure   | Retry 3 times with backoff         |
+| Partial success   | Show what succeeded, list failures |
+| Rate limit        | Wait and retry automatically       |
+| Permission denied | Show which permission is missing   |
 
 ## Related Use Cases
 

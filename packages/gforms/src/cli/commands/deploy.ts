@@ -3,16 +3,23 @@
  * Deploy form definitions to Google Forms
  */
 
-import { Command } from 'commander';
 import chalk from 'chalk';
+import { Command } from 'commander';
+import { FormsApiError, FormsClient, type CreateFormResult } from '../../api/forms-client.js';
+import { convertResponseToFormDefinition } from '../../api/response-converter.js';
+import { AuthError } from '../../auth/auth-manager.js';
+import { DiffEngine, type DiffResult, type DiffSummary } from '../../diff/diff-engine.js';
 import type { FormDefinition, FormState } from '../../schema/index.js';
 import { StateManager } from '../../state/state-manager.js';
-import { FormsClient, FormsApiError, type CreateFormResult } from '../../api/forms-client.js';
-import { AuthError } from '../../auth/auth-manager.js';
-import { DiffEngine, type DiffSummary, type DiffResult } from '../../diff/diff-engine.js';
-import { convertResponseToFormDefinition } from '../../api/response-converter.js';
 import { hashFormDefinition } from '../../utils/hash.js';
-import { loadFormDefinition, DEFAULT_STATE_DIR, getGlobalOptions, getAuthManager, commandAction } from '../utils/load-form.js';
+import {
+  commandAction,
+  DEFAULT_STATE_DIR,
+  getAuthManager,
+  getGlobalOptions,
+  loadFormDefinition,
+  sanitizeErrorMessage,
+} from '../utils/load-form.js';
 
 interface DeployOptions {
   autoApprove?: boolean;
@@ -41,9 +48,11 @@ export function createDeployCommand(): Command {
     .argument('<file>', 'Path to form definition file')
     .option('--auto-approve', 'Skip confirmation prompt')
     .option('--dry-run', 'Show changes without deploying')
-    .action(commandAction(async (file: string, options: DeployOptions) => {
-      await runDeploy(file, options);
-    }));
+    .action(
+      commandAction(async (file: string, options: DeployOptions) => {
+        await runDeploy(file, options);
+      })
+    );
 
   return deploy;
 }
@@ -127,7 +136,7 @@ function printFetchWarning(error: unknown): void {
   }
 
   if (getGlobalOptions().verbose && error instanceof Error) {
-    console.log(chalk.dim(`  Detail: ${error.message}`));
+    console.log(chalk.dim(`  Detail: ${sanitizeErrorMessage(error.message)}`));
   }
 }
 
@@ -263,4 +272,3 @@ function printCreateSuccess(result: CreateFormResult): void {
   console.log('  Edit URL:', chalk.cyan(result.formUrl));
   console.log('  Response URL:', chalk.cyan(result.responseUrl));
 }
-

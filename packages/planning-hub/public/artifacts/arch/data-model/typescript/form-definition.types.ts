@@ -131,10 +131,7 @@ export interface TextValidation {
 // Integration Types
 // =============================================================================
 
-export type Integration =
-  | SheetsIntegration
-  | EmailIntegration
-  | WebhookIntegration;
+export type Integration = SheetsIntegration | EmailIntegration | WebhookIntegration;
 
 export type IntegrationType = Integration['type'];
 

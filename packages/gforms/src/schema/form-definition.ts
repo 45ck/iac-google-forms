@@ -29,10 +29,7 @@ export const ConditionalLogicSchema = z
     notEquals: z.string().optional(),
   })
   .refine(
-    (data) =>
-      data.equals !== undefined ||
-      data.in !== undefined ||
-      data.notEquals !== undefined,
+    (data) => data.equals !== undefined || data.in !== undefined || data.notEquals !== undefined,
     { message: 'ConditionalLogic must have equals, in, or notEquals' }
   );
 
@@ -142,15 +139,17 @@ export const SectionSchema = z.object({
   title: z.string().min(1, 'title is required'),
   description: z.string().optional(),
   // Questions within section - using a simpler inline definition to avoid recursion issues
-  questions: z.array(
-    z.discriminatedUnion('type', [
-      TextQuestionSchema,
-      EmailQuestionSchema,
-      ChoiceQuestionSchema,
-      DropdownQuestionSchema,
-      ScaleQuestionSchema,
-    ])
-  ).min(1, 'questions must have at least 1 item'),
+  questions: z
+    .array(
+      z.discriminatedUnion('type', [
+        TextQuestionSchema,
+        EmailQuestionSchema,
+        ChoiceQuestionSchema,
+        DropdownQuestionSchema,
+        ScaleQuestionSchema,
+      ])
+    )
+    .min(1, 'questions must have at least 1 item'),
   showIf: ConditionalLogicSchema.optional(),
 });
 

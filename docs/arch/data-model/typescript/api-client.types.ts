@@ -3,7 +3,7 @@
  */
 
 import type { AuthClient } from './auth.types';
-import type { FormDefinition, FormState, DiffResult } from './form-definition.types';
+import type { DiffResult, FormDefinition, FormState } from './form-definition.types';
 
 // =============================================================================
 // Google Forms API Types

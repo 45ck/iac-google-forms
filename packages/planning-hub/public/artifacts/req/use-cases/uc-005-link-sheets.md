@@ -2,12 +2,12 @@
 
 ## Overview
 
-| Attribute | Value |
-|-----------|-------|
-| **ID** | UC-005 |
-| **Title** | Link to Sheets |
-| **Actor** | System (via Deploy) |
-| **Priority** | Must Have |
+| Attribute        | Value                            |
+| ---------------- | -------------------------------- |
+| **ID**           | UC-005                           |
+| **Title**        | Link to Sheets                   |
+| **Actor**        | System (via Deploy)              |
+| **Priority**     | Must Have                        |
 | **Derived From** | visionary-configure-integrations |
 
 ## Goal
@@ -28,14 +28,14 @@ Configure a Google Sheets spreadsheet as the response destination for form submi
 
 ## Main Success Scenario
 
-| Step | Actor | Action | System Response |
-|------|-------|--------|-----------------|
-| 1 | System | Reads sheets integration config | Config parsed |
-| 2 | System | Checks if spreadsheet exists | Existence determined |
-| 3a | System | Creates new spreadsheet (if `createIfMissing`) | Sheet created |
-| 3b | System | Uses existing spreadsheet (if ID provided) | Sheet found |
-| 4 | System | Links form responses to spreadsheet | Linkage created |
-| 5 | System | Returns spreadsheet URL | URL available |
+| Step | Actor  | Action                                         | System Response      |
+| ---- | ------ | ---------------------------------------------- | -------------------- |
+| 1    | System | Reads sheets integration config                | Config parsed        |
+| 2    | System | Checks if spreadsheet exists                   | Existence determined |
+| 3a   | System | Creates new spreadsheet (if `createIfMissing`) | Sheet created        |
+| 3b   | System | Uses existing spreadsheet (if ID provided)     | Sheet found          |
+| 4    | System | Links form responses to spreadsheet            | Linkage created      |
+| 5    | System | Returns spreadsheet URL                        | URL available        |
 
 ## Configuration Options
 
@@ -51,7 +51,7 @@ sheets({
   // Option 3: Create in specific folder
   spreadsheetName: 'Form Responses',
   folderId: '1XYZ789...',
-})
+});
 ```
 
 ## Business Rules
@@ -63,11 +63,11 @@ sheets({
 
 ## Error Handling
 
-| Error | Behavior |
-|-------|----------|
-| Spreadsheet not found | Error with ID, or create if allowed |
-| Permission denied | Show which permission needed |
-| Already linked to different sheet | Warn and update linkage |
+| Error                             | Behavior                            |
+| --------------------------------- | ----------------------------------- |
+| Spreadsheet not found             | Error with ID, or create if allowed |
+| Permission denied                 | Show which permission needed        |
+| Already linked to different sheet | Warn and update linkage             |
 
 ## Related Use Cases
 

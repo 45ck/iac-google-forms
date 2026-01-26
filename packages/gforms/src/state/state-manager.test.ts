@@ -5,11 +5,17 @@
  * TDD: These tests define the expected behavior for state file management.
  */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import * as fs from 'node:fs/promises';
-import * as path from 'node:path';
 import * as os from 'node:os';
-import { StateManager } from './state-manager.js';
+import * as path from 'node:path';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { StateError, StateManager } from './state-manager.js';
+
+// Make ESM module namespace configurable so vi.spyOn works
+vi.mock('node:fs/promises', async (importOriginal) => {
+  const actual = await importOriginal<typeof fs>();
+  return { ...actual };
+});
 
 describe('StateManager', () => {
   let tempDir: string;
@@ -22,6 +28,7 @@ describe('StateManager', () => {
   });
 
   afterEach(async () => {
+    vi.restoreAllMocks();
     // Clean up temp directory
     await fs.rm(tempDir, { recursive: true, force: true });
   });
@@ -153,10 +160,7 @@ describe('StateManager', () => {
         },
       };
 
-      await fs.writeFile(
-        path.join(tempDir, 'state.json'),
-        JSON.stringify(initialState, null, 2)
-      );
+      await fs.writeFile(path.join(tempDir, 'state.json'), JSON.stringify(initialState, null, 2));
 
       const state = await stateManager.load();
 
@@ -262,9 +266,7 @@ describe('StateManager', () => {
     });
 
     it('should not throw when removing non-existent form', async () => {
-      await expect(
-        stateManager.removeFormState('forms/nonexistent.ts')
-      ).resolves.not.toThrow();
+      await expect(stateManager.removeFormState('forms/nonexistent.ts')).resolves.not.toThrow();
     });
   });
 
@@ -284,12 +286,8 @@ describe('StateManager', () => {
       const forms = await stateManager.listForms();
 
       expect(forms).toHaveLength(2);
-      expect(forms).toContainEqual(
-        expect.objectContaining({ localPath: 'forms/form1.ts' })
-      );
-      expect(forms).toContainEqual(
-        expect.objectContaining({ localPath: 'forms/form2.ts' })
-      );
+      expect(forms).toContainEqual(expect.objectContaining({ localPath: 'forms/form1.ts' }));
+      expect(forms).toContainEqual(expect.objectContaining({ localPath: 'forms/form2.ts' }));
     });
 
     it('should check if form exists', async () => {
@@ -319,6 +317,84 @@ describe('StateManager', () => {
       const state = await stateManager.load();
       // Both forms should be saved
       expect(Object.keys(state.forms).length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  // ==========================================================================
+  // Lock mechanism branch coverage
+  // ==========================================================================
+  describe('Lock mechanism', () => {
+    it('should throw StateError when lock file creation fails with non-EEXIST error', async () => {
+      const writeFileSpy = vi
+        .spyOn(fs, 'writeFile')
+        .mockRejectedValue(Object.assign(new Error('Permission denied'), { code: 'EACCES' }));
+
+      await expect(
+        stateManager.saveFormState('forms/test.ts', { localPath: 'forms/test.ts' })
+      ).rejects.toThrow(StateError);
+
+      await expect(
+        stateManager.saveFormState('forms/test.ts', { localPath: 'forms/test.ts' })
+      ).rejects.toThrow(/lock file/i);
+
+      writeFileSpy.mockRestore();
+    });
+
+    it('should break stale lock and retry', async () => {
+      const lockPath = path.join(tempDir, 'state.json.lock');
+
+      // Create a stale lock file (pretend it's old)
+      await fs.writeFile(lockPath, '99999');
+
+      // Make the lock file appear old by modifying its mtime
+      const staleMtime = new Date(Date.now() - 15000); // 15 seconds ago (> 10s timeout)
+      await fs.utimes(lockPath, staleMtime, staleMtime);
+
+      // saveFormState should break the stale lock and succeed
+      await stateManager.saveFormState('forms/test.ts', {
+        localPath: 'forms/test.ts',
+        formId: 'stale-lock-test',
+      });
+
+      const state = await stateManager.load();
+      expect(state.forms['forms/test.ts']?.formId).toBe('stale-lock-test');
+    });
+  });
+
+  // ==========================================================================
+  // Load error handling branch coverage
+  // ==========================================================================
+  describe('Load error handling', () => {
+    it('should re-throw StateError as-is', async () => {
+      // Write valid JSON that fails schema validation (triggers StateError)
+      await fs.writeFile(
+        path.join(tempDir, 'state.json'),
+        JSON.stringify({ version: 123, forms: {} })
+      );
+
+      try {
+        await stateManager.load();
+        expect.fail('Should have thrown');
+      } catch (error) {
+        expect(error).toBeInstanceOf(StateError);
+        expect((error as StateError).message).toMatch(/invalid state file/i);
+      }
+    });
+
+    it('should wrap unknown read errors as StateError', async () => {
+      const readFileSpy = vi
+        .spyOn(fs, 'readFile')
+        .mockRejectedValueOnce(Object.assign(new Error('I/O error'), { code: 'EIO' }));
+
+      try {
+        await stateManager.load();
+        expect.fail('Should have thrown');
+      } catch (error) {
+        expect(error).toBeInstanceOf(StateError);
+        expect((error as StateError).message).toMatch(/failed to load state file/i);
+      }
+
+      readFileSpy.mockRestore();
     });
   });
 });

@@ -14,19 +14,19 @@ export type * from './types/index.js';
 export { defineConfig, defineForm } from './config/index.js';
 
 // State management
-export { StateManager, StateError } from './state/state-manager.js';
+export { StateError, StateManager } from './state/state-manager.js';
 
 // Auth
-export { AuthManager, TokenStore, AuthError } from './auth/auth-manager.js';
+export { AuthError, AuthManager, TokenStore } from './auth/auth-manager.js';
 
 // Diff engine
 export { DiffEngine } from './diff/diff-engine.js';
 export type { DiffSummary } from './diff/diff-engine.js';
 
 // API client
-export { FormsClient, FormsApiError } from './api/forms-client.js';
+export { FormsApiError, FormsClient } from './api/forms-client.js';
 export type { CreateFormResult, FormListItem } from './api/forms-client.js';
 
 // Utilities
-export { withRetry, makeRetryable, isRetryableStatusCode } from './utils/retry.js';
+export { isRetryableStatusCode, makeRetryable, withRetry } from './utils/retry.js';
 export type { RetryOptions } from './utils/retry.js';

@@ -3,12 +3,12 @@
  * Tests file loading, validation, and deploy flow
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createDeployCommand } from './deploy.js';
 import * as fs from 'node:fs/promises';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FormsApiError } from '../../api/forms-client.js';
 import { AuthError } from '../../auth/auth-manager.js';
-import { applyGlobalOptions, resetGlobalOptions } from '../global-options.js';
+import { applyGlobalOptions } from '../global-options.js';
+import { createDeployCommand } from './deploy.js';
 
 // Module-level mock functions for per-test control
 const mockGetFormState = vi.fn();
@@ -50,7 +50,7 @@ vi.mock('../../api/forms-client.js', () => ({
     constructor(
       message: string,
       public readonly statusCode: number,
-      public readonly details?: unknown,
+      public readonly details?: unknown
     ) {
       super(message);
       this.name = 'FormsApiError';
@@ -67,18 +67,14 @@ vi.mock('../../api/response-converter.js', () => ({
   convertResponseToFormDefinition: vi.fn().mockReturnValue({
     title: 'Test Form',
     description: 'A test form',
-    questions: [
-      { id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false },
-    ],
+    questions: [{ id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false }],
   }),
 }));
 
 const mockFormDefinition = {
   title: 'Test Form',
   description: 'A test form',
-  questions: [
-    { id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false },
-  ],
+  questions: [{ id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false }],
 };
 
 describe('deploy command', () => {
@@ -86,7 +82,7 @@ describe('deploy command', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    resetGlobalOptions();
+    applyGlobalOptions({});
     // Default mock: file exists, new form (no state)
     mockFs.access.mockResolvedValue(undefined);
     mockFs.readFile.mockResolvedValue(JSON.stringify(mockFormDefinition));
@@ -181,7 +177,10 @@ describe('deploy command', () => {
 
       await cmd.parseAsync(['node', 'test', 'form.json']);
 
-      expect(consoleSpy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining('Invalid JSON'));
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.stringContaining('Invalid JSON')
+      );
       expect(exitSpy).toHaveBeenCalledWith(1);
 
       consoleSpy.mockRestore();
@@ -208,6 +207,7 @@ describe('deploy command', () => {
     });
   });
 
+  // TC-CLI-006: gforms deploy dry-run
   describe('dry-run mode', () => {
     it('should show diff without deploying in dry-run mode', async () => {
       const cmd = createDeployCommand();
@@ -231,9 +231,7 @@ describe('deploy command', () => {
       // Check that one of the console.log calls contains the approval message
       const calls = consoleSpy.mock.calls;
       const hasApprovalMessage = calls.some((call) =>
-        call.some(
-          (arg) => typeof arg === 'string' && arg.includes('run with --auto-approve')
-        )
+        call.some((arg) => typeof arg === 'string' && arg.includes('run with --auto-approve'))
       );
       expect(hasApprovalMessage).toBe(true);
 
@@ -311,9 +309,7 @@ describe('deploy command', () => {
 
       const calls = consoleSpy.mock.calls;
       const hasGenericWarning = calls.some((call) =>
-        call.some(
-          (arg) => typeof arg === 'string' && arg.includes('Could not fetch remote form')
-        )
+        call.some((arg) => typeof arg === 'string' && arg.includes('Could not fetch remote form'))
       );
       expect(hasGenericWarning).toBe(true);
 
@@ -361,6 +357,7 @@ describe('deploy command', () => {
     });
   });
 
+  // TC-CLI-007: gforms deploy auto-approve
   describe('new form deployment', () => {
     it('should create form and save state with --auto-approve', async () => {
       mockGetForm.mockResolvedValue({ revisionId: 'rev-1' });
@@ -680,9 +677,7 @@ describe('deploy command', () => {
       mockConvert.mockReturnValueOnce({
         title: 'Test Form',
         description: 'A test form',
-        questions: [
-          { id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false },
-        ],
+        questions: [{ id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false }],
       });
 
       mockGetAccessToken.mockResolvedValue('mock-token');
@@ -725,5 +720,4 @@ describe('deploy command', () => {
       consoleSpy.mockRestore();
     });
   });
-
 });

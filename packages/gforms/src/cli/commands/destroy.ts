@@ -3,11 +3,11 @@
  * Remove a form from Google and clear state
  */
 
-import { Command } from 'commander';
 import chalk from 'chalk';
+import { Command } from 'commander';
+import { FormsApiError, FormsClient } from '../../api/forms-client.js';
 import { StateManager } from '../../state/state-manager.js';
-import { FormsClient, FormsApiError } from '../../api/forms-client.js';
-import { DEFAULT_STATE_DIR, getAuthManager, commandAction } from '../utils/load-form.js';
+import { commandAction, DEFAULT_STATE_DIR, getAuthManager } from '../utils/load-form.js';
 
 interface DestroyOptions {
   autoApprove?: boolean;
@@ -20,9 +20,11 @@ export function createDestroyCommand(): Command {
     .argument('<file>', 'Path to form definition file')
     .option('--auto-approve', 'Skip confirmation prompt')
     .option('--keep-remote', 'Only clear local state, keep form on Google')
-    .action(commandAction(async (file: string, options: DestroyOptions) => {
-      await runDestroy(file, options);
-    }));
+    .action(
+      commandAction(async (file: string, options: DestroyOptions) => {
+        await runDestroy(file, options);
+      })
+    );
 
   return destroy;
 }
@@ -80,7 +82,10 @@ async function deleteRemoteForm(formId: string): Promise<void> {
 
   const exists = await verifyFormExists(formsClient, formId);
   if (!exists) {
-    console.log(chalk.yellow('Warning:'), 'Form not found on Google — may have been deleted already.');
+    console.log(
+      chalk.yellow('Warning:'),
+      'Form not found on Google — may have been deleted already.'
+    );
     return;
   }
 
@@ -89,10 +94,7 @@ async function deleteRemoteForm(formId: string): Promise<void> {
   console.log(chalk.green('✓'), 'Form deleted from Google');
 }
 
-async function verifyFormExists(
-  client: FormsClient,
-  formId: string
-): Promise<boolean> {
+async function verifyFormExists(client: FormsClient, formId: string): Promise<boolean> {
   try {
     await client.getForm(formId);
     return true;

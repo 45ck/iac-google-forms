@@ -3,9 +3,9 @@
  * Handle authentication with Google APIs
  */
 
-import { Command } from 'commander';
 import chalk from 'chalk';
-import { getTokenStore, getAuthManager, commandAction } from '../utils/load-form.js';
+import { Command } from 'commander';
+import { commandAction, getAuthManager, getTokenStore } from '../utils/load-form.js';
 
 export function createAuthCommand(): Command {
   const auth = new Command('auth').description('Manage authentication');
@@ -16,25 +16,31 @@ export function createAuthCommand(): Command {
     .description('Authenticate with Google using OAuth 2.0')
     .option('--no-browser', 'Print URL instead of opening browser')
     .option('--force', 'Re-authenticate even if already logged in')
-    .action(commandAction(async (options: { browser: boolean; force: boolean }) => {
-      await runLogin(options);
-    }));
+    .action(
+      commandAction(async (options: { browser: boolean; force: boolean }) => {
+        await runLogin(options);
+      })
+    );
 
   // gforms auth logout
   auth
     .command('logout')
     .description('Remove stored credentials')
-    .action(commandAction(async () => {
-      await runLogout();
-    }));
+    .action(
+      commandAction(async () => {
+        await runLogout();
+      })
+    );
 
   // gforms auth status
   auth
     .command('status')
     .description('Show current authentication status')
-    .action(commandAction(async () => {
-      await runStatus();
-    }));
+    .action(
+      commandAction(async () => {
+        await runStatus();
+      })
+    );
 
   return auth;
 }
@@ -95,13 +101,20 @@ async function runStatus(): Promise<void> {
       const diff = expires.getTime() - now.getTime();
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      console.log('Expires:', chalk.cyan(expires.toLocaleString()), `(in ${String(hours)}h ${String(minutes)}m)`);
+      console.log(
+        'Expires:',
+        chalk.cyan(expires.toLocaleString()),
+        `(in ${String(hours)}h ${String(minutes)}m)`
+      );
     }
     if (status.scopes) {
       console.log('Scopes:', chalk.cyan(status.scopes.join(', ')));
     }
   } else if (status.method === 'service-account') {
     console.log('Method:', chalk.cyan('Service Account'));
-    console.log('Key File:', chalk.cyan(process.env['GOOGLE_APPLICATION_CREDENTIALS'] ?? 'Unknown'));
+    console.log(
+      'Key File:',
+      chalk.cyan(process.env['GOOGLE_APPLICATION_CREDENTIALS'] ?? 'Unknown')
+    );
   }
 }

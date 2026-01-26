@@ -14,14 +14,14 @@ pnpm add -g iac-google-forms
 
 ## Global Options
 
-| Option | Alias | Description |
-|--------|-------|-------------|
-| `--help` | `-h` | Show help for command |
-| `--version` | `-v` | Show version number |
-| `--verbose` | | Enable verbose output |
-| `--quiet` | `-q` | Suppress non-essential output |
-| `--no-color` | | Disable colored output |
-| `--config <path>` | `-c` | Path to config file (default: `gforms.config.ts`) |
+| Option            | Alias | Description                                       |
+| ----------------- | ----- | ------------------------------------------------- |
+| `--help`          | `-h`  | Show help for command                             |
+| `--version`       | `-v`  | Show version number                               |
+| `--verbose`       |       | Enable verbose output                             |
+| `--quiet`         | `-q`  | Suppress non-essential output                     |
+| `--no-color`      |       | Disable colored output                            |
+| `--config <path>` | `-c`  | Path to config file (default: `gforms.config.ts`) |
 
 ---
 
@@ -42,12 +42,14 @@ gforms init [options]
 | `--typescript` | Use TypeScript for form definitions | `true` |
 
 **Behavior:**
+
 1. Creates `.gforms/` directory
 2. Creates `gforms.config.ts` with default settings
 3. Creates `forms/` directory with example form
 4. Initializes `.gforms/state.json`
 
 **Output:**
+
 ```
 ✓ Created .gforms/state.json
 ✓ Created gforms.config.ts
@@ -82,6 +84,7 @@ gforms auth login [options]
 | `--force` | Re-authenticate even if already logged in |
 
 **Behavior:**
+
 1. Starts local server on random port
 2. Opens browser to Google consent screen
 3. Receives OAuth code via redirect
@@ -89,6 +92,7 @@ gforms auth login [options]
 5. Stores tokens in `~/.gforms/credentials.json`
 
 **Output:**
+
 ```
 Opening browser for Google authentication...
 
@@ -115,6 +119,7 @@ gforms auth logout
 ```
 
 **Output:**
+
 ```
 ✓ Credentials removed from ~/.gforms/credentials.json
 ```
@@ -130,6 +135,7 @@ gforms auth status
 ```
 
 **Output (authenticated):**
+
 ```
 Authentication Status
 ─────────────────────
@@ -140,6 +146,7 @@ Scopes:    forms.body, spreadsheets, drive.file
 ```
 
 **Output (service account):**
+
 ```
 Authentication Status
 ─────────────────────
@@ -150,6 +157,7 @@ Scopes:    forms.body, spreadsheets, drive.file
 ```
 
 **Output (not authenticated):**
+
 ```
 Not authenticated. Run 'gforms auth login' to authenticate.
 ```
@@ -176,6 +184,7 @@ gforms diff <file> [options]
 | `--ci` | CI mode: exit 1 if changes, markdown output | `false` |
 
 **Output (console format):**
+
 ```
 Comparing forms/feedback.ts with remote form...
 
@@ -198,20 +207,22 @@ Summary: 1 modified, 1 added, 1 removed
 ```
 
 **Output (markdown format):**
+
 ```markdown
 ## Form Diff: Customer Feedback
 
-| Change | Item | Details |
-|--------|------|---------|
-| Modified | Title | "Customer Feedback" → "Customer Feedback Form" |
-| Modified | satisfaction | maxLabel changed |
-| Added | comments | text (paragraph) |
-| Removed | legacy_field | - |
+| Change   | Item         | Details                                        |
+| -------- | ------------ | ---------------------------------------------- |
+| Modified | Title        | "Customer Feedback" → "Customer Feedback Form" |
+| Modified | satisfaction | maxLabel changed                               |
+| Added    | comments     | text (paragraph)                               |
+| Removed  | legacy_field | -                                              |
 
 **Summary:** 1 modified, 1 added, 1 removed
 ```
 
 **Output (json format):**
+
 ```json
 {
   "status": "modified",
@@ -251,6 +262,7 @@ gforms deploy <file> [options]
 | `--dry-run` | Show diff without deploying | `false` |
 
 **Behavior:**
+
 1. Load and validate form definition
 2. Check state file for existing form ID
 3. Authenticate with Google
@@ -262,6 +274,7 @@ gforms deploy <file> [options]
 9. Update state file
 
 **Output (new form):**
+
 ```
 Deploying forms/feedback.ts...
 
@@ -282,6 +295,7 @@ State saved to .gforms/state.json
 ```
 
 **Output (update existing):**
+
 ```
 Deploying forms/feedback.ts...
 
@@ -324,6 +338,7 @@ gforms validate <file> [options]
 | `--strict` | Treat warnings as errors |
 
 **Output (valid):**
+
 ```
 ✓ forms/feedback.ts is valid
 
@@ -333,6 +348,7 @@ gforms validate <file> [options]
 ```
 
 **Output (invalid):**
+
 ```
 ✗ forms/feedback.ts has errors
 
@@ -367,6 +383,7 @@ gforms list [options]
 | `--format <fmt>` | Output format (`table`, `json`) |
 
 **Output:**
+
 ```
 Tracked Forms
 ─────────────────────────────────────────────────────────────────
@@ -395,6 +412,7 @@ gforms destroy <file> [options]
 | `--keep-remote` | Only clear local state, don't delete from Google |
 
 **Output:**
+
 ```
 This will permanently delete:
   Form: Customer Feedback (1BxiMVs0XRA5...)
@@ -418,13 +436,13 @@ This action cannot be undone. Proceed? [y/N] y
 
 ## Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `GOOGLE_APPLICATION_CREDENTIALS` | Path to service account key (for CI) |
-| `GFORMS_CONFIG` | Path to config file |
-| `GFORMS_STATE_DIR` | Directory for state file (default: `.gforms`) |
-| `NO_COLOR` | Disable colored output |
-| `CI` | Enables CI mode behaviors |
+| Variable                         | Description                                   |
+| -------------------------------- | --------------------------------------------- |
+| `GOOGLE_APPLICATION_CREDENTIALS` | Path to service account key (for CI)          |
+| `GFORMS_CONFIG`                  | Path to config file                           |
+| `GFORMS_STATE_DIR`               | Directory for state file (default: `.gforms`) |
+| `NO_COLOR`                       | Disable colored output                        |
+| `CI`                             | Enables CI mode behaviors                     |
 
 ---
 
@@ -459,11 +477,11 @@ export default defineConfig({
 
 ## Error Messages
 
-| Error | Cause | Resolution |
-|-------|-------|------------|
-| `Not authenticated` | No credentials found | Run `gforms auth login` |
-| `Token expired` | OAuth token expired | Run `gforms auth login` |
-| `Form not found` | Form deleted externally | Remove from state with `gforms destroy --keep-remote` |
-| `Permission denied` | Insufficient scopes | Re-authenticate with required scopes |
-| `Validation failed` | Invalid form definition | Fix errors shown in output |
-| `Conflict detected` | Form modified externally | Run `gforms diff` to review, then redeploy |
+| Error               | Cause                    | Resolution                                            |
+| ------------------- | ------------------------ | ----------------------------------------------------- |
+| `Not authenticated` | No credentials found     | Run `gforms auth login`                               |
+| `Token expired`     | OAuth token expired      | Run `gforms auth login`                               |
+| `Form not found`    | Form deleted externally  | Remove from state with `gforms destroy --keep-remote` |
+| `Permission denied` | Insufficient scopes      | Re-authenticate with required scopes                  |
+| `Validation failed` | Invalid form definition  | Fix errors shown in output                            |
+| `Conflict detected` | Form modified externally | Run `gforms diff` to review, then redeploy            |

@@ -2,8 +2,8 @@
  * Configuration helpers for iac-google-forms
  */
 
-import type { GFormsConfig } from '../types/index.js';
 import type { FormDefinition } from '../schema/index.js';
+import type { GFormsConfig } from '../types/index.js';
 
 /**
  * Define the gforms configuration

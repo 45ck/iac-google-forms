@@ -20,24 +20,24 @@ import { Meta } from '@storybook/blocks';
 
 ## ESLint Rules
 
-| Rule | Setting |
-|------|---------|
-| Complexity | max 10 |
-| Max depth | 4 |
-| Lines per function | 50 |
-| Max params | 4 |
-| No explicit any | error |
+| Rule               | Setting |
+| ------------------ | ------- |
+| Complexity         | max 10  |
+| Max depth          | 4       |
+| Lines per function | 50      |
+| Max params         | 4       |
+| No explicit any    | error   |
 
 ## Naming Conventions
 
-| Element | Convention | Example |
-|---------|------------|---------|
-| Variables | camelCase | `formState` |
-| Constants | SCREAMING_SNAKE | `MAX_RETRIES` |
-| Functions | camelCase | `calculateDiff()` |
-| Classes | PascalCase | `DiffEngine` |
-| Interfaces | PascalCase | `FormDefinition` |
-| Files | kebab-case | `diff-engine.ts` |
+| Element    | Convention      | Example           |
+| ---------- | --------------- | ----------------- |
+| Variables  | camelCase       | `formState`       |
+| Constants  | SCREAMING_SNAKE | `MAX_RETRIES`     |
+| Functions  | camelCase       | `calculateDiff()` |
+| Classes    | PascalCase      | `DiffEngine`      |
+| Interfaces | PascalCase      | `FormDefinition`  |
+| Files      | kebab-case      | `diff-engine.ts`  |
 
 ## Error Handling
 
@@ -67,28 +67,31 @@ class ValidationError extends GFormsError { ... }
 [optional footer]
 ```
 
-| Type | Description |
-|------|-------------|
-| feat | New feature |
-| fix | Bug fix |
-| docs | Documentation |
-| refactor | Code change |
-| test | Adding tests |
-| chore | Maintenance |
+| Type     | Description   |
+| -------- | ------------- |
+| feat     | New feature   |
+| fix      | Bug fix       |
+| docs     | Documentation |
+| refactor | Code change   |
+| test     | Adding tests  |
+| chore    | Maintenance   |
 
 ## Quality Gates
 
 ### Pre-Commit
+
 - ESLint passes
 - TypeScript compiles
 - Unit tests pass
 
 ### Pre-Merge
+
 - All tests pass
 - Coverage ≥ 95%
 - No security vulnerabilities
 
 ### Pre-Release
+
 - E2E tests pass
 - Performance benchmarks pass
 - CHANGELOG updated

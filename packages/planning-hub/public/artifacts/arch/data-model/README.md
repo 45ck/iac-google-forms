@@ -10,16 +10,16 @@ This document describes the data schemas and type definitions for iac-google-for
 
 ## Diagrams
 
-| Diagram | Description |
-|---------|-------------|
+| Diagram              | Description                                            |
+| -------------------- | ------------------------------------------------------ |
 | [erd.mmd](./erd.mmd) | Entity-Relationship diagram showing data relationships |
 
 ## JSON Schemas
 
-| Schema | Purpose | Location |
-|--------|---------|----------|
+| Schema                          | Purpose                            | Location   |
+| ------------------------------- | ---------------------------------- | ---------- |
 | **form-definition.schema.json** | Validates form configuration files | `schemas/` |
-| **state-file.schema.json** | Validates `.gforms/state.json` | `schemas/` |
+| **state-file.schema.json**      | Validates `.gforms/state.json`     | `schemas/` |
 
 ### Form Definition Schema
 
@@ -91,15 +91,16 @@ The state file tracks deployed forms in `.gforms/state.json`:
 
 ## TypeScript Types
 
-| File | Contents |
-|------|----------|
-| `typescript/form-definition.types.ts` | Form, Question, Integration types |
-| `typescript/auth.types.ts` | AuthClient, OAuth, ServiceAccount types |
-| `typescript/api-client.types.ts` | GoogleFormsClient, ConfigLoader, DiffEngine |
+| File                                  | Contents                                    |
+| ------------------------------------- | ------------------------------------------- |
+| `typescript/form-definition.types.ts` | Form, Question, Integration types           |
+| `typescript/auth.types.ts`            | AuthClient, OAuth, ServiceAccount types     |
+| `typescript/api-client.types.ts`      | GoogleFormsClient, ConfigLoader, DiffEngine |
 
 ### Key Type Patterns
 
 **Discriminated Unions for Questions:**
+
 ```typescript
 type Question =
   | TextQuestion
@@ -123,6 +124,7 @@ function processQuestion(q: Question) {
 ```
 
 **Auth Client Interface:**
+
 ```typescript
 interface AuthClient {
   getAccessToken(): Promise<string>;
@@ -160,23 +162,23 @@ class ServiceAccountAuth implements AuthClient { ... }
 
 ### Form Definition Validation
 
-| Rule | Constraint |
-|------|------------|
-| Title length | 1-200 characters |
-| Question ID format | `^[a-zA-Z][a-zA-Z0-9_-]*$` |
-| Scale min | 0 or 1 |
-| Scale max | 2-10 |
-| At least one question | `minItems: 1` |
-| Unique question IDs | Enforced at runtime |
+| Rule                  | Constraint                 |
+| --------------------- | -------------------------- |
+| Title length          | 1-200 characters           |
+| Question ID format    | `^[a-zA-Z][a-zA-Z0-9_-]*$` |
+| Scale min             | 0 or 1                     |
+| Scale max             | 2-10                       |
+| At least one question | `minItems: 1`              |
+| Unique question IDs   | Enforced at runtime        |
 
 ### State File Validation
 
-| Rule | Constraint |
-|------|------------|
+| Rule           | Constraint                 |
+| -------------- | -------------------------- |
 | Version format | `^\d+\.\d+$` (e.g., "1.0") |
-| Form ID format | `^[a-zA-Z0-9_-]+$` |
-| Content hash | SHA-256 (64 hex chars) |
-| Timestamps | ISO 8601 format |
+| Form ID format | `^[a-zA-Z0-9_-]+$`         |
+| Content hash   | SHA-256 (64 hex chars)     |
+| Timestamps     | ISO 8601 format            |
 
 ## File Locations
 

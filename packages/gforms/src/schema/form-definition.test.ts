@@ -6,16 +6,16 @@
  * The Zod schemas in form-definition.ts make these tests pass.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
-  validateFormDefinition,
-  TextQuestionSchema,
-  EmailQuestionSchema,
   ChoiceQuestionSchema,
   DropdownQuestionSchema,
+  EmailIntegrationSchema,
+  EmailQuestionSchema,
   ScaleQuestionSchema,
   SectionSchema,
-  EmailIntegrationSchema,
+  TextQuestionSchema,
+  validateFormDefinition,
 } from './form-definition.js';
 
 describe('Form Definition Validation', () => {

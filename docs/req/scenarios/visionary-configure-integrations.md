@@ -14,15 +14,15 @@
 
 ## Steps
 
-| Step | Actor | Action | System Response |
-|------|-------|--------|-----------------|
-| 1 | Alex | Opens form definition in IDE | TypeScript file loads |
-| 2 | Alex | Adds `integrations` array to form config | IDE shows available integration types |
-| 3 | Alex | Configures Sheets integration | Autocomplete shows options |
-| 4 | Alex | Configures email notification | Type checking validates config |
-| 5 | Alex | Configures webhook integration | URL and payload format specified |
-| 6 | Alex | Runs `gforms diff` | Shows integrations to be configured |
-| 7 | Alex | Runs `gforms deploy` | All integrations set up atomically |
+| Step | Actor | Action                                   | System Response                       |
+| ---- | ----- | ---------------------------------------- | ------------------------------------- |
+| 1    | Alex  | Opens form definition in IDE             | TypeScript file loads                 |
+| 2    | Alex  | Adds `integrations` array to form config | IDE shows available integration types |
+| 3    | Alex  | Configures Sheets integration            | Autocomplete shows options            |
+| 4    | Alex  | Configures email notification            | Type checking validates config        |
+| 5    | Alex  | Configures webhook integration           | URL and payload format specified      |
+| 6    | Alex  | Runs `gforms diff`                       | Shows integrations to be configured   |
+| 7    | Alex  | Runs `gforms deploy`                     | All integrations set up atomically    |
 
 ## Code Example
 
@@ -33,7 +33,7 @@ import {
   // ... question types ...
   sheets,
   emailNotification,
-  webhook
+  webhook,
 } from 'iac-google-forms';
 
 export default defineForm({
@@ -69,7 +69,7 @@ export default defineForm({
       url: 'https://api.internal.company.com/forms/feedback',
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ${FORMS_WEBHOOK_TOKEN}',
+        Authorization: 'Bearer ${FORMS_WEBHOOK_TOKEN}',
         'Content-Type': 'application/json',
       },
       // Transform response data before sending
@@ -134,11 +134,11 @@ $ FORMS_WEBHOOK_TOKEN=secret gforms deploy forms/customer-feedback.ts
 
 ## Integration Types Reference
 
-| Integration | Purpose | Configuration |
-|-------------|---------|---------------|
-| `sheets()` | Store responses in spreadsheet | Spreadsheet name or ID, create if missing |
-| `emailNotification()` | Send email on submission | Recipients, subject, optional condition |
-| `webhook()` | POST to external URL | URL, method, headers, payload template |
+| Integration           | Purpose                        | Configuration                             |
+| --------------------- | ------------------------------ | ----------------------------------------- |
+| `sheets()`            | Store responses in spreadsheet | Spreadsheet name or ID, create if missing |
+| `emailNotification()` | Send email on submission       | Recipients, subject, optional condition   |
+| `webhook()`           | POST to external URL           | URL, method, headers, payload template    |
 
 ## Benefits
 

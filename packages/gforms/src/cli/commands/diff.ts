@@ -3,16 +3,16 @@
  * Show differences between local and remote forms
  */
 
-import { Command } from 'commander';
 import chalk from 'chalk';
-import { StateManager } from '../../state/state-manager.js';
-import { DiffEngine } from '../../diff/diff-engine.js';
+import { Command } from 'commander';
 import { FormsClient } from '../../api/forms-client.js';
 import { convertResponseToFormDefinition } from '../../api/response-converter.js';
-import { loadFormDefinition, getAuthManager, commandAction } from '../utils/load-form.js';
-import { DEFAULT_STATE_DIR } from '../constants.js';
+import { DiffEngine } from '../../diff/diff-engine.js';
 import type { FormDefinition } from '../../schema/index.js';
-import type { DiffResult, QuestionDiff, IntegrationDiff } from '../../types/index.js';
+import { StateManager } from '../../state/state-manager.js';
+import type { DiffResult, IntegrationDiff, QuestionDiff } from '../../types/index.js';
+import { DEFAULT_STATE_DIR } from '../constants.js';
+import { commandAction, getAuthManager, loadFormDefinition } from '../utils/load-form.js';
 
 const diffEngine = new DiffEngine();
 
@@ -32,9 +32,11 @@ export function createDiffCommand(): Command {
     .argument('<file>', 'Path to form definition file')
     .option('--format <fmt>', 'Output format (console, markdown, json)', 'console')
     .option('--ci', 'CI mode: exit 1 if changes detected')
-    .action(commandAction(async (file: string, options: { format: string; ci: boolean }) => {
-      return runDiff(file, options);
-    }, 2));
+    .action(
+      commandAction(async (file: string, options: { format: string; ci: boolean }) => {
+        return runDiff(file, options);
+      }, 2)
+    );
 
   return diff;
 }
@@ -107,10 +109,7 @@ function formatConsole(result: DiffResult, title: string): void {
   }
 
   if (result.title) {
-    console.log(
-      chalk.yellow('~ Title:'),
-      `"${result.title.remote}" → "${result.title.local}"`
-    );
+    console.log(chalk.yellow('~ Title:'), `"${result.title.remote}" → "${result.title.local}"`);
   }
 
   printQuestionDiffs(result.questions);
@@ -126,7 +125,12 @@ function formatConsole(result: DiffResult, title: string): void {
   console.log('Summary:', parts.join(', '));
 }
 
-function buildSummaryParts(summary: { added: number; removed: number; modified: number; unchanged: number }): string[] {
+function buildSummaryParts(summary: {
+  added: number;
+  removed: number;
+  modified: number;
+  unchanged: number;
+}): string[] {
   const parts: string[] = [];
   if (summary.added > 0) {
     parts.push(chalk.green(`${String(summary.added)} added`));
@@ -186,9 +190,7 @@ function formatMarkdown(result: DiffResult, title: string): void {
   console.log('|--------|------|---------|');
 
   if (result.title) {
-    console.log(
-      `| Modified | Title | "${result.title.remote}" → "${result.title.local}" |`
-    );
+    console.log(`| Modified | Title | "${result.title.remote}" → "${result.title.local}" |`);
   }
 
   for (const q of result.questions) {
@@ -208,8 +210,8 @@ function formatMarkdown(result: DiffResult, title: string): void {
   console.log();
   console.log(
     `**Summary:** ${String(summary.added)} added, ` +
-    `${String(summary.removed)} removed, ` +
-    `${String(summary.modified)} modified`
+      `${String(summary.removed)} removed, ` +
+      `${String(summary.modified)} modified`
   );
 }
 
@@ -242,9 +244,7 @@ const VALID_FORMATS: OutputFormat[] = ['console', 'markdown', 'json'];
 
 function validateFormat(format: string): OutputFormat {
   if (!VALID_FORMATS.includes(format as OutputFormat)) {
-    throw new Error(
-      `Invalid format '${format}'. Valid formats: ${VALID_FORMATS.join(', ')}`
-    );
+    throw new Error(`Invalid format '${format}'. Valid formats: ${VALID_FORMATS.join(', ')}`);
   }
   return format as OutputFormat;
 }

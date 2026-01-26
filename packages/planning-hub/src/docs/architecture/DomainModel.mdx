@@ -31,33 +31,33 @@ import { Meta } from '@storybook/blocks';
 
 ## Core Entities
 
-| Entity | Description |
-|--------|-------------|
+| Entity             | Description                              |
+| ------------------ | ---------------------------------------- |
 | **FormDefinition** | Root entity representing a complete form |
-| **Question** | Interface for all question types |
-| **Section** | Groups questions with conditional logic |
-| **Integration** | Sheets, Email, or Webhook integration |
-| **FormState** | Tracks deployed form state |
-| **AuthClient** | Interface for OAuth/Service Account |
+| **Question**       | Interface for all question types         |
+| **Section**        | Groups questions with conditional logic  |
+| **Integration**    | Sheets, Email, or Webhook integration    |
+| **FormState**      | Tracks deployed form state               |
+| **AuthClient**     | Interface for OAuth/Service Account      |
 
 ## Question Types
 
-| Type | Description | Key Properties |
-|------|-------------|----------------|
-| `text` | Short/long text | `paragraph`, `maxLength` |
-| `email` | Email with validation | Auto-validated |
-| `choice` | Radio/checkbox | `options`, `allowOther` |
-| `dropdown` | Dropdown select | `options` |
-| `scale` | Linear scale | `min`, `max`, labels |
-| `section` | Question group | `questions`, `showIf` |
+| Type       | Description           | Key Properties           |
+| ---------- | --------------------- | ------------------------ |
+| `text`     | Short/long text       | `paragraph`, `maxLength` |
+| `email`    | Email with validation | Auto-validated           |
+| `choice`   | Radio/checkbox        | `options`, `allowOther`  |
+| `dropdown` | Dropdown select       | `options`                |
+| `scale`    | Linear scale          | `min`, `max`, labels     |
+| `section`  | Question group        | `questions`, `showIf`    |
 
 ## Integration Types
 
-| Type | Description | Key Properties |
-|------|-------------|----------------|
-| `sheets` | Link to Google Sheets | `spreadsheetName`, `folderId` |
-| `email` | Send notifications | `to`, `subject`, `condition` |
-| `webhook` | HTTP POST | `url`, `headers`, `secret` |
+| Type      | Description           | Key Properties                |
+| --------- | --------------------- | ----------------------------- |
+| `sheets`  | Link to Google Sheets | `spreadsheetName`, `folderId` |
+| `email`   | Send notifications    | `to`, `subject`, `condition`  |
+| `webhook` | HTTP POST             | `url`, `headers`, `secret`    |
 
 ## Key Relationships
 

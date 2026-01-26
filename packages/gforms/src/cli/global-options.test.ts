@@ -2,25 +2,21 @@
  * Tests for global CLI options
  */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import chalk from 'chalk';
-import {
-  applyGlobalOptions,
-  getGlobalOptions,
-  resetGlobalOptions,
-} from './global-options.js';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { applyGlobalOptions, getGlobalOptions } from './global-options.js';
 
 describe('global options', () => {
   let originalChalkLevel: number;
 
   beforeEach(() => {
     originalChalkLevel = chalk.level;
-    resetGlobalOptions();
+    applyGlobalOptions({});
   });
 
   afterEach(() => {
     chalk.level = originalChalkLevel;
-    resetGlobalOptions();
+    applyGlobalOptions({});
   });
 
   describe('applyGlobalOptions', () => {
@@ -53,19 +49,6 @@ describe('global options', () => {
     it('should use default config path when not provided', () => {
       applyGlobalOptions({});
       expect(getGlobalOptions().configPath).toBe('gforms.config.ts');
-    });
-  });
-
-  describe('resetGlobalOptions', () => {
-    it('should reset to defaults', () => {
-      applyGlobalOptions({ verbose: true, quiet: true });
-      resetGlobalOptions();
-
-      const opts = getGlobalOptions();
-      expect(opts.verbose).toBe(false);
-      expect(opts.quiet).toBe(false);
-      expect(opts.color).toBe(true);
-      expect(opts.configPath).toBe('gforms.config.ts');
     });
   });
 

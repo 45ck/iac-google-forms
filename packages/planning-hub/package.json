@@ -13,14 +13,12 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
-  "dependencies": {
+  "devDependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "mdx-mermaid": "^2.0.3",
     "swagger-ui-react": "^5.31.0",
-    "js-yaml": "^4.1.0"
-  },
-  "devDependencies": {
+    "js-yaml": "^4.1.0",
     "@storybook/addon-a11y": "^8.4.7",
     "@storybook/addon-essentials": "^8.4.7",
     "@storybook/addon-links": "^8.4.7",

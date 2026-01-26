@@ -4,7 +4,7 @@
  */
 
 import type { Question } from '../schema/index.js';
-import type { GoogleFormResponse, GoogleFormItem } from './forms-client.js';
+import type { GoogleFormItem, GoogleFormResponse } from './forms-client.js';
 
 /**
  * Minimal FormDefinition shape for diff comparison.

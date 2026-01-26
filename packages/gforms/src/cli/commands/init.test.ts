@@ -3,9 +3,9 @@
  * Covers TC-CLI-001
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createInitCommand } from './init.js';
 import * as fs from 'node:fs/promises';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createInitCommand } from './init.js';
 
 vi.mock('node:fs/promises');
 
@@ -100,9 +100,7 @@ describe('init command', () => {
 
       const calls = consoleSpy.mock.calls;
       const hasNextSteps = calls.some((call) =>
-        call.some(
-          (arg) => typeof arg === 'string' && arg.includes('initialized')
-        )
+        call.some((arg) => typeof arg === 'string' && arg.includes('initialized'))
       );
       expect(hasNextSteps).toBe(true);
 

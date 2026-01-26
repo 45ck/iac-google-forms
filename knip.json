@@ -12,6 +12,10 @@
     "packages/ui": {
       "entry": ["src/index.ts"],
       "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/gforms": {
+      "entry": ["src/index.ts", "src/cli/index.ts"],
+      "project": ["src/**/*.{ts,tsx}"]
     }
   },
   "ignore": ["dist/**", "coverage/**", "node_modules/**"],

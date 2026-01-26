@@ -11,6 +11,7 @@ import { Meta } from '@storybook/blocks';
 ### Problem Statement
 
 Platform and DevOps teams currently manage Google Forms manually through the UI, leading to:
+
 - No version control for form definitions
 - Manual, error-prone updates across environments
 - No way to preview changes before applying
@@ -19,6 +20,7 @@ Platform and DevOps teams currently manage Google Forms manually through the UI,
 ### Solution
 
 A CLI tool that enables:
+
 - **Define forms as code** - TypeScript configuration with full type safety
 - **Version control** - Store form definitions in Git
 - **Diff before deploy** - Preview changes like `terraform plan`
@@ -32,10 +34,10 @@ A CLI tool that enables:
 
 ### Key Features
 
-| Feature | Description |
-|---------|-------------|
-| TypeScript Config | Define forms with full IDE support |
-| `gforms diff` | Compare local vs deployed |
-| `gforms deploy` | Apply changes with confirmation |
+| Feature            | Description                              |
+| ------------------ | ---------------------------------------- |
+| TypeScript Config  | Define forms with full IDE support       |
+| `gforms diff`      | Compare local vs deployed                |
+| `gforms deploy`    | Apply changes with confirmation          |
 | Sheets Integration | Auto-link form responses to spreadsheets |
-| Dual Auth | OAuth for dev, Service Account for CI |
+| Dual Auth          | OAuth for dev, Service Account for CI    |

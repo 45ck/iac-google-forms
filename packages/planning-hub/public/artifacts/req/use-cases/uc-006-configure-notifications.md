@@ -2,12 +2,12 @@
 
 ## Overview
 
-| Attribute | Value |
-|-----------|-------|
-| **ID** | UC-006 |
-| **Title** | Configure Email Notifications |
-| **Actor** | System (via Deploy) |
-| **Priority** | Should Have |
+| Attribute        | Value                            |
+| ---------------- | -------------------------------- |
+| **ID**           | UC-006                           |
+| **Title**        | Configure Email Notifications    |
+| **Actor**        | System (via Deploy)              |
+| **Priority**     | Should Have                      |
 | **Derived From** | visionary-configure-integrations |
 
 ## Goal
@@ -28,12 +28,12 @@ Set up email notifications to be sent when form responses are submitted.
 
 ## Main Success Scenario
 
-| Step | Actor | Action | System Response |
-|------|-------|--------|-----------------|
-| 1 | System | Reads email notification config | Config parsed |
-| 2 | System | Validates email addresses | Addresses valid |
-| 3 | System | Creates notification rule via API | Rule created |
-| 4 | System | Applies condition filter (if any) | Filter applied |
+| Step | Actor  | Action                            | System Response |
+| ---- | ------ | --------------------------------- | --------------- |
+| 1    | System | Reads email notification config   | Config parsed   |
+| 2    | System | Validates email addresses         | Addresses valid |
+| 3    | System | Creates notification rule via API | Rule created    |
+| 4    | System | Applies condition filter (if any) | Filter applied  |
 
 ## Configuration Options
 
@@ -56,7 +56,7 @@ emailNotification({
     field: 'satisfaction',
     in: ['Dissatisfied', 'Very dissatisfied'],
   },
-})
+});
 ```
 
 ## Business Rules
@@ -68,11 +68,11 @@ emailNotification({
 
 ## Error Handling
 
-| Error | Behavior |
-|-------|----------|
-| Invalid email format | Validation error at config time |
+| Error                      | Behavior                           |
+| -------------------------- | ---------------------------------- |
+| Invalid email format       | Validation error at config time    |
 | Unknown field in condition | Error referencing available fields |
-| API error | Retry, then show error |
+| API error                  | Retry, then show error             |
 
 ## Related Use Cases
 

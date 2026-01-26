@@ -8,10 +8,10 @@
 // Re-export schema-derived types
 export type {
   FormDefinition,
-  Question,
-  Integration,
-  StateFile,
   FormState,
+  Integration,
+  Question,
+  StateFile,
 } from '../schema/index.js';
 
 // Diff types

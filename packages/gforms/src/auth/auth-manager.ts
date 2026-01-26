@@ -165,8 +165,7 @@ export class AuthManager {
     this.scopes = config.scopes;
 
     // Check for service account from environment
-    this.serviceAccountKeyPath =
-      process.env['GOOGLE_APPLICATION_CREDENTIALS'] ?? undefined;
+    this.serviceAccountKeyPath = process.env['GOOGLE_APPLICATION_CREDENTIALS'] ?? undefined;
   }
 
   /**
@@ -249,9 +248,7 @@ export class AuthManager {
     if (tokens) {
       if (await this.isTokenExpired()) {
         // In a full implementation, we would refresh the token here
-        throw new AuthError(
-          'Token expired. Please run `gforms auth login` to re-authenticate.'
-        );
+        throw new AuthError('Token expired. Please run `gforms auth login` to re-authenticate.');
       }
       return tokens.accessToken;
     }

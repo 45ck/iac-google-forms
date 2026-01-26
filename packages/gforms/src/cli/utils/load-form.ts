@@ -3,16 +3,40 @@
  * Eliminates duplicated logic across CLI commands
  */
 
-import * as fs from 'node:fs/promises';
-import * as path from 'node:path';
-import * as os from 'node:os';
 import chalk from 'chalk';
+import * as fs from 'node:fs/promises';
+import * as os from 'node:os';
+import * as path from 'node:path';
+import { AuthManager, TokenStore } from '../../auth/index.js';
 import { validateFormDefinition, type FormDefinition } from '../../schema/index.js';
-import { TokenStore, AuthManager } from '../../auth/index.js';
 import { DEFAULT_SCOPES } from '../constants.js';
 
-export { DEFAULT_STATE_DIR, DEFAULT_SCOPES } from '../constants.js';
+export { DEFAULT_STATE_DIR } from '../constants.js';
 export { getGlobalOptions } from '../global-options.js';
+
+/**
+ * Sanitize an error message to prevent leaking sensitive data (tokens, credentials).
+ */
+export function sanitizeErrorMessage(message: string): string {
+  return message
+    .replace(/Bearer\s+[\w./-]+/gi, 'Bearer [REDACTED]')
+    .replace(/access_token["':\s]+[\w./-]+/gi, 'access_token: [REDACTED]')
+    .replace(/ya29\.[\w-]+/g, '[REDACTED_TOKEN]');
+}
+
+/**
+ * Assert that a resolved file path does not escape the current working directory.
+ * Prevents path traversal attacks via arguments like "../../etc/passwd".
+ */
+export function assertSafePath(resolvedPath: string, displayPath: string): void {
+  const cwd = process.cwd();
+  if (!resolvedPath.startsWith(cwd)) {
+    throw new Error(
+      `Path '${displayPath}' resolves outside the project directory. ` +
+        'Provide a path within the project.'
+    );
+  }
+}
 
 /**
  * Create a TokenStore pointing to the user-level credentials file (~/.gforms/credentials.json).
@@ -37,6 +61,7 @@ export function getAuthManager(): AuthManager {
 export async function loadFormDefinition(file: string): Promise<FormDefinition> {
   const filePath = path.resolve(file);
 
+  assertSafePath(filePath, file);
   await assertFileExists(filePath, file);
   assertNotTypeScript(filePath);
 
@@ -59,7 +84,7 @@ export async function assertFileExists(filePath: string, displayPath: string): P
 /**
  * Assert the file is not TypeScript (requires compilation).
  */
-export function assertNotTypeScript(filePath: string): void {
+function assertNotTypeScript(filePath: string): void {
   if (filePath.endsWith('.ts')) {
     throw new Error(
       'TypeScript files require compilation. Export as JSON or use the programmatic API.'
@@ -81,12 +106,10 @@ export function parseJsonContent(content: string, displayPath: string): unknown 
 /**
  * Validate parsed data against the form definition schema.
  */
-export function validateForm(data: unknown): FormDefinition {
+function validateForm(data: unknown): FormDefinition {
   const result = validateFormDefinition(data);
   if (!result.success || !result.data) {
-    const errors = result.errors
-      ?.map((e) => `  ${e.path.join('.')}: ${e.message}`)
-      .join('\n');
+    const errors = result.errors?.map((e) => `  ${e.path.join('.')}: ${e.message}`).join('\n');
     throw new Error(`Invalid form definition:\n${errors ?? 'Unknown validation error'}`);
   }
   return result.data;

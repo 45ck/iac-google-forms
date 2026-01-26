@@ -2,12 +2,12 @@
 
 ## Overview
 
-| Attribute | Value |
-|-----------|-------|
-| **ID** | UC-004 |
-| **Title** | Configure Authentication |
-| **Actor** | Platform Engineer |
-| **Priority** | Must Have |
+| Attribute        | Value                        |
+| ---------------- | ---------------------------- |
+| **ID**           | UC-004                       |
+| **Title**        | Configure Authentication     |
+| **Actor**        | Platform Engineer            |
+| **Priority**     | Must Have                    |
 | **Derived From** | All scenarios (prerequisite) |
 
 ## Goal
@@ -28,25 +28,25 @@ Set up authentication credentials to allow the CLI to access Google Forms, Sheet
 
 ## Main Success Scenario (Service Account)
 
-| Step | Actor | Action | System Response |
-|------|-------|--------|-----------------|
-| 1 | Engineer | Downloads service account JSON from GCP Console | JSON file obtained |
-| 2 | Engineer | Sets `GOOGLE_APPLICATION_CREDENTIALS` env var | Environment configured |
-| 3 | Engineer | Runs `gforms auth verify` | CLI tests connection |
-| 4 | System | Authenticates using service account | Auth successful |
-| 5 | System | Verifies required scopes | Scopes confirmed |
-| 6 | System | Displays success message | Ready to use |
+| Step | Actor    | Action                                          | System Response        |
+| ---- | -------- | ----------------------------------------------- | ---------------------- |
+| 1    | Engineer | Downloads service account JSON from GCP Console | JSON file obtained     |
+| 2    | Engineer | Sets `GOOGLE_APPLICATION_CREDENTIALS` env var   | Environment configured |
+| 3    | Engineer | Runs `gforms auth verify`                       | CLI tests connection   |
+| 4    | System   | Authenticates using service account             | Auth successful        |
+| 5    | System   | Verifies required scopes                        | Scopes confirmed       |
+| 6    | System   | Displays success message                        | Ready to use           |
 
 ## Alternative: OAuth Flow
 
-| Step | Actor | Action | System Response |
-|------|-------|--------|-----------------|
-| 1 | Engineer | Runs `gforms auth login` | CLI starts OAuth flow |
-| 2 | System | Opens browser to Google consent page | Browser opens |
-| 3 | Engineer | Grants permissions to application | Consent given |
-| 4 | System | Receives OAuth tokens | Tokens stored |
-| 5 | System | Saves tokens to `~/.gforms/credentials.json` | Credentials persisted |
-| 6 | System | Displays success message | Ready to use |
+| Step | Actor    | Action                                       | System Response       |
+| ---- | -------- | -------------------------------------------- | --------------------- |
+| 1    | Engineer | Runs `gforms auth login`                     | CLI starts OAuth flow |
+| 2    | System   | Opens browser to Google consent page         | Browser opens         |
+| 3    | Engineer | Grants permissions to application            | Consent given         |
+| 4    | System   | Receives OAuth tokens                        | Tokens stored         |
+| 5    | System   | Saves tokens to `~/.gforms/credentials.json` | Credentials persisted |
+| 6    | System   | Displays success message                     | Ready to use          |
 
 ## CLI Interface
 
@@ -69,12 +69,12 @@ GOOGLE_APPLICATION_CREDENTIALS=./service-account.json gforms deploy
 
 ## Required Scopes
 
-| Scope | Purpose |
-|-------|---------|
-| `https://www.googleapis.com/auth/forms.body` | Create/edit forms |
-| `https://www.googleapis.com/auth/forms.responses.readonly` | Read responses (for diff) |
-| `https://www.googleapis.com/auth/spreadsheets` | Create/link Sheets |
-| `https://www.googleapis.com/auth/drive.file` | Access files created by app |
+| Scope                                                      | Purpose                     |
+| ---------------------------------------------------------- | --------------------------- |
+| `https://www.googleapis.com/auth/forms.body`               | Create/edit forms           |
+| `https://www.googleapis.com/auth/forms.responses.readonly` | Read responses (for diff)   |
+| `https://www.googleapis.com/auth/spreadsheets`             | Create/link Sheets          |
+| `https://www.googleapis.com/auth/drive.file`               | Access files created by app |
 
 ## Business Rules
 
@@ -85,11 +85,11 @@ GOOGLE_APPLICATION_CREDENTIALS=./service-account.json gforms deploy
 
 ## Error Handling
 
-| Error | Behavior |
-|-------|----------|
-| Missing credentials | Show setup instructions |
-| Invalid credentials | Show re-auth instructions |
-| Missing scopes | List which scopes to add |
+| Error               | Behavior                        |
+| ------------------- | ------------------------------- |
+| Missing credentials | Show setup instructions         |
+| Invalid credentials | Show re-auth instructions       |
+| Missing scopes      | List which scopes to add        |
 | Expired OAuth token | Auto-refresh or prompt re-login |
 
 ## Related Use Cases

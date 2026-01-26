@@ -3,13 +3,11 @@
  * Covers conversion of Google Forms API responses to local FormDefinition format
  */
 
-import { describe, it, expect } from 'vitest';
-import { convertResponseToFormDefinition } from './response-converter.js';
+import { describe, expect, it } from 'vitest';
 import type { GoogleFormResponse } from './forms-client.js';
+import { convertResponseToFormDefinition } from './response-converter.js';
 
-function makeResponse(
-  overrides: Partial<GoogleFormResponse> = {}
-): GoogleFormResponse {
+function makeResponse(overrides: Partial<GoogleFormResponse> = {}): GoogleFormResponse {
   return {
     formId: 'test-id',
     info: { title: 'Test Form' },
@@ -44,17 +42,19 @@ describe('convertResponseToFormDefinition', () => {
   describe('text questions', () => {
     it('should convert short text questions', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Your Name',
-          questionItem: {
-            question: {
-              questionId: 'q1',
-              required: true,
-              textQuestion: { paragraph: false },
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Your Name',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+                required: true,
+                textQuestion: { paragraph: false },
+              },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -70,16 +70,18 @@ describe('convertResponseToFormDefinition', () => {
 
     it('should convert paragraph text questions', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Comments',
-          questionItem: {
-            question: {
-              questionId: 'q1',
-              textQuestion: { paragraph: true },
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Comments',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+                textQuestion: { paragraph: true },
+              },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -91,16 +93,18 @@ describe('convertResponseToFormDefinition', () => {
 
     it('should default required to false', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Optional',
-          questionItem: {
-            question: {
-              questionId: 'q1',
-              textQuestion: { paragraph: false },
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Optional',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+                textQuestion: { paragraph: false },
+              },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -111,20 +115,22 @@ describe('convertResponseToFormDefinition', () => {
   describe('choice questions', () => {
     it('should convert radio button questions', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Favorite Color',
-          questionItem: {
-            question: {
-              questionId: 'q1',
-              required: false,
-              choiceQuestion: {
-                type: 'RADIO',
-                options: [{ value: 'Red' }, { value: 'Blue' }, { value: 'Green' }],
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Favorite Color',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+                required: false,
+                choiceQuestion: {
+                  type: 'RADIO',
+                  options: [{ value: 'Red' }, { value: 'Blue' }, { value: 'Green' }],
+                },
               },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -140,19 +146,21 @@ describe('convertResponseToFormDefinition', () => {
 
     it('should convert checkbox questions as multiple choice', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Select All',
-          questionItem: {
-            question: {
-              questionId: 'q1',
-              choiceQuestion: {
-                type: 'CHECKBOX',
-                options: [{ value: 'A' }, { value: 'B' }],
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Select All',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+                choiceQuestion: {
+                  type: 'CHECKBOX',
+                  options: [{ value: 'A' }, { value: 'B' }],
+                },
               },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -166,19 +174,21 @@ describe('convertResponseToFormDefinition', () => {
   describe('dropdown questions', () => {
     it('should convert dropdown questions', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Country',
-          questionItem: {
-            question: {
-              questionId: 'q1',
-              choiceQuestion: {
-                type: 'DROP_DOWN',
-                options: [{ value: 'US' }, { value: 'UK' }, { value: 'CA' }],
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Country',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+                choiceQuestion: {
+                  type: 'DROP_DOWN',
+                  options: [{ value: 'US' }, { value: 'UK' }, { value: 'CA' }],
+                },
               },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -194,22 +204,24 @@ describe('convertResponseToFormDefinition', () => {
   describe('scale questions', () => {
     it('should convert scale questions', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Rating',
-          questionItem: {
-            question: {
-              questionId: 'q1',
-              required: true,
-              scaleQuestion: {
-                low: 1,
-                high: 5,
-                lowLabel: 'Poor',
-                highLabel: 'Excellent',
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Rating',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+                required: true,
+                scaleQuestion: {
+                  low: 1,
+                  high: 5,
+                  lowLabel: 'Poor',
+                  highLabel: 'Excellent',
+                },
               },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -227,16 +239,18 @@ describe('convertResponseToFormDefinition', () => {
 
     it('should omit labels when not present', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Rating',
-          questionItem: {
-            question: {
-              questionId: 'q1',
-              scaleQuestion: { low: 0, high: 10 },
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Rating',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+                scaleQuestion: { low: 0, high: 10 },
+              },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -278,16 +292,18 @@ describe('convertResponseToFormDefinition', () => {
 
     it('should use itemId when questionId is missing', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'fallback-id',
-          title: 'Question',
-          questionItem: {
-            question: {
-              questionId: '',
-              textQuestion: { paragraph: false },
+        items: [
+          {
+            itemId: 'fallback-id',
+            title: 'Question',
+            questionItem: {
+              question: {
+                questionId: '',
+                textQuestion: { paragraph: false },
+              },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -296,17 +312,19 @@ describe('convertResponseToFormDefinition', () => {
 
     it('should include question description when present', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Name',
-          description: 'Enter your full name',
-          questionItem: {
-            question: {
-              questionId: 'q1',
-              textQuestion: { paragraph: false },
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Name',
+            description: 'Enter your full name',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+                textQuestion: { paragraph: false },
+              },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);
@@ -317,15 +335,17 @@ describe('convertResponseToFormDefinition', () => {
 
     it('should handle unknown question types as text', () => {
       const response = makeResponse({
-        items: [{
-          itemId: 'item1',
-          title: 'Unknown',
-          questionItem: {
-            question: {
-              questionId: 'q1',
+        items: [
+          {
+            itemId: 'item1',
+            title: 'Unknown',
+            questionItem: {
+              question: {
+                questionId: 'q1',
+              },
             },
           },
-        }],
+        ],
       });
 
       const result = convertResponseToFormDefinition(response);

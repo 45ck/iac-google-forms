@@ -8,42 +8,42 @@ import { Meta } from '@storybook/blocks';
 
 ### Spoofing
 
-| Threat | Mitigation |
-|--------|------------|
-| Token theft from disk | File permissions 600 |
+| Threat                    | Mitigation                 |
+| ------------------------- | -------------------------- |
+| Token theft from disk     | File permissions 600       |
 | Service account key theft | User-managed, never copied |
-| Phishing via fake OAuth | Use verified client ID |
+| Phishing via fake OAuth   | Use verified client ID     |
 
 ### Tampering
 
-| Threat | Mitigation |
-|--------|------------|
-| Form definition modified | Git version control |
-| State file corrupted | Regenerable from API |
-| MITM attack | HTTPS with cert validation |
+| Threat                   | Mitigation                 |
+| ------------------------ | -------------------------- |
+| Form definition modified | Git version control        |
+| State file corrupted     | Regenerable from API       |
+| MITM attack              | HTTPS with cert validation |
 
 ### Information Disclosure
 
-| Threat | Mitigation |
-|--------|------------|
-| Tokens in logs | Never log tokens |
-| Keys in Git | .gitignore, CLI warnings |
-| Webhook secrets exposed | Use env vars |
+| Threat                  | Mitigation               |
+| ----------------------- | ------------------------ |
+| Tokens in logs          | Never log tokens         |
+| Keys in Git             | .gitignore, CLI warnings |
+| Webhook secrets exposed | Use env vars             |
 
 ### Denial of Service
 
-| Threat | Mitigation |
-|--------|------------|
-| API rate limiting | Exponential backoff |
-| Large form crashes CLI | Input validation |
+| Threat                 | Mitigation          |
+| ---------------------- | ------------------- |
+| API rate limiting      | Exponential backoff |
+| Large form crashes CLI | Input validation    |
 
 ### Elevation of Privilege
 
-| Threat | Mitigation |
-|--------|------------|
-| Scope escalation | Request minimum scopes |
+| Threat                    | Mitigation               |
+| ------------------------- | ------------------------ |
+| Scope escalation          | Request minimum scopes   |
 | Code execution via config | Config is data, not code |
-| Dependency attack | Lock + audit deps |
+| Dependency attack         | Lock + audit deps        |
 
 ## Authentication Design
 
@@ -69,12 +69,12 @@ CLI reads key file → Signs JWT → Exchange for token
 
 ## Secure Defaults
 
-| Setting | Default | Rationale |
-|---------|---------|-----------|
-| Token file permissions | 600 | User-only access |
-| HTTPS only | Yes | No HTTP fallback |
-| Auto-approve | Disabled | Require confirmation |
-| Verbose logging | Disabled | Minimize exposure |
+| Setting                | Default  | Rationale            |
+| ---------------------- | -------- | -------------------- |
+| Token file permissions | 600      | User-only access     |
+| HTTPS only             | Yes      | No HTTP fallback     |
+| Auto-approve           | Disabled | Require confirmation |
+| Verbose logging        | Disabled | Minimize exposure    |
 
 ## Credential Protection
 

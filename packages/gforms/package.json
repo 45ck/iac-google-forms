@@ -34,9 +34,7 @@
   "dependencies": {
     "zod": "^3.24.0",
     "commander": "^12.0.0",
-    "chalk": "^5.3.0",
-    "googleapis": "^144.0.0",
-    "open": "^10.0.0"
+    "chalk": "^5.3.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"
@@ -54,7 +52,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/iac-google-forms"
+    "url": "https://github.com/45ck/iac-google-forms"
   },
   "license": "MIT"
 }

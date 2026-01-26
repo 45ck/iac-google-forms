@@ -5,8 +5,8 @@
  * TDD: These tests define the expected behavior for state file validation.
  */
 
-import { describe, it, expect } from 'vitest';
-import { validateStateFile, FormStateSchema } from './state-file.js';
+import { describe, expect, it } from 'vitest';
+import { FormStateSchema, validateStateFile } from './state-file.js';
 
 describe('State File Validation', () => {
   // ==========================================================================

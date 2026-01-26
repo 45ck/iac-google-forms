@@ -98,9 +98,9 @@ class AuthManager {
 }
 
 interface OAuthLoginOptions {
-  openBrowser?: boolean;  // default: true
-  port?: number;          // default: random
-  timeout?: number;       // default: 120000 (2 min)
+  openBrowser?: boolean; // default: true
+  port?: number; // default: random
+  timeout?: number; // default: 120000 (2 min)
 }
 ```
 
@@ -173,16 +173,10 @@ if (diff.hasChanges) {
 
 ```typescript
 class DiffEngine {
-  calculateDiff(
-    local: FormDefinition,
-    remote: RemoteForm | null
-  ): DiffResult;
+  calculateDiff(local: FormDefinition, remote: RemoteForm | null): DiffResult;
 }
 
-function formatDiff(
-  diff: DiffResult,
-  options: DiffFormatOptions
-): string;
+function formatDiff(diff: DiffResult, options: DiffFormatOptions): string;
 
 interface DiffResult {
   status: 'new' | 'modified' | 'unchanged' | 'deleted';
@@ -271,10 +265,7 @@ console.log('Deployed:', result.formUrl);
 **Function Signature:**
 
 ```typescript
-async function deploy(
-  filePath: string,
-  options: DeployOptions
-): Promise<DeployResult>;
+async function deploy(filePath: string, options: DeployOptions): Promise<DeployResult>;
 
 interface DeployOptions {
   autoApprove?: boolean;
@@ -313,10 +304,7 @@ process.exit(result.hasChanges ? 1 : 0);
 **Function Signature:**
 
 ```typescript
-async function diff(
-  filePath: string,
-  options: DiffOptions
-): Promise<DiffOutput>;
+async function diff(filePath: string, options: DiffOptions): Promise<DiffOutput>;
 
 interface DiffOptions {
   format?: 'console' | 'markdown' | 'json';
@@ -365,18 +353,18 @@ gforms.on('api:error', (error) => {
 
 **Event Types:**
 
-| Event | Payload |
-|-------|---------|
-| `auth:login` | `{ email: string, method: AuthMethod }` |
-| `auth:logout` | `void` |
-| `auth:refresh` | `void` |
-| `deploy:start` | `{ filePath: string }` |
-| `deploy:diff` | `{ diff: DiffResult }` |
-| `deploy:complete` | `{ result: DeployResult }` |
-| `deploy:error` | `{ error: Error }` |
-| `api:request` | `{ method: string, url: string }` |
-| `api:response` | `{ status: number, duration: number }` |
-| `api:error` | `{ error: Error, retryable: boolean }` |
+| Event             | Payload                                 |
+| ----------------- | --------------------------------------- |
+| `auth:login`      | `{ email: string, method: AuthMethod }` |
+| `auth:logout`     | `void`                                  |
+| `auth:refresh`    | `void`                                  |
+| `deploy:start`    | `{ filePath: string }`                  |
+| `deploy:diff`     | `{ diff: DiffResult }`                  |
+| `deploy:complete` | `{ result: DeployResult }`              |
+| `deploy:error`    | `{ error: Error }`                      |
+| `api:request`     | `{ method: string, url: string }`       |
+| `api:response`    | `{ status: number, duration: number }`  |
+| `api:error`       | `{ error: Error, retryable: boolean }`  |
 
 ---
 
@@ -385,13 +373,7 @@ gforms.on('api:error', (error) => {
 All errors extend `GFormsError`:
 
 ```typescript
-import {
-  GFormsError,
-  AuthError,
-  ValidationError,
-  ApiError,
-  ConflictError,
-} from 'iac-google-forms';
+import { GFormsError, AuthError, ValidationError, ApiError, ConflictError } from 'iac-google-forms';
 
 try {
   await deploy('forms/feedback.ts', { autoApprove: true });
@@ -416,11 +398,11 @@ try {
 
 **Error Classes:**
 
-| Class | Properties |
-|-------|------------|
-| `GFormsError` | `message`, `code` |
-| `AuthError` | `method`, `reason` |
-| `ValidationError` | `errors[]`, `filePath` |
-| `ApiError` | `status`, `retryable`, `response` |
-| `ConflictError` | `localHash`, `remoteRevision` |
-| `StateError` | `statePath`, `reason` |
+| Class             | Properties                        |
+| ----------------- | --------------------------------- |
+| `GFormsError`     | `message`, `code`                 |
+| `AuthError`       | `method`, `reason`                |
+| `ValidationError` | `errors[]`, `filePath`            |
+| `ApiError`        | `status`, `retryable`, `response` |
+| `ConflictError`   | `localHash`, `remoteRevision`     |
+| `StateError`      | `statePath`, `reason`             |

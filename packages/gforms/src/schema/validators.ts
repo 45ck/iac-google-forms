@@ -16,19 +16,12 @@ interface QuestionLike {
 /**
  * Check for duplicate question IDs in a form
  */
-export function checkDuplicateIds(
-  questions: QuestionLike[],
-  ctx: RefinementCtx
-): void {
+export function checkDuplicateIds(questions: QuestionLike[], ctx: RefinementCtx): void {
   const ids = new Set<string>();
   collectAndCheckIds(questions, ids, ctx);
 }
 
-function collectAndCheckIds(
-  questions: QuestionLike[],
-  ids: Set<string>,
-  ctx: RefinementCtx
-): void {
+function collectAndCheckIds(questions: QuestionLike[], ids: Set<string>, ctx: RefinementCtx): void {
   for (const q of questions) {
     if ('id' in q && typeof q.id === 'string') {
       if (ids.has(q.id)) {
@@ -50,10 +43,7 @@ function collectAndCheckIds(
 /**
  * Validate scale question bounds (max > min)
  */
-export function validateScaleBounds(
-  questions: QuestionLike[],
-  ctx: RefinementCtx
-): void {
+export function validateScaleBounds(questions: QuestionLike[], ctx: RefinementCtx): void {
   validateScalesAtLevel(questions, ctx, []);
 }
 
@@ -86,9 +76,6 @@ function validateScalesAtLevel(
 
 function isInvalidScale(q: QuestionLike): boolean {
   return (
-    q.type === 'scale' &&
-    typeof q.min === 'number' &&
-    typeof q.max === 'number' &&
-    q.max <= q.min
+    q.type === 'scale' && typeof q.min === 'number' && typeof q.max === 'number' && q.max <= q.min
   );
 }

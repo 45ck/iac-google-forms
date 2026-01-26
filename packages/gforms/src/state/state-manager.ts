@@ -7,7 +7,7 @@
 
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { StateFileSchema, type StateFile, type FormState } from '../schema/state-file.js';
+import { StateFileSchema, type FormState, type StateFile } from '../schema/state-file.js';
 
 /**
  * Error thrown when state file operations fail
@@ -126,9 +126,21 @@ export class StateManager {
       try {
         await fs.writeFile(this.lockPath, String(process.pid), { flag: 'wx' });
         return;
-      } catch {
+      } catch (error: unknown) {
+        // Only retry if the lock file already exists (EEXIST).
+        // Any other error (e.g. permission denied) should propagate immediately.
+        if (!this.isFileExistsError(error)) {
+          throw new StateError(
+            `Failed to create lock file: ${error instanceof Error ? error.message : String(error)}`,
+            error
+          );
+        }
+
         // Lock file exists — check if it's stale
-        await this.breakStaleLock();
+        const broken = await this.tryBreakStaleLock();
+        if (broken) {
+          continue; // Retry immediately after breaking stale lock
+        }
         await this.sleep(StateManager.LOCK_RETRY_MS);
       }
     }
@@ -136,16 +148,27 @@ export class StateManager {
     throw new StateError('Failed to acquire state file lock — another process may be running');
   }
 
-  private async breakStaleLock(): Promise<void> {
+  private async tryBreakStaleLock(): Promise<boolean> {
     try {
       const stat = await fs.stat(this.lockPath);
       const age = Date.now() - stat.mtimeMs;
       if (age > StateManager.LOCK_TIMEOUT_MS) {
         await fs.unlink(this.lockPath);
+        return true;
       }
+      return false;
     } catch {
       // Lock already removed — race with another process is fine
+      return true;
     }
+  }
+
+  private isFileExistsError(error: unknown): boolean {
+    return (
+      error instanceof Error &&
+      'code' in error &&
+      (error as NodeJS.ErrnoException).code === 'EEXIST'
+    );
   }
 
   private async releaseLock(): Promise<void> {

@@ -227,44 +227,136 @@
   "artifacts": [
     { "path": "docs/req/vision.md", "stage": "kickoff", "type": "markdown" },
     { "path": "docs/ux/personas/platform-engineer.md", "stage": "scenarios", "type": "markdown" },
-    { "path": "docs/req/scenarios/as-is-manual-form-creation.md", "stage": "scenarios", "type": "markdown" },
+    {
+      "path": "docs/req/scenarios/as-is-manual-form-creation.md",
+      "stage": "scenarios",
+      "type": "markdown"
+    },
     { "path": "docs/req/scenarios/as-is-form-update.md", "stage": "scenarios", "type": "markdown" },
-    { "path": "docs/req/scenarios/visionary-define-new-form.md", "stage": "scenarios", "type": "markdown" },
-    { "path": "docs/req/scenarios/visionary-preview-and-deploy.md", "stage": "scenarios", "type": "markdown" },
-    { "path": "docs/req/scenarios/visionary-configure-integrations.md", "stage": "scenarios", "type": "markdown" },
-    { "path": "docs/req/scenarios/visionary-version-control-workflow.md", "stage": "scenarios", "type": "markdown" },
+    {
+      "path": "docs/req/scenarios/visionary-define-new-form.md",
+      "stage": "scenarios",
+      "type": "markdown"
+    },
+    {
+      "path": "docs/req/scenarios/visionary-preview-and-deploy.md",
+      "stage": "scenarios",
+      "type": "markdown"
+    },
+    {
+      "path": "docs/req/scenarios/visionary-configure-integrations.md",
+      "stage": "scenarios",
+      "type": "markdown"
+    },
+    {
+      "path": "docs/req/scenarios/visionary-version-control-workflow.md",
+      "stage": "scenarios",
+      "type": "markdown"
+    },
     { "path": "docs/req/use-cases/use-case-diagram.mmd", "stage": "useCases", "type": "mermaid" },
     { "path": "docs/req/use-cases/uc-001-define-form.md", "stage": "useCases", "type": "markdown" },
     { "path": "docs/req/use-cases/uc-002-diff-form.md", "stage": "useCases", "type": "markdown" },
     { "path": "docs/req/use-cases/uc-003-deploy-form.md", "stage": "useCases", "type": "markdown" },
-    { "path": "docs/req/use-cases/uc-004-configure-auth.md", "stage": "useCases", "type": "markdown" },
+    {
+      "path": "docs/req/use-cases/uc-004-configure-auth.md",
+      "stage": "useCases",
+      "type": "markdown"
+    },
     { "path": "docs/req/use-cases/uc-005-link-sheets.md", "stage": "useCases", "type": "markdown" },
-    { "path": "docs/req/use-cases/uc-006-configure-notifications.md", "stage": "useCases", "type": "markdown" },
-    { "path": "docs/req/use-cases/uc-007-configure-webhooks.md", "stage": "useCases", "type": "markdown" },
-    { "path": "docs/req/activity-diagrams/deploy-flow.mmd", "stage": "useCases", "type": "mermaid" },
+    {
+      "path": "docs/req/use-cases/uc-006-configure-notifications.md",
+      "stage": "useCases",
+      "type": "markdown"
+    },
+    {
+      "path": "docs/req/use-cases/uc-007-configure-webhooks.md",
+      "stage": "useCases",
+      "type": "markdown"
+    },
+    {
+      "path": "docs/req/activity-diagrams/deploy-flow.mmd",
+      "stage": "useCases",
+      "type": "mermaid"
+    },
     { "path": "docs/req/activity-diagrams/diff-flow.mmd", "stage": "useCases", "type": "mermaid" },
     { "path": "docs/req/activity-diagrams/auth-flow.mmd", "stage": "useCases", "type": "mermaid" },
     { "path": "docs/arch/domain-model/README.md", "stage": "domainModel", "type": "markdown" },
-    { "path": "docs/arch/domain-model/class-diagram.mmd", "stage": "domainModel", "type": "mermaid" },
-    { "path": "docs/arch/domain-model/sequence-diagrams/deploy-sequence.mmd", "stage": "domainModel", "type": "mermaid" },
-    { "path": "docs/arch/domain-model/sequence-diagrams/diff-sequence.mmd", "stage": "domainModel", "type": "mermaid" },
-    { "path": "docs/arch/domain-model/sequence-diagrams/auth-sequence.mmd", "stage": "domainModel", "type": "mermaid" },
+    {
+      "path": "docs/arch/domain-model/class-diagram.mmd",
+      "stage": "domainModel",
+      "type": "mermaid"
+    },
+    {
+      "path": "docs/arch/domain-model/sequence-diagrams/deploy-sequence.mmd",
+      "stage": "domainModel",
+      "type": "mermaid"
+    },
+    {
+      "path": "docs/arch/domain-model/sequence-diagrams/diff-sequence.mmd",
+      "stage": "domainModel",
+      "type": "mermaid"
+    },
+    {
+      "path": "docs/arch/domain-model/sequence-diagrams/auth-sequence.mmd",
+      "stage": "domainModel",
+      "type": "mermaid"
+    },
     { "path": "docs/arch/data-model/README.md", "stage": "dataModel", "type": "markdown" },
     { "path": "docs/arch/data-model/erd.mmd", "stage": "dataModel", "type": "mermaid" },
-    { "path": "docs/arch/data-model/schemas/form-definition.schema.json", "stage": "dataModel", "type": "json" },
-    { "path": "docs/arch/data-model/schemas/state-file.schema.json", "stage": "dataModel", "type": "json" },
-    { "path": "docs/arch/data-model/typescript/form-definition.types.ts", "stage": "dataModel", "type": "typescript" },
-    { "path": "docs/arch/data-model/typescript/auth.types.ts", "stage": "dataModel", "type": "typescript" },
-    { "path": "docs/arch/data-model/typescript/api-client.types.ts", "stage": "dataModel", "type": "typescript" },
+    {
+      "path": "docs/arch/data-model/schemas/form-definition.schema.json",
+      "stage": "dataModel",
+      "type": "json"
+    },
+    {
+      "path": "docs/arch/data-model/schemas/state-file.schema.json",
+      "stage": "dataModel",
+      "type": "json"
+    },
+    {
+      "path": "docs/arch/data-model/typescript/form-definition.types.ts",
+      "stage": "dataModel",
+      "type": "typescript"
+    },
+    {
+      "path": "docs/arch/data-model/typescript/auth.types.ts",
+      "stage": "dataModel",
+      "type": "typescript"
+    },
+    {
+      "path": "docs/arch/data-model/typescript/api-client.types.ts",
+      "stage": "dataModel",
+      "type": "typescript"
+    },
     { "path": "docs/arch/api-contract/README.md", "stage": "apiContract", "type": "markdown" },
-    { "path": "docs/arch/api-contract/cli-specification.md", "stage": "apiContract", "type": "markdown" },
-    { "path": "docs/arch/api-contract/internal-api.md", "stage": "apiContract", "type": "markdown" },
-    { "path": "docs/arch/api-contract/google-api-mapping.md", "stage": "apiContract", "type": "markdown" },
+    {
+      "path": "docs/arch/api-contract/cli-specification.md",
+      "stage": "apiContract",
+      "type": "markdown"
+    },
+    {
+      "path": "docs/arch/api-contract/internal-api.md",
+      "stage": "apiContract",
+      "type": "markdown"
+    },
+    {
+      "path": "docs/arch/api-contract/google-api-mapping.md",
+      "stage": "apiContract",
+      "type": "markdown"
+    },
     { "path": "docs/ux/cli-design/README.md", "stage": "prototypes", "type": "markdown" },
     { "path": "docs/ux/cli-design/terminal-mockups.md", "stage": "prototypes", "type": "markdown" },
-    { "path": "docs/ux/cli-design/form-definition-examples.md", "stage": "prototypes", "type": "markdown" },
+    {
+      "path": "docs/ux/cli-design/form-definition-examples.md",
+      "stage": "prototypes",
+      "type": "markdown"
+    },
     { "path": "docs/arch/security/threat-model.md", "stage": "supporting", "type": "markdown" },
-    { "path": "docs/arch/security/authentication-design.md", "stage": "supporting", "type": "markdown" },
+    {
+      "path": "docs/arch/security/authentication-design.md",
+      "stage": "supporting",
+      "type": "markdown"
+    },
     { "path": "docs/quality/test-strategy.md", "stage": "supporting", "type": "markdown" },
     { "path": "docs/quality/coding-standards.md", "stage": "supporting", "type": "markdown" },
     { "path": "docs/req/rtm.md", "stage": "signoff", "type": "markdown" },

@@ -3,8 +3,8 @@
  * List tracked forms
  */
 
-import { Command } from 'commander';
 import chalk from 'chalk';
+import { Command } from 'commander';
 import { StateManager } from '../../state/index.js';
 import { DEFAULT_STATE_DIR, commandAction } from '../utils/load-form.js';
 
@@ -12,9 +12,11 @@ export function createListCommand(): Command {
   const list = new Command('list')
     .description('List all forms tracked in the state file')
     .option('--format <fmt>', 'Output format (table, json)', 'table')
-    .action(commandAction(async (options: { format: string }) => {
-      await runList(options);
-    }));
+    .action(
+      commandAction(async (options: { format: string }) => {
+        await runList(options);
+      })
+    );
 
   return list;
 }
@@ -24,9 +26,7 @@ type OutputFormat = (typeof VALID_FORMATS)[number];
 
 function validateFormat(format: string): OutputFormat {
   if (!VALID_FORMATS.includes(format as OutputFormat)) {
-    throw new Error(
-      `Invalid format '${format}'. Valid formats: ${VALID_FORMATS.join(', ')}`
-    );
+    throw new Error(`Invalid format '${format}'. Valid formats: ${VALID_FORMATS.join(', ')}`);
   }
   return format as OutputFormat;
 }
@@ -54,13 +54,7 @@ async function runList(options: { format: string }): Promise<void> {
   }
 
   // Header
-  console.log(
-    chalk.gray(
-      padRight('File', 30) +
-        padRight('Form ID', 25) +
-        'Last Deployed'
-    )
-  );
+  console.log(chalk.gray(padRight('File', 30) + padRight('Form ID', 25) + 'Last Deployed'));
   console.log('─'.repeat(70));
 
   // Rows
@@ -71,9 +65,7 @@ async function runList(options: { format: string }): Promise<void> {
     const formId = form.formId ?? chalk.dim('(pending)');
 
     console.log(
-      padRight(form.localPath, 30) +
-        padRight(formId.slice(0, 23) + '...', 25) +
-        deployed
+      padRight(form.localPath, 30) + padRight(formId.slice(0, 23) + '...', 25) + deployed
     );
   }
 

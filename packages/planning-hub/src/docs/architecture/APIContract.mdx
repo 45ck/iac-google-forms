@@ -6,17 +6,17 @@ import { Meta } from '@storybook/blocks';
 
 ## CLI Commands
 
-| Command | Description |
-|---------|-------------|
-| gforms init | Initialize new project |
-| gforms auth login | Authenticate with Google |
-| gforms auth logout | Remove credentials |
-| gforms auth status | Show auth status |
+| Command              | Description              |
+| -------------------- | ------------------------ |
+| gforms init          | Initialize new project   |
+| gforms auth login    | Authenticate with Google |
+| gforms auth logout   | Remove credentials       |
+| gforms auth status   | Show auth status         |
 | gforms validate FILE | Validate form definition |
-| gforms diff FILE | Show changes vs deployed |
-| gforms deploy FILE | Deploy form to Google |
-| gforms list | List tracked forms |
-| gforms destroy FILE | Delete form |
+| gforms diff FILE     | Show changes vs deployed |
+| gforms deploy FILE   | Deploy form to Google    |
+| gforms list          | List tracked forms       |
+| gforms destroy FILE  | Delete form              |
 
 ## Command Details
 
@@ -33,12 +33,12 @@ Options:
 
 **Exit Codes:**
 
-| Code | Meaning |
-|------|---------|
-| 0 | Success |
-| 1 | Deployment failed |
-| 2 | Validation error |
-| 3 | User cancelled |
+| Code | Meaning           |
+| ---- | ----------------- |
+| 0    | Success           |
+| 1    | Deployment failed |
+| 2    | Validation error  |
+| 3    | User cancelled    |
 
 ### gforms diff
 
@@ -70,12 +70,12 @@ if (diffResult.hasChanges) {
 
 ## Google API Mapping
 
-| gforms Operation | Google API |
-|------------------|------------|
-| Create form | POST /forms |
-| Update form | POST /forms/ID:batchUpdate |
-| Get form | GET /forms/ID |
-| Link Sheets | Sheets API + Forms updateSettings |
+| gforms Operation | Google API                        |
+| ---------------- | --------------------------------- |
+| Create form      | POST /forms                       |
+| Update form      | POST /forms/ID:batchUpdate        |
+| Get form         | GET /forms/ID                     |
+| Link Sheets      | Sheets API + Forms updateSettings |
 
 ## Required OAuth Scopes
 

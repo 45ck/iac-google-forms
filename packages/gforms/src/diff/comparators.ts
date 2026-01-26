@@ -2,12 +2,12 @@
  * Comparison helper functions for diff engine
  */
 
-import type { Question, Integration } from '../schema/index.js';
+import type { Integration, Question } from '../schema/index.js';
 
 /**
  * Compare two arrays for equality
  */
-export function arraysEqual<T>(a: T[], b: T[]): boolean {
+function arraysEqual<T>(a: T[], b: T[]): boolean {
   if (a.length !== b.length) {
     return false;
   }
@@ -129,10 +129,7 @@ export function getQuestionChanges(local: Question, remote: Question): string[] 
 /**
  * Compare sheets integration properties
  */
-function compareSheetsIntegration(
-  local: Integration,
-  remote: Integration
-): string[] {
+function compareSheetsIntegration(local: Integration, remote: Integration): string[] {
   if (local.type !== 'sheets' || remote.type !== 'sheets') {
     return [];
   }
@@ -152,10 +149,7 @@ function compareSheetsIntegration(
 /**
  * Compare email integration properties
  */
-function compareEmailIntegration(
-  local: Integration,
-  remote: Integration
-): string[] {
+function compareEmailIntegration(local: Integration, remote: Integration): string[] {
   if (local.type !== 'email' || remote.type !== 'email') {
     return [];
   }
@@ -172,10 +166,7 @@ function compareEmailIntegration(
 /**
  * Compare webhook integration properties
  */
-function compareWebhookIntegration(
-  local: Integration,
-  remote: Integration
-): string[] {
+function compareWebhookIntegration(local: Integration, remote: Integration): string[] {
   if (local.type !== 'webhook' || remote.type !== 'webhook') {
     return [];
   }
@@ -192,10 +183,7 @@ function compareWebhookIntegration(
 /**
  * Get list of changed properties between two integrations
  */
-export function getIntegrationChanges(
-  local: Integration,
-  remote: Integration
-): string[] {
+export function getIntegrationChanges(local: Integration, remote: Integration): string[] {
   return [
     ...compareSheetsIntegration(local, remote),
     ...compareEmailIntegration(local, remote),

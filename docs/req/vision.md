@@ -3,6 +3,7 @@
 ## Problem Statement
 
 Managing Google Forms manually through the web UI is:
+
 - **Not version-controlled**: No history of changes, no rollback capability
 - **Not reproducible**: Forms must be recreated manually in different environments
 - **Error-prone**: Manual configuration leads to inconsistencies
@@ -28,21 +29,25 @@ Managing Google Forms manually through the web UI is:
 ## Project Components
 
 ### 1. Core Library (`@iac-google-forms/core`)
+
 - TypeScript types and builders for form definitions
 - Validation of form configurations
 - Serialization/deserialization
 
 ### 2. Google API Client (`@iac-google-forms/google`)
+
 - Google Forms API integration
 - Google Sheets API integration
 - Authentication (Service Account + OAuth)
 - Diff calculation between local and remote state
 
 ### 3. CLI (`iac-google-forms` or `gforms`)
+
 - `diff` - Show what would change
 - `deploy` - Apply changes to Google Forms
 
 ### 4. Output Integrations
+
 - Google Sheets response destination
 - Email notifications
 - Webhook triggers
@@ -50,6 +55,7 @@ Managing Google Forms manually through the web UI is:
 ## Scope Boundaries
 
 ### In Scope (MVP)
+
 - TypeScript form definition DSL
 - All question types supported by Google Forms API
 - Form logic (sections, branching, skip logic)
@@ -62,6 +68,7 @@ Managing Google Forms manually through the web UI is:
 - Single Google account
 
 ### Out of Scope (Future)
+
 - Import existing forms from Google
 - Delete forms via CLI
 - Multi-account support

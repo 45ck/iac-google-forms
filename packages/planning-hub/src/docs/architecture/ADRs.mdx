@@ -11,12 +11,14 @@ import { Meta } from '@storybook/blocks';
 **Decision:** Use TypeScript as the form configuration format.
 
 **Rationale:**
+
 - Type safety with IDE autocomplete
 - Native support for environment variables
 - Can compute values programmatically
 - Familiar to target users
 
 **Trade-offs:**
+
 - Requires Node.js runtime
 - Must handle code execution safely
 
@@ -29,12 +31,14 @@ import { Meta } from '@storybook/blocks';
 **Decision:** Use a local state file (`.gforms/state.json`) following Terraform's pattern.
 
 **Rationale:**
+
 - Simple - no cloud resources needed
 - Git-friendly - can commit or gitignore
 - Fast - no network call to read state
 - Works offline
 
 **Trade-offs:**
+
 - Teams must coordinate state file
 - State can diverge from reality
 
@@ -49,16 +53,19 @@ import { Meta } from '@storybook/blocks';
 **Decision:** Support both OAuth 2.0 and Service Account authentication.
 
 **Detection Priority:**
+
 1. `GOOGLE_APPLICATION_CREDENTIALS` env var → Service Account
 2. `~/.gforms/credentials.json` exists → OAuth
 3. Neither → Error with instructions
 
 **Rationale:**
+
 - OAuth ideal for local development
 - Service Account ideal for CI/CD
 - No one-size-fits-all compromise
 
 **Trade-offs:**
+
 - Two code paths to maintain
 - More documentation needed
 
@@ -66,8 +73,8 @@ import { Meta } from '@storybook/blocks';
 
 ## ADR Index
 
-| ADR | Title | Status |
-|-----|-------|--------|
+| ADR     | Title                 | Status   |
+| ------- | --------------------- | -------- |
 | ADR-001 | TypeScript for Config | Accepted |
-| ADR-002 | Local State File | Accepted |
-| ADR-003 | Dual Auth Strategy | Accepted |
+| ADR-002 | Local State File      | Accepted |
+| ADR-003 | Dual Auth Strategy    | Accepted |

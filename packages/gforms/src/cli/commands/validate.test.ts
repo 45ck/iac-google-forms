@@ -3,17 +3,15 @@
  * Covers TC-CLI-002, TC-CLI-003
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createValidateCommand } from './validate.js';
 import * as fs from 'node:fs/promises';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createValidateCommand } from './validate.js';
 
 vi.mock('node:fs/promises');
 
 const validForm = {
   title: 'Test Form',
-  questions: [
-    { id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false },
-  ],
+  questions: [{ id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false }],
 };
 
 describe('validate command', () => {
@@ -105,7 +103,14 @@ describe('validate command', () => {
         title: 'Complete Form',
         description: 'A fully described form',
         questions: [
-          { id: 'q1', type: 'text', title: 'Name', description: 'Your name', required: true, paragraph: false },
+          {
+            id: 'q1',
+            type: 'text',
+            title: 'Name',
+            description: 'Your name',
+            required: true,
+            paragraph: false,
+          },
         ],
         settings: { collectEmail: false },
       };
@@ -146,9 +151,7 @@ describe('validate command', () => {
       const formWithDesc = {
         title: 'Test Form',
         description: 'Has description',
-        questions: [
-          { id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false },
-        ],
+        questions: [{ id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false }],
         settings: { collectEmail: false },
       };
       mockFs.readFile.mockResolvedValue(JSON.stringify(formWithDesc));

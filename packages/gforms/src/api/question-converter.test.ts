@@ -3,9 +3,9 @@
  * Covers conversion of local form questions to Google Forms API format
  */
 
-import { describe, it, expect } from 'vitest';
-import { convertQuestionToApiFormat } from './question-converter.js';
+import { describe, expect, it } from 'vitest';
 import type { Question } from '../schema/index.js';
+import { convertQuestionToApiFormat } from './question-converter.js';
 
 describe('convertQuestionToApiFormat', () => {
   describe('text questions', () => {

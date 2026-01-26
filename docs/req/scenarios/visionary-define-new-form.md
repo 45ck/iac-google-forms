@@ -12,18 +12,18 @@
 
 ## Steps
 
-| Step | Actor | Action | System Response |
-|------|-------|--------|-----------------|
-| 1 | Alex | Creates new file `forms/customer-feedback.ts` in IDE | IDE provides TypeScript autocomplete |
-| 2 | Alex | Imports form builder: `import { defineForm, text, dropdown, section } from 'iac-google-forms'` | Types available |
-| 3 | Alex | Defines form structure (see code below) | IDE validates types, shows errors |
-| 4 | Alex | Runs `gforms diff forms/customer-feedback.ts` | CLI shows "Will create new form with 10 questions" |
-| 5 | Alex | Reviews diff output | Clear summary of what will be created |
-| 6 | Alex | Runs `gforms deploy forms/customer-feedback.ts` | CLI creates form, shows progress |
-| 7 | System | Creates form via Google Forms API | Form created |
-| 8 | System | Links to Google Sheet (as configured) | Sheet created and linked |
-| 9 | System | Sets up email notification | Notification configured |
-| 10 | Alex | Receives confirmation with form URL | Form ready to use |
+| Step | Actor  | Action                                                                                         | System Response                                    |
+| ---- | ------ | ---------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| 1    | Alex   | Creates new file `forms/customer-feedback.ts` in IDE                                           | IDE provides TypeScript autocomplete               |
+| 2    | Alex   | Imports form builder: `import { defineForm, text, dropdown, section } from 'iac-google-forms'` | Types available                                    |
+| 3    | Alex   | Defines form structure (see code below)                                                        | IDE validates types, shows errors                  |
+| 4    | Alex   | Runs `gforms diff forms/customer-feedback.ts`                                                  | CLI shows "Will create new form with 10 questions" |
+| 5    | Alex   | Reviews diff output                                                                            | Clear summary of what will be created              |
+| 6    | Alex   | Runs `gforms deploy forms/customer-feedback.ts`                                                | CLI creates form, shows progress                   |
+| 7    | System | Creates form via Google Forms API                                                              | Form created                                       |
+| 8    | System | Links to Google Sheet (as configured)                                                          | Sheet created and linked                           |
+| 9    | System | Sets up email notification                                                                     | Notification configured                            |
+| 10   | Alex   | Receives confirmation with form URL                                                            | Form ready to use                                  |
 
 ## Example Code
 
@@ -38,7 +38,7 @@ import {
   section,
   required,
   sheets,
-  emailNotification
+  emailNotification,
 } from 'iac-google-forms';
 
 export default defineForm({
@@ -144,11 +144,11 @@ Done in 3.2s
 
 ## Benefits Over As-Is
 
-| Aspect | As-Is | Visionary |
-|--------|-------|-----------|
-| Time | 35-45 min | 5 min |
-| Version control | None | Full git history |
-| Reproducibility | None | 100% reproducible |
-| Review process | None | Code review before deploy |
-| Type safety | None | Full TypeScript validation |
-| Documentation | None | Code is documentation |
+| Aspect          | As-Is     | Visionary                  |
+| --------------- | --------- | -------------------------- |
+| Time            | 35-45 min | 5 min                      |
+| Version control | None      | Full git history           |
+| Reproducibility | None      | 100% reproducible          |
+| Review process  | None      | Code review before deploy  |
+| Type safety     | None      | Full TypeScript validation |
+| Documentation   | None      | Code is documentation      |

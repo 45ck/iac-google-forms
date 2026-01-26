@@ -4,11 +4,11 @@
  */
 
 import type {
-  Question,
-  TextQuestion,
   ChoiceQuestion,
   DropdownQuestion,
+  Question,
   ScaleQuestion,
+  TextQuestion,
 } from '../schema/index.js';
 
 export interface ApiQuestion {

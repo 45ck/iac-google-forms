@@ -3,27 +3,35 @@
  * Validate form definitions
  */
 
+import chalk from 'chalk';
 import { Command } from 'commander';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import chalk from 'chalk';
 import { validateFormDefinition } from '../../schema/index.js';
-import { assertFileExists, parseJsonContent, commandAction } from '../utils/load-form.js';
+import {
+  assertFileExists,
+  assertSafePath,
+  commandAction,
+  parseJsonContent,
+} from '../utils/load-form.js';
 
 export function createValidateCommand(): Command {
   const validate = new Command('validate')
     .description('Validate a form definition without deploying')
     .argument('<file>', 'Path to form definition file')
     .option('--strict', 'Treat warnings as errors')
-    .action(commandAction(async (file: string, options: { strict: boolean }) => {
-      await runValidate(file, options.strict);
-    }));
+    .action(
+      commandAction(async (file: string, options: { strict: boolean }) => {
+        await runValidate(file, options.strict);
+      })
+    );
 
   return validate;
 }
 
 async function runValidate(file: string, strict: boolean): Promise<void> {
   const filePath = path.resolve(file);
+  assertSafePath(filePath, file);
   await assertFileExists(filePath, file);
 
   if (filePath.endsWith('.ts')) {
@@ -122,7 +130,10 @@ function printStrictWarnings(file: string, warnings: StrictWarning[]): void {
   console.log(`${String(warnings.length)} warning(s) treated as errors (--strict)`);
 }
 
-function printValidResult(file: string, data: { title: string; questions: unknown[]; integrations?: unknown[] | undefined }): void {
+function printValidResult(
+  file: string,
+  data: { title: string; questions: unknown[]; integrations?: unknown[] | undefined }
+): void {
   console.log(chalk.green('✓'), `${file} is valid`);
   console.log();
   console.log('  Title:', chalk.cyan(data.title));

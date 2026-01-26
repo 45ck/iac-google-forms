@@ -2,8 +2,8 @@
  * Tests for retry utility
  */
 
-import { describe, it, expect, vi } from 'vitest';
-import { withRetry, isRetryableStatusCode, makeRetryable } from './retry.js';
+import { describe, expect, it, vi } from 'vitest';
+import { isRetryableStatusCode, makeRetryable, withRetry } from './retry.js';
 
 describe('isRetryableStatusCode', () => {
   it('should return true for rate limiting (429)', () => {
@@ -40,14 +40,12 @@ describe('withRetry', () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
+  // TC-ERR-002: API rate limit — retry with backoff
   it('should retry on retryable error', async () => {
     const retryableError = new Error('Rate limited');
     Object.assign(retryableError, { statusCode: 429 });
 
-    const fn = vi
-      .fn()
-      .mockRejectedValueOnce(retryableError)
-      .mockResolvedValueOnce('success');
+    const fn = vi.fn().mockRejectedValueOnce(retryableError).mockResolvedValueOnce('success');
 
     const result = await withRetry(fn, {
       maxAttempts: 3,
@@ -64,9 +62,9 @@ describe('withRetry', () => {
 
     const fn = vi.fn().mockRejectedValue(nonRetryableError);
 
-    await expect(
-      withRetry(fn, { maxAttempts: 3, initialDelayMs: 10 })
-    ).rejects.toThrow('Not found');
+    await expect(withRetry(fn, { maxAttempts: 3, initialDelayMs: 10 })).rejects.toThrow(
+      'Not found'
+    );
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
@@ -76,19 +74,16 @@ describe('withRetry', () => {
 
     const fn = vi.fn().mockRejectedValue(retryableError);
 
-    await expect(
-      withRetry(fn, { maxAttempts: 3, initialDelayMs: 10 })
-    ).rejects.toThrow('Server error');
+    await expect(withRetry(fn, { maxAttempts: 3, initialDelayMs: 10 })).rejects.toThrow(
+      'Server error'
+    );
     expect(fn).toHaveBeenCalledTimes(3);
   });
 
   it('should use custom retryable check', async () => {
     const customError = new Error('Custom error');
 
-    const fn = vi
-      .fn()
-      .mockRejectedValueOnce(customError)
-      .mockResolvedValueOnce('success');
+    const fn = vi.fn().mockRejectedValueOnce(customError).mockResolvedValueOnce('success');
 
     const result = await withRetry(fn, {
       maxAttempts: 3,
@@ -103,9 +98,9 @@ describe('withRetry', () => {
   it('should throw if maxAttempts is less than 1', async () => {
     const fn = vi.fn().mockResolvedValue('success');
 
-    await expect(
-      withRetry(fn, { maxAttempts: 0 })
-    ).rejects.toThrow('maxAttempts must be at least 1');
+    await expect(withRetry(fn, { maxAttempts: 0 })).rejects.toThrow(
+      'maxAttempts must be at least 1'
+    );
 
     expect(fn).not.toHaveBeenCalled();
   });

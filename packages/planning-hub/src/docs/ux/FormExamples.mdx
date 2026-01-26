@@ -60,9 +60,7 @@ export default defineForm({
     },
   ],
 
-  integrations: [
-    { type: 'sheets', spreadsheetName: 'Feedback Responses' },
-  ],
+  integrations: [{ type: 'sheets', spreadsheetName: 'Feedback Responses' }],
 });
 ```
 
@@ -83,8 +81,8 @@ export default defineForm({
     },
     {
       type: 'section',
-      title: 'We\'d love to improve',
-      showIf: { field: 'nps', in: ['0','1','2','3','4','5','6'] },
+      title: "We'd love to improve",
+      showIf: { field: 'nps', in: ['0', '1', '2', '3', '4', '5', '6'] },
       questions: [
         {
           id: 'improvement',
@@ -102,7 +100,7 @@ export default defineForm({
       type: 'email',
       to: ['support@company.com'],
       subject: 'Detractor Alert',
-      condition: { field: 'nps', in: ['0','1','2','3','4','5','6'] },
+      condition: { field: 'nps', in: ['0', '1', '2', '3', '4', '5', '6'] },
     },
   ],
 });
@@ -132,7 +130,7 @@ export default defineForm({
       type: 'webhook',
       url: 'https://api.example.com/registrations',
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ${API_KEY}' },
+      headers: { Authorization: 'Bearer ${API_KEY}' },
     },
   ],
 });

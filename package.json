@@ -1,5 +1,5 @@
 {
-  "name": "iac-google-forms",
+  "name": "iac-google-forms-workspace",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -19,7 +19,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "depcruise": "depcruise packages --config .dependency-cruiser.js",
-    "knip": "knip --production",
+    "knip": "knip --production --use-tsconfig-files",
     "check": "pnpm format && pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm depcruise && pnpm knip",
     "validate:packages": "node scripts/validate-packages.js",
     "prepare": "husky"
@@ -51,8 +51,13 @@
       "prettier --write --ignore-unknown"
     ],
     "**/*.{ts,tsx,js,jsx,mjs,cjs}": [
-      "eslint --fix --max-warnings=0"
+      "eslint --fix --max-warnings=0 --no-warn-ignored"
     ]
+  },
+  "pnpm": {
+    "overrides": {
+      "lodash-es": ">=4.17.23"
+    }
   },
   "keywords": [
     "sdlc",

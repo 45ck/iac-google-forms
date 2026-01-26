@@ -3,7 +3,7 @@
  * Covers TC-CLI-008
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createListCommand } from './list.js';
 
 const mockListForms = vi.fn();

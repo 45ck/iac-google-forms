@@ -8,17 +8,17 @@ This document shows the visual design of CLI output for all major commands and s
 
 ## Color Palette
 
-| Element | Color | ANSI Code | Usage |
-|---------|-------|-----------|-------|
-| Success | Green | `\x1b[32m` | Checkmarks, success messages |
-| Error | Red | `\x1b[31m` | Error messages, removals |
-| Warning | Yellow | `\x1b[33m` | Warnings, modifications |
-| Info | Cyan | `\x1b[36m` | URLs, hints |
-| Dim | Gray | `\x1b[90m` | Secondary info, IDs |
-| Bold | - | `\x1b[1m` | Headers, emphasis |
-| Add | Green | `\x1b[32m` | Diff additions (+) |
-| Remove | Red | `\x1b[31m` | Diff removals (-) |
-| Modify | Yellow | `\x1b[33m` | Diff modifications (~) |
+| Element | Color  | ANSI Code  | Usage                        |
+| ------- | ------ | ---------- | ---------------------------- |
+| Success | Green  | `\x1b[32m` | Checkmarks, success messages |
+| Error   | Red    | `\x1b[31m` | Error messages, removals     |
+| Warning | Yellow | `\x1b[33m` | Warnings, modifications      |
+| Info    | Cyan   | `\x1b[36m` | URLs, hints                  |
+| Dim     | Gray   | `\x1b[90m` | Secondary info, IDs          |
+| Bold    | -      | `\x1b[1m`  | Headers, emphasis            |
+| Add     | Green  | `\x1b[32m` | Diff additions (+)           |
+| Remove  | Red    | `\x1b[31m` | Diff removals (-)            |
+| Modify  | Yellow | `\x1b[33m` | Diff modifications (~)       |
 
 ---
 

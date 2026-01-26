@@ -20,11 +20,11 @@ This document defines the testing approach for iac-google-forms, covering unit t
                 └───────────────────┘
 ```
 
-| Level | Count | Speed | Scope |
-|-------|-------|-------|-------|
-| Unit | ~200 | <1ms each | Single function/class |
-| Integration | ~50 | <100ms each | Module boundaries |
-| E2E | ~20 | <30s each | Full CLI workflows |
+| Level       | Count | Speed       | Scope                 |
+| ----------- | ----- | ----------- | --------------------- |
+| Unit        | ~200  | <1ms each   | Single function/class |
+| Integration | ~50   | <100ms each | Module boundaries     |
+| E2E         | ~20   | <30s each   | Full CLI workflows    |
 
 ## Testing Framework
 
@@ -45,13 +45,7 @@ export default defineConfig({
         functions: 95,
         lines: 95,
       },
-      exclude: [
-        'node_modules',
-        'dist',
-        '**/*.d.ts',
-        '**/*.test.ts',
-        '**/test-utils/**',
-      ],
+      exclude: ['node_modules', 'dist', '**/*.d.ts', '**/*.test.ts', '**/test-utils/**'],
     },
   },
 });
@@ -61,13 +55,13 @@ export default defineConfig({
 
 ### What to Unit Test
 
-| Component | Test Focus |
-|-----------|------------|
-| ConfigLoader | Parsing, validation, error messages |
-| DiffEngine | Diff calculation for all change types |
-| StateManager | Read/write, serialization |
-| AuthManager | Token handling, expiry logic |
-| Formatters | Output formatting, colors |
+| Component    | Test Focus                            |
+| ------------ | ------------------------------------- |
+| ConfigLoader | Parsing, validation, error messages   |
+| DiffEngine   | Diff calculation for all change types |
+| StateManager | Read/write, serialization             |
+| AuthManager  | Token handling, expiry logic          |
+| Formatters   | Output formatting, colors             |
 
 ### Example: DiffEngine
 
@@ -233,12 +227,12 @@ describe('validateDefinition', () => {
 
 ### What to Integration Test
 
-| Boundary | Test Focus |
-|----------|------------|
-| Config → State | Loading form, checking state |
-| Auth → API | Token refresh, API calls |
-| Diff → Deploy | Diff calculation to update generation |
-| CLI → All | Command parsing to output |
+| Boundary       | Test Focus                            |
+| -------------- | ------------------------------------- |
+| Config → State | Loading form, checking state          |
+| Auth → API     | Token refresh, API calls              |
+| Diff → Deploy  | Diff calculation to update generation |
+| CLI → All      | Command parsing to output             |
 
 ### Example: State Integration
 
@@ -323,7 +317,7 @@ const server = setupServer(
       info: { title: 'Existing Form' },
       items: [],
     });
-  }),
+  })
 );
 
 beforeAll(() => server.listen());
@@ -355,11 +349,11 @@ describe('GoogleFormsClient Integration', () => {
 
 ### What to E2E Test
 
-| Workflow | Verification |
-|----------|--------------|
-| Init → Auth → Deploy | Full new user journey |
-| Deploy → Diff → Deploy | Update workflow |
-| Deploy → Destroy | Cleanup workflow |
+| Workflow               | Verification          |
+| ---------------------- | --------------------- |
+| Init → Auth → Deploy   | Full new user journey |
+| Deploy → Diff → Deploy | Update workflow       |
+| Deploy → Destroy       | Cleanup workflow      |
 
 ### Example: E2E with Real CLI
 
@@ -449,14 +443,10 @@ export const fullForm = {
     {
       type: 'section' as const,
       title: 'Details',
-      questions: [
-        { id: 'comments', type: 'text' as const, title: 'Comments', paragraph: true },
-      ],
+      questions: [{ id: 'comments', type: 'text' as const, title: 'Comments', paragraph: true }],
     },
   ],
-  integrations: [
-    { type: 'sheets' as const, spreadsheetName: 'Responses' },
-  ],
+  integrations: [{ type: 'sheets' as const, spreadsheetName: 'Responses' }],
   settings: {
     collectEmail: true,
     confirmationMessage: 'Thanks!',
@@ -476,9 +466,7 @@ export function createForm(overrides: Partial<FormDefinition> = {}): FormDefinit
   counter++;
   return {
     title: `Test Form ${counter}`,
-    questions: [
-      { id: `q${counter}`, type: 'text', title: `Question ${counter}` },
-    ],
+    questions: [{ id: `q${counter}`, type: 'text', title: `Question ${counter}` }],
     ...overrides,
   };
 }
@@ -531,9 +519,9 @@ jobs:
 
 ## Coverage Requirements
 
-| Metric | Threshold |
-|--------|-----------|
-| Statements | 95% |
-| Branches | 90% |
-| Functions | 95% |
-| Lines | 95% |
+| Metric     | Threshold |
+| ---------- | --------- |
+| Statements | 95%       |
+| Branches   | 90%       |
+| Functions  | 95%       |
+| Lines      | 95%       |

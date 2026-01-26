@@ -3,19 +3,21 @@
  * Initialize a new gforms project
  */
 
+import chalk from 'chalk';
 import { Command } from 'commander';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import chalk from 'chalk';
 import { commandAction } from '../utils/load-form.js';
 
 export function createInitCommand(): Command {
   const init = new Command('init')
     .description('Initialize a new gforms project')
     .option('--force', 'Overwrite existing files')
-    .action(commandAction(async (options: { force: boolean }) => {
-      await runInit(options.force);
-    }));
+    .action(
+      commandAction(async (options: { force: boolean }) => {
+        await runInit(options.force);
+      })
+    );
 
   return init;
 }
@@ -34,7 +36,10 @@ async function runInit(force: boolean): Promise<void> {
 }
 
 async function checkExisting(gformsDir: string, force: boolean): Promise<void> {
-  const exists = await fs.access(gformsDir).then(() => true).catch(() => false);
+  const exists = await fs
+    .access(gformsDir)
+    .then(() => true)
+    .catch(() => false);
   if (exists && !force) {
     throw new Error('Project already initialized. Use --force to reinitialize.');
   }
@@ -96,7 +101,10 @@ export default defineForm({
 async function updateGitignore(cwd: string): Promise<void> {
   const gitignoreContent = `# gforms\n.gforms/credentials.json\n`;
   const gitignorePath = path.join(cwd, '.gitignore');
-  const exists = await fs.access(gitignorePath).then(() => true).catch(() => false);
+  const exists = await fs
+    .access(gitignorePath)
+    .then(() => true)
+    .catch(() => false);
 
   if (exists) {
     const existing = await fs.readFile(gitignorePath, 'utf-8');

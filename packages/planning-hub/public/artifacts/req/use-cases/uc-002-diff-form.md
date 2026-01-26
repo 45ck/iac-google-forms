@@ -2,13 +2,13 @@
 
 ## Overview
 
-| Attribute | Value |
-|-----------|-------|
-| **ID** | UC-002 |
-| **Title** | Diff Form |
-| **Actor** | Platform Engineer, CI/CD System |
-| **Priority** | Must Have |
-| **Derived From** | visionary-preview-deploy |
+| Attribute        | Value                           |
+| ---------------- | ------------------------------- |
+| **ID**           | UC-002                          |
+| **Title**        | Diff Form                       |
+| **Actor**        | Platform Engineer, CI/CD System |
+| **Priority**     | Must Have                       |
+| **Derived From** | visionary-preview-deploy        |
 
 ## Goal
 
@@ -30,24 +30,24 @@ Compare local form definition against the current state in Google Forms and disp
 
 ## Main Success Scenario
 
-| Step | Actor | Action | System Response |
-|------|-------|--------|-----------------|
-| 1 | Engineer | Runs `gforms diff <file>` | CLI starts |
-| 2 | System | Loads and validates form definition | Config loaded |
-| 3 | System | Authenticates with Google APIs | Auth successful |
-| 4 | System | Fetches current form state (if exists) | Remote state retrieved |
-| 5 | System | Compares local vs remote | Diff calculated |
-| 6 | System | Displays formatted diff output | Diff shown to user |
+| Step | Actor    | Action                                 | System Response        |
+| ---- | -------- | -------------------------------------- | ---------------------- |
+| 1    | Engineer | Runs `gforms diff <file>`              | CLI starts             |
+| 2    | System   | Loads and validates form definition    | Config loaded          |
+| 3    | System   | Authenticates with Google APIs         | Auth successful        |
+| 4    | System   | Fetches current form state (if exists) | Remote state retrieved |
+| 5    | System   | Compares local vs remote               | Diff calculated        |
+| 6    | System   | Displays formatted diff output         | Diff shown to user     |
 
 ## Extensions
 
-| Step | Condition | Action |
-|------|-----------|--------|
-| 2a | Invalid TypeScript | CLI shows validation errors, exits |
-| 3a | Auth fails | CLI shows auth error with fix instructions |
-| 4a | Form doesn't exist | CLI shows "NEW" form, lists all questions |
-| 4b | Network error | CLI shows error, suggests retry |
-| 5a | No changes | CLI shows "No changes detected" |
+| Step | Condition          | Action                                     |
+| ---- | ------------------ | ------------------------------------------ |
+| 2a   | Invalid TypeScript | CLI shows validation errors, exits         |
+| 3a   | Auth fails         | CLI shows auth error with fix instructions |
+| 4a   | Form doesn't exist | CLI shows "NEW" form, lists all questions  |
+| 4b   | Network error      | CLI shows error, suggests retry            |
+| 5a   | No changes         | CLI shows "No changes detected"            |
 
 ## CLI Interface
 

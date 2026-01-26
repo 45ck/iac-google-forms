@@ -3,10 +3,10 @@
  * Implements TC-API-001 through TC-API-006 from test plan
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { FormsClient, FormsApiError } from './forms-client.js';
-import { convertQuestionToApiFormat } from './question-converter.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { FormDefinition } from '../schema/index.js';
+import { FormsApiError, FormsClient } from './forms-client.js';
+import { convertQuestionToApiFormat } from './question-converter.js';
 
 // Mock form data
 const mockFormDefinition: FormDefinition = {
@@ -80,6 +80,7 @@ describe('FormsClient', () => {
       );
     });
 
+    // TC-ERR-004: Permission denied (403)
     it('should throw FormsApiError on API failure', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
@@ -105,6 +106,7 @@ describe('FormsClient', () => {
       expect(result.formId).toBe('test-form-id-123');
     });
 
+    // TC-ERR-003: Form not found (404)
     it('should throw FormsApiError when form not found', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
@@ -129,9 +131,7 @@ describe('FormsClient', () => {
         title: 'Updated Title',
       };
 
-      await expect(
-        client.updateForm('test-form-id-123', updatedDefinition)
-      ).resolves.not.toThrow();
+      await expect(client.updateForm('test-form-id-123', updatedDefinition)).resolves.not.toThrow();
     });
   });
 
@@ -162,7 +162,13 @@ describe('FormsClient', () => {
 
   describe('TC-API-006: Convert definition to API format', () => {
     it('should convert text questions correctly', () => {
-      const question = { id: 'q1', type: 'text' as const, title: 'Name', required: true, paragraph: false };
+      const question = {
+        id: 'q1',
+        type: 'text' as const,
+        title: 'Name',
+        required: true,
+        paragraph: false,
+      };
       const result = convertQuestionToApiFormat(question);
 
       expect(result).toEqual({
@@ -224,13 +230,14 @@ describe('FormsClient', () => {
         if (opts.method === 'GET') {
           return Promise.resolve({
             ok: true,
-            json: () => Promise.resolve({
-              ...mockFormResponse,
-              items: [
-                { itemId: 'existing-1', title: 'Old Q1' },
-                { itemId: 'existing-2', title: 'Old Q2' },
-              ],
-            }),
+            json: () =>
+              Promise.resolve({
+                ...mockFormResponse,
+                items: [
+                  { itemId: 'existing-1', title: 'Old Q1' },
+                  { itemId: 'existing-2', title: 'Old Q2' },
+                ],
+              }),
           });
         }
         // POST for batchUpdate
@@ -279,17 +286,19 @@ describe('FormsClient', () => {
         if (callCount === 1) {
           return Promise.resolve({
             ok: true,
-            json: () => Promise.resolve({
-              files: [{ id: 'form-1', name: 'Form 1' }],
-              nextPageToken: 'page2',
-            }),
+            json: () =>
+              Promise.resolve({
+                files: [{ id: 'form-1', name: 'Form 1' }],
+                nextPageToken: 'page2',
+              }),
           });
         }
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({
-            files: [{ id: 'form-2', name: 'Form 2' }],
-          }),
+          json: () =>
+            Promise.resolve({
+              files: [{ id: 'form-2', name: 'Form 2' }],
+            }),
         });
       });
 
@@ -335,7 +344,12 @@ describe('FormsClient', () => {
         }
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({ formId: 'new-id', info: { title: 'Section Form' }, responderUri: 'https://test' }),
+          json: () =>
+            Promise.resolve({
+              formId: 'new-id',
+              info: { title: 'Section Form' },
+              responderUri: 'https://test',
+            }),
         });
       });
       global.fetch = mockFetch;
@@ -359,11 +373,12 @@ describe('FormsClient', () => {
 
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          formId: 'empty-id',
-          info: { title: 'Empty Form' },
-          responderUri: 'https://test',
-        }),
+        json: () =>
+          Promise.resolve({
+            formId: 'empty-id',
+            info: { title: 'Empty Form' },
+            responderUri: 'https://test',
+          }),
       });
 
       const result = await client.createForm(minimalDef);
@@ -373,7 +388,9 @@ describe('FormsClient', () => {
     });
   });
 
+  // TC-ERR-001 through TC-ERR-004: Error handling
   describe('Error handling', () => {
+    // TC-ERR-002: API rate limit (429)
     it('should include status code in FormsApiError', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
@@ -391,6 +408,7 @@ describe('FormsClient', () => {
       }
     });
 
+    // TC-ERR-001: Network failure
     it('should handle network errors', async () => {
       global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
 
@@ -418,10 +436,11 @@ describe('FormsClient', () => {
     it('should throw when API returns response without formId', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          info: { title: 'No ID' },
-          responderUri: 'https://test',
-        }),
+        json: () =>
+          Promise.resolve({
+            info: { title: 'No ID' },
+            responderUri: 'https://test',
+          }),
       });
 
       await expect(client.getForm('test')).rejects.toThrow(FormsApiError);
@@ -432,13 +451,14 @@ describe('FormsClient', () => {
         ok: false,
         status: 400,
         statusText: 'Bad Request',
-        json: () => Promise.resolve({
-          error: {
-            message: 'Invalid request',
-            code: 400,
-            errors: [{ domain: 'global', reason: 'invalid' }],
-          },
-        }),
+        json: () =>
+          Promise.resolve({
+            error: {
+              message: 'Invalid request',
+              code: 400,
+              errors: [{ domain: 'global', reason: 'invalid' }],
+            },
+          }),
       });
 
       try {

@@ -3,9 +3,9 @@
  * Covers TC-CLI-004, TC-CLI-005
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createDiffCommand } from './diff.js';
 import * as fs from 'node:fs/promises';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createDiffCommand } from './diff.js';
 
 const mockGetFormState = vi.fn();
 const mockGetAccessToken = vi.fn();
@@ -33,7 +33,7 @@ vi.mock('../../api/forms-client.js', () => ({
     constructor(
       message: string,
       public readonly statusCode: number,
-      public readonly details?: unknown,
+      public readonly details?: unknown
     ) {
       super(message);
       this.name = 'FormsApiError';
@@ -54,7 +54,15 @@ const mockForm = {
   title: 'Test Form',
   questions: [
     { id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false },
-    { id: 'q2', type: 'choice', title: 'Color', required: false, options: ['Red', 'Blue'], allowOther: false, multiple: false },
+    {
+      id: 'q2',
+      type: 'choice',
+      title: 'Color',
+      required: false,
+      options: ['Red', 'Blue'],
+      allowOther: false,
+      multiple: false,
+    },
   ],
 };
 
@@ -167,9 +175,7 @@ describe('diff command', () => {
 
       await cmd.parseAsync(['node', 'test', 'form.json', '--format', 'json']);
 
-      const jsonOutput = consoleSpy.mock.calls
-        .map((call) => call.join(''))
-        .join('');
+      const jsonOutput = consoleSpy.mock.calls.map((call) => call.join('')).join('');
 
       const parsed = JSON.parse(jsonOutput);
       expect(parsed).toHaveProperty('status', 'new');
@@ -212,7 +218,15 @@ describe('diff command', () => {
         title: 'Test Form',
         questions: [
           { id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false },
-          { id: 'q2', type: 'choice', title: 'Color', required: false, options: ['Red', 'Blue'], allowOther: false, multiple: false },
+          {
+            id: 'q2',
+            type: 'choice',
+            title: 'Color',
+            required: false,
+            options: ['Red', 'Blue'],
+            allowOther: false,
+            multiple: false,
+          },
         ],
       });
 

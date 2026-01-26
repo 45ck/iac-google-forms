@@ -1,0 +1,11 @@
+# Keep line endings consistent across platforms.
+# Prettier is configured with "endOfLine": "lf".
+* text=auto eol=lf
+
+# Common binary file types.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary

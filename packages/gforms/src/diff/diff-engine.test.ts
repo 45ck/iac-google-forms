@@ -5,9 +5,9 @@
  * TDD: These tests define the expected behavior for form diffing.
  */
 
-import { describe, it, expect } from 'vitest';
-import { DiffEngine } from './diff-engine.js';
+import { describe, expect, it } from 'vitest';
 import type { FormDefinition } from '../schema/index.js';
+import { DiffEngine } from './diff-engine.js';
 
 describe('DiffEngine', () => {
   const diffEngine = new DiffEngine();
@@ -177,9 +177,7 @@ describe('DiffEngine', () => {
 
     it('should detect modified question options', () => {
       const local = createForm({
-        questions: [
-          { id: 'q1', type: 'choice', title: 'Pick', options: ['A', 'B', 'C'] },
-        ],
+        questions: [{ id: 'q1', type: 'choice', title: 'Pick', options: ['A', 'B', 'C'] }],
       });
       const remote = createForm({
         questions: [{ id: 'q1', type: 'choice', title: 'Pick', options: ['A', 'B'] }],
@@ -347,9 +345,7 @@ describe('DiffEngine', () => {
 
       const result = diffEngine.diff(local, remote);
 
-      const sheetsIntegrations = result.integrations.filter(
-        (i) => i.integrationType === 'sheets'
-      );
+      const sheetsIntegrations = result.integrations.filter((i) => i.integrationType === 'sheets');
       expect(sheetsIntegrations).toHaveLength(2);
       expect(sheetsIntegrations.filter((i) => i.action === 'unchanged')).toHaveLength(1);
       expect(sheetsIntegrations.filter((i) => i.action === 'modify')).toHaveLength(1);

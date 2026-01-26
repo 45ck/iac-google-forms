@@ -19,11 +19,11 @@ The gforms package currently has **zero E2E tests and zero integration tests**, 
 
 ### Expected Test Structure (from test-plan.md)
 
-| Test Type | Expected | Actual | Gap |
-|-----------|----------|--------|-----|
-| **Unit Tests** | Validation, diff logic, converters | ✅ Present | Low complexity coverage |
-| **Integration Tests** | StateManager with real file I/O, FormsClient with mock HTTP server, CLI with real FS | ❌ None | 100% missing |
-| **E2E Tests** | Full deploy flow, full destroy flow, multi-command workflows | ❌ None | 100% missing |
+| Test Type             | Expected                                                                             | Actual     | Gap                     |
+| --------------------- | ------------------------------------------------------------------------------------ | ---------- | ----------------------- |
+| **Unit Tests**        | Validation, diff logic, converters                                                   | ✅ Present | Low complexity coverage |
+| **Integration Tests** | StateManager with real file I/O, FormsClient with mock HTTP server, CLI with real FS | ❌ None    | 100% missing            |
+| **E2E Tests**         | Full deploy flow, full destroy flow, multi-command workflows                         | ❌ None    | 100% missing            |
 
 ---
 
@@ -32,22 +32,26 @@ The gforms package currently has **zero E2E tests and zero integration tests**, 
 ### 1. CLI Command Tests
 
 #### `deploy.test.ts` - **PURE UNIT TEST**
+
 **Classification**: Unit test with mocked dependencies
 **Coverage**: Command structure, error messages, logic paths
 **Missing Integration**:
+
 - ❌ No real file system operations
 - ❌ No actual state file writes
 - ❌ No real API calls (even to mock server)
 - ❌ No validation of actual JSON parsing from disk
 
 **Evidence**:
+
 ```typescript
-vi.mock('node:fs/promises');  // File system mocked
-vi.mock('../../state/state-manager.js');  // State completely mocked
-vi.mock('../../api/forms-client.js');  // API completely mocked
+vi.mock('node:fs/promises'); // File system mocked
+vi.mock('../../state/state-manager.js'); // State completely mocked
+vi.mock('../../api/forms-client.js'); // API completely mocked
 ```
 
 **Test Cases Present**:
+
 - ✅ TC-CLI-006: dry-run mode
 - ✅ TC-CLI-007: auto-approve flag
 - ✅ File validation (TypeScript rejection, invalid JSON)
@@ -55,6 +59,7 @@ vi.mock('../../api/forms-client.js');  // API completely mocked
 - ⚠️ Diff display (mocked remote response)
 
 **Critical Gaps**:
+
 1. **Real file loading**: No test reads an actual JSON file from disk
 2. **State persistence**: No test verifies state.json is actually written correctly
 3. **End-to-end flow**: No test for: read file → validate → API call → save state
@@ -63,15 +68,18 @@ vi.mock('../../api/forms-client.js');  // API completely mocked
 ---
 
 #### `destroy.test.ts` - **PURE UNIT TEST**
+
 **Classification**: Unit test with mocked dependencies
 **Coverage**: Command options, confirmation logic, error paths
 
 **Missing Integration**:
+
 - ❌ No real state file deletion
 - ❌ No validation of state.json structure after removal
 - ❌ No test for concurrent destroy operations
 
 **Critical Gaps**:
+
 1. **State consistency**: No test that state file is actually updated after destroy
 2. **Edge cases**: No test for destroy during ongoing deploy
 3. **File system errors**: No test for permission denied on state file
@@ -79,15 +87,18 @@ vi.mock('../../api/forms-client.js');  // API completely mocked
 ---
 
 #### `diff.test.ts` - **PURE UNIT TEST**
+
 **Classification**: Unit test with mocked dependencies
 **Coverage**: Output formats (markdown, JSON, text), CI mode exit codes
 
 **Missing Integration**:
+
 - ❌ No real file reading from disk
 - ❌ No actual remote form fetching
 - ❌ No validation of diff accuracy with real API responses
 
 **Critical Gaps**:
+
 1. **Real diff accuracy**: No verification that diff matches actual API response format
 2. **Complex forms**: No test with deeply nested sections, 50+ questions
 3. **Performance**: No test for diff of large forms (100+ questions)
@@ -97,11 +108,13 @@ vi.mock('../../api/forms-client.js');  // API completely mocked
 ### 2. State Management Tests
 
 #### `state-manager.test.ts` - **INTEGRATION TEST (Good!)**
+
 **Classification**: Integration test with real file I/O
 **Coverage**: State file CRUD operations with real temp directory
 **Quality**: ✅ **This is the only true integration test in the codebase**
 
 **What's Good**:
+
 - ✅ TC-STATE-001: Real file creation
 - ✅ TC-STATE-002: Real state updates
 - ✅ TC-STATE-003: Real file loading
@@ -111,6 +124,7 @@ vi.mock('../../api/forms-client.js');  // API completely mocked
 - ✅ Proper cleanup with `afterEach`
 
 **Remaining Gaps**:
+
 - ⚠️ **Concurrency**: Line 304-322 tests concurrent writes but doesn't assert both forms were saved
   ```typescript
   // Test expects >= 1 form, should expect exactly 2
@@ -125,15 +139,18 @@ vi.mock('../../api/forms-client.js');  // API completely mocked
 ### 3. API Client Tests
 
 #### `forms-client.test.ts` - **PURE UNIT TEST**
+
 **Classification**: Unit test with mocked fetch
 **Coverage**: API call construction, error handling, pagination
 
 **Missing Integration**:
+
 - ❌ No mock HTTP server (e.g., MSW, nock)
 - ❌ No validation of actual Google API request format
 - ❌ No test with real OAuth tokens (even expired ones)
 
 **Critical Gaps**:
+
 1. **Request validation**: Tests don't validate the actual HTTP request body structure
    - Does the API actually accept the question format we send?
    - Are batch update requests correctly ordered?
@@ -143,11 +160,13 @@ vi.mock('../../api/forms-client.js');  // API completely mocked
 ---
 
 #### `retry.test.ts` - **PURE UNIT TEST**
+
 **Classification**: Unit test for retry logic
 **Coverage**: Exponential backoff, retryable vs. non-retryable errors
 **Quality**: ✅ Good coverage of retry mechanics
 
 **Missing Integration**:
+
 - ❌ No test of retry with FormsClient (is it actually applied to API calls?)
 - ❌ No test for retry exhaustion in a real scenario (e.g., Google API rate limit)
 
@@ -164,9 +183,11 @@ All validation tests (`form-definition.test.ts`, `diff-engine.test.ts`, `compara
 ### Critical User Journeys (Never Tested End-to-End)
 
 #### 1. **New Form Deployment Flow**
+
 **Scenario**: User creates a form definition, runs deploy, form appears in Google Forms
 
 **Required E2E Test**:
+
 ```typescript
 test('E2E: Deploy new form from JSON file', async () => {
   // 1. Create real temp JSON file with form definition
@@ -193,6 +214,7 @@ test('E2E: Deploy new form from JSON file', async () => {
 ```
 
 **Why This Matters**: Current tests mock every step. We've never verified:
+
 - CLI correctly spawns and exits
 - File parsing works with real files
 - State JSON is valid and parseable after write
@@ -201,7 +223,9 @@ test('E2E: Deploy new form from JSON file', async () => {
 ---
 
 #### 2. **Update Existing Form Flow**
+
 **Never Tested**:
+
 - Deploy form → Modify form definition → Deploy again → Verify changes applied
 - Verify content hash correctly detects changes
 - Verify content hash correctly skips no-change deploys
@@ -209,17 +233,21 @@ test('E2E: Deploy new form from JSON file', async () => {
 ---
 
 #### 3. **Diff Accuracy Validation**
+
 **Never Tested**:
+
 - Deploy form → Modify remotely in Google Forms UI → Run diff → Verify detected changes match reality
 
 ---
 
 #### 4. **Destroy Flow with Remote Already Deleted**
+
 **Scenario**: User deletes form in Google Forms UI, then runs `gforms destroy`
 
 **Test Plan Coverage**: TC-ERR-003 mentions this, but it's never tested end-to-end.
 
 **Required E2E Test**:
+
 ```typescript
 test('E2E: Destroy handles remote form already deleted', async () => {
   // 1. Deploy form
@@ -243,7 +271,9 @@ test('E2E: Destroy handles remote form already deleted', async () => {
 ---
 
 #### 5. **Multi-Form Project**
+
 **Never Tested**:
+
 - Deploy 3 forms
 - Destroy 1 form
 - Verify other 2 forms still in state and functional
@@ -252,9 +282,11 @@ test('E2E: Destroy handles remote form already deleted', async () => {
 ---
 
 #### 6. **Authentication Flows**
+
 **Test Plan Coverage**: TC-AUTH-001 through TC-AUTH-006, but **NONE implemented**
 
 **Missing E2E Tests**:
+
 - OAuth login flow (can use mock OAuth server)
 - Token refresh on expired access token
 - Service account authentication with real key file
@@ -266,6 +298,7 @@ test('E2E: Destroy handles remote form already deleted', async () => {
 #### 7. **Error Handling Edge Cases**
 
 **From Test Plan but Never Tested**:
+
 - **TC-ERR-001**: Network failure during deploy (disconnect mid-request)
 - **TC-ERR-002**: API rate limit with retry → verify exponential backoff actually works
 - **TC-ERR-004**: Permission denied error → verify helpful message shown
@@ -275,12 +308,15 @@ test('E2E: Destroy handles remote form already deleted', async () => {
 ## Integration Test Gaps
 
 ### 1. StateManager + CLI Integration
+
 **Gap**: CLI tests mock StateManager completely. No test verifies:
+
 - CLI correctly initializes StateManager with right directory
 - CLI correctly handles StateManager errors (permission denied, disk full)
 - State file format written by CLI is readable by StateManager.load()
 
 **Required Integration Test**:
+
 ```typescript
 test('Integration: CLI deploy writes valid state file', async () => {
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'gforms-int-'));
@@ -310,9 +346,11 @@ test('Integration: CLI deploy writes valid state file', async () => {
 ---
 
 ### 2. FormsClient + Retry Integration
+
 **Gap**: Retry logic is tested in isolation. No test verifies FormsClient actually retries failed requests.
 
 **Required Integration Test**:
+
 ```typescript
 test('Integration: FormsClient retries on 429 rate limit', async () => {
   let callCount = 0;
@@ -338,11 +376,14 @@ test('Integration: FormsClient retries on 429 rate limit', async () => {
 ---
 
 ### 3. Diff Engine + API Response Converter Integration
+
 **Gap**: Diff engine tests use hardcoded FormDefinition objects. No test verifies:
+
 - Real API response → convertResponseToFormDefinition → DiffEngine produces accurate diff
 - Diff accurately handles Google Forms API quirks (e.g., missing fields, default values)
 
 **Required Integration Test**:
+
 ```typescript
 test('Integration: Diff engine handles real Google API response format', async () => {
   const realApiResponse = {
@@ -356,15 +397,20 @@ test('Integration: Diff engine handles real Google API response format', async (
           question: {
             questionId: 'q1',
             required: true,
-            textQuestion: { paragraph: false }
-          }
-        }
-      }
+            textQuestion: { paragraph: false },
+          },
+        },
+      },
     ],
-    revisionId: 'rev-1'
+    revisionId: 'rev-1',
   };
 
-  const localDef = { title: 'Real Form', questions: [/* modified */] };
+  const localDef = {
+    title: 'Real Form',
+    questions: [
+      /* modified */
+    ],
+  };
 
   // Convert real API response
   const remoteDef = convertResponseToFormDefinition(realApiResponse);
@@ -436,6 +482,7 @@ test('Integration: Diff engine handles real Google API response format', async (
 ### Immediate Actions (Before Production Release)
 
 1. **Create `tests/integration` directory structure**:
+
    ```
    tests/
    ├── integration/
@@ -476,6 +523,7 @@ test('Integration: Diff engine handles real Google API response format', async (
 ### Test Patterns to Adopt
 
 #### For Integration Tests
+
 ```typescript
 describe('Integration: StateManager + CLI', () => {
   let tempDir: string;
@@ -509,13 +557,14 @@ describe('Integration: StateManager + CLI', () => {
 ```
 
 #### For E2E Tests
+
 ```typescript
 describe('E2E: Deploy Flow', () => {
   it('should deploy form end-to-end', async () => {
     // Spawn actual CLI process
     const result = await spawnCLI(['deploy', 'test-form.json', '--auto-approve'], {
       cwd: testProjectDir,
-      env: { GOOGLE_APPLICATION_CREDENTIALS: mockCredPath }
+      env: { GOOGLE_APPLICATION_CREDENTIALS: mockCredPath },
     });
 
     // Verify exit code
@@ -535,11 +584,11 @@ describe('E2E: Deploy Flow', () => {
 
 ## Test Coverage Goals
 
-| Test Level | Current | Target | Priority |
-|------------|---------|--------|----------|
-| Unit Tests | ~18 files | Maintain | Low (sufficient) |
-| Integration Tests | 1 file (StateManager only) | 8+ files | **Critical** |
-| E2E Tests | 0 files | 6+ files | **Critical** |
+| Test Level        | Current                    | Target   | Priority         |
+| ----------------- | -------------------------- | -------- | ---------------- |
+| Unit Tests        | ~18 files                  | Maintain | Low (sufficient) |
+| Integration Tests | 1 file (StateManager only) | 8+ files | **Critical**     |
+| E2E Tests         | 0 files                    | 6+ files | **Critical**     |
 
 **Integration Test Target**: 80% coverage of cross-module interactions
 **E2E Test Target**: 100% coverage of critical user journeys (deploy, destroy, diff, list)
@@ -548,16 +597,16 @@ describe('E2E: Deploy Flow', () => {
 
 ## Quality Score Breakdown
 
-| Dimension | Score | Justification |
-|-----------|-------|---------------|
-| Unit Test Coverage | 8/10 | Good coverage of isolated logic |
-| Unit Test Quality | 7/10 | Meaningful assertions, but some weak (e.g., "hasSuccess") |
-| Integration Test Coverage | 1/10 | Only StateManager tested, all CLI/API mocked |
-| Integration Test Quality | 8/10 | StateManager tests are well-written |
-| E2E Test Coverage | 0/10 | **Zero E2E tests** |
-| E2E Test Quality | N/A | No E2E tests exist |
-| Test Organization | 6/10 | Clear structure, but missing integration/e2e dirs |
-| **Overall Score** | **4/10** | Heavy mocking masks integration risks |
+| Dimension                 | Score    | Justification                                             |
+| ------------------------- | -------- | --------------------------------------------------------- |
+| Unit Test Coverage        | 8/10     | Good coverage of isolated logic                           |
+| Unit Test Quality         | 7/10     | Meaningful assertions, but some weak (e.g., "hasSuccess") |
+| Integration Test Coverage | 1/10     | Only StateManager tested, all CLI/API mocked              |
+| Integration Test Quality  | 8/10     | StateManager tests are well-written                       |
+| E2E Test Coverage         | 0/10     | **Zero E2E tests**                                        |
+| E2E Test Quality          | N/A      | No E2E tests exist                                        |
+| Test Organization         | 6/10     | Clear structure, but missing integration/e2e dirs         |
+| **Overall Score**         | **4/10** | Heavy mocking masks integration risks                     |
 
 ---
 
@@ -566,6 +615,7 @@ describe('E2E: Deploy Flow', () => {
 ### Test Cases from test-plan.md - Implementation Status
 
 #### CLI Commands (TC-CLI-001 to TC-CLI-010)
+
 - ✅ TC-CLI-002: validate valid file (mocked)
 - ✅ TC-CLI-003: validate invalid file (mocked)
 - ✅ TC-CLI-004: diff new form (mocked)
@@ -580,6 +630,7 @@ describe('E2E: Deploy Flow', () => {
 **All CLI tests use mocks. None test real CLI execution.**
 
 #### State Management (TC-STATE-001 to TC-STATE-005)
+
 - ✅ TC-STATE-001: Create state file (REAL)
 - ✅ TC-STATE-002: Update existing state (REAL)
 - ✅ TC-STATE-003: Load state file (REAL)
@@ -589,6 +640,7 @@ describe('E2E: Deploy Flow', () => {
 **These are the only true integration tests in the codebase.**
 
 #### Authentication (TC-AUTH-001 to TC-AUTH-006)
+
 - ❌ TC-AUTH-001: OAuth login success (NOT IMPLEMENTED)
 - ❌ TC-AUTH-002: OAuth token refresh (NOT IMPLEMENTED)
 - ❌ TC-AUTH-003: Service account auth (NOT IMPLEMENTED)
@@ -599,6 +651,7 @@ describe('E2E: Deploy Flow', () => {
 **Authentication flow is completely untested.**
 
 #### Error Handling (TC-ERR-001 to TC-ERR-004)
+
 - ⚠️ TC-ERR-001: Network failure (mocked, not real)
 - ⚠️ TC-ERR-002: API rate limit (mocked, not real)
 - ❌ TC-ERR-003: Form not found (partially mocked)
@@ -607,9 +660,11 @@ describe('E2E: Deploy Flow', () => {
 **Error handling logic tested, but not with real errors.**
 
 #### Diff Engine (TC-DIFF-001 to TC-DIFF-008)
+
 - ✅ TC-DIFF-001 to TC-DIFF-008: All implemented **but with mocked data**
 
 #### Validation (TC-VAL-001 to TC-VAL-008)
+
 - ✅ All validation test cases implemented with good coverage
 
 ---

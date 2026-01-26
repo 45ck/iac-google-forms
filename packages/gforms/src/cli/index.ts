@@ -15,21 +15,18 @@
  */
 
 import { Command } from 'commander';
-import { createInitCommand } from './commands/init.js';
 import { createAuthCommand } from './commands/auth.js';
-import { createValidateCommand } from './commands/validate.js';
-import { createDiffCommand } from './commands/diff.js';
 import { createDeployCommand } from './commands/deploy.js';
-import { createListCommand } from './commands/list.js';
 import { createDestroyCommand } from './commands/destroy.js';
+import { createDiffCommand } from './commands/diff.js';
+import { createInitCommand } from './commands/init.js';
+import { createListCommand } from './commands/list.js';
+import { createValidateCommand } from './commands/validate.js';
 import { applyGlobalOptions } from './global-options.js';
 
 const program = new Command();
 
-program
-  .name('gforms')
-  .description('Infrastructure as Code for Google Forms')
-  .version('0.1.0');
+program.name('gforms').description('Infrastructure as Code for Google Forms').version('0.1.0');
 
 // Global options
 program

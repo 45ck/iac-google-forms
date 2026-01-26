@@ -9,9 +9,7 @@ import { getQuestionChanges } from './comparators.js';
 /**
  * Collect all questions including nested ones from sections
  */
-export function collectAllQuestions(
-  questions: Question[]
-): (Question & { id: string })[] {
+export function collectAllQuestions(questions: Question[]): (Question & { id: string })[] {
   const result: (Question & { id: string })[] = [];
 
   for (const q of questions) {
@@ -126,10 +124,7 @@ function isReordered(localIds: string[], remoteIds: string[]): boolean {
     if (localIds[i] !== remoteIds[i]) {
       const localSet = new Set(localIds);
       const remoteSet = new Set(remoteIds);
-      return (
-        localIds.every((id) => remoteSet.has(id)) &&
-        remoteIds.every((id) => localSet.has(id))
-      );
+      return localIds.every((id) => remoteSet.has(id)) && remoteIds.every((id) => localSet.has(id));
     }
   }
   return false;

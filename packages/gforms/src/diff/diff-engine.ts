@@ -6,19 +6,10 @@
  */
 
 import type { FormDefinition } from '../schema/index.js';
-import type {
-  DiffResult,
-  QuestionDiff,
-  IntegrationDiff,
-  SettingsDiff,
-} from '../types/index.js';
+import type { DiffResult, IntegrationDiff, QuestionDiff, SettingsDiff } from '../types/index.js';
 
-import {
-  diffQuestions,
-  checkOrderChanged,
-  collectAllQuestions,
-} from './question-differ.js';
 import { diffIntegrations } from './integration-differ.js';
+import { checkOrderChanged, collectAllQuestions, diffQuestions } from './question-differ.js';
 
 export type { DiffResult } from '../types/index.js';
 
@@ -52,18 +43,12 @@ export class DiffEngine {
     return this.createModifiedFormDiff(local, remote);
   }
 
-  private createModifiedFormDiff(
-    local: FormDefinition,
-    remote: FormDefinition
-  ): DiffResult {
+  private createModifiedFormDiff(local: FormDefinition, remote: FormDefinition): DiffResult {
     const diffs: DiffParts = {
       title: this.diffTitle(local, remote),
       description: this.diffDescription(local, remote),
       questions: diffQuestions(local.questions, remote.questions),
-      integrations: diffIntegrations(
-        local.integrations ?? [],
-        remote.integrations ?? []
-      ),
+      integrations: diffIntegrations(local.integrations ?? [], remote.integrations ?? []),
       settings: this.diffSettings(local.settings, remote.settings),
       orderChanged: checkOrderChanged(local.questions, remote.questions),
     };

@@ -3,6 +3,7 @@
 ## Overview
 
 iac-google-forms supports two authentication methods:
+
 1. **OAuth 2.0** - For local development and interactive use
 2. **Service Account** - For CI/CD and automation
 
@@ -74,10 +75,7 @@ PKCE (Proof Key for Code Exchange) prevents authorization code interception:
 const codeVerifier = crypto.randomBytes(32).toString('base64url');
 
 // Create code challenge (SHA-256 hash of verifier)
-const codeChallenge = crypto
-  .createHash('sha256')
-  .update(codeVerifier)
-  .digest('base64url');
+const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url');
 
 // Include in authorization URL
 const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
@@ -89,7 +87,7 @@ const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
   method: 'POST',
   body: new URLSearchParams({
     code: authCode,
-    code_verifier: codeVerifier,  // Proves we initiated the request
+    code_verifier: codeVerifier, // Proves we initiated the request
     // ...
   }),
 });
@@ -275,8 +273,8 @@ class AuthManager {
     // No auth available
     throw new AuthError(
       'Not authenticated.\n' +
-      'Run: gforms auth login\n' +
-      'Or set: GOOGLE_APPLICATION_CREDENTIALS=/path/to/key.json'
+        'Run: gforms auth login\n' +
+        'Or set: GOOGLE_APPLICATION_CREDENTIALS=/path/to/key.json'
     );
   }
 }
@@ -284,12 +282,12 @@ class AuthManager {
 
 ## Required Scopes
 
-| Scope | Purpose |
-|-------|---------|
-| `forms.body` | Read/write form structure |
+| Scope                      | Purpose                                      |
+| -------------------------- | -------------------------------------------- |
+| `forms.body`               | Read/write form structure                    |
 | `forms.responses.readonly` | Read form responses (for conflict detection) |
-| `spreadsheets` | Create/link spreadsheets |
-| `drive.file` | Manage files created by the app |
+| `spreadsheets`             | Create/link spreadsheets                     |
+| `drive.file`               | Manage files created by the app              |
 
 ```typescript
 const REQUIRED_SCOPES = [
@@ -305,6 +303,7 @@ const REQUIRED_SCOPES = [
 ### For Users
 
 1. **Never commit credentials**
+
    ```gitignore
    # .gitignore
    *.json
@@ -314,6 +313,7 @@ const REQUIRED_SCOPES = [
    ```
 
 2. **Use environment variables for CI**
+
    ```yaml
    # GitHub Actions
    env:

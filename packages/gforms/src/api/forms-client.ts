@@ -4,7 +4,7 @@
  */
 
 import type { FormDefinition } from '../schema/index.js';
-import { withRetry, isRetryableStatusCode } from '../utils/retry.js';
+import { isRetryableStatusCode, withRetry } from '../utils/retry.js';
 import { convertQuestionToApiFormat, type ApiQuestion } from './question-converter.js';
 
 const FORMS_API_BASE = 'https://forms.googleapis.com/v1';
@@ -49,24 +49,30 @@ export interface GoogleFormItem {
   itemId: string;
   title: string;
   description?: string | undefined;
-  questionItem?: {
-    question: {
-      questionId: string;
-      required?: boolean | undefined;
-      textQuestion?: { paragraph: boolean } | undefined;
-      choiceQuestion?: {
-        type: 'RADIO' | 'CHECKBOX' | 'DROP_DOWN';
-        options: { value: string }[];
-        shuffle?: boolean | undefined;
-      } | undefined;
-      scaleQuestion?: {
-        low: number;
-        high: number;
-        lowLabel?: string | undefined;
-        highLabel?: string | undefined;
-      } | undefined;
-    };
-  } | undefined;
+  questionItem?:
+    | {
+        question: {
+          questionId: string;
+          required?: boolean | undefined;
+          textQuestion?: { paragraph: boolean } | undefined;
+          choiceQuestion?:
+            | {
+                type: 'RADIO' | 'CHECKBOX' | 'DROP_DOWN';
+                options: { value: string }[];
+                shuffle?: boolean | undefined;
+              }
+            | undefined;
+          scaleQuestion?:
+            | {
+                low: number;
+                high: number;
+                lowLabel?: string | undefined;
+                highLabel?: string | undefined;
+              }
+            | undefined;
+        };
+      }
+    | undefined;
 }
 
 export interface GoogleFormResponse {
@@ -138,22 +144,19 @@ export class FormsClient {
   async createForm(definition: FormDefinition): Promise<CreateFormResult> {
     const token = await this.getAccessToken();
 
-    const createResponse = await this.request<GoogleFormResponse>(
-      `${FORMS_API_BASE}/forms`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+    const createResponse = await this.request<GoogleFormResponse>(`${FORMS_API_BASE}/forms`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        info: {
+          title: definition.title,
+          documentTitle: definition.title,
         },
-        body: JSON.stringify({
-          info: {
-            title: definition.title,
-            documentTitle: definition.title,
-          },
-        }),
-      }
-    );
+      }),
+    });
 
     assertValidFormResponse(createResponse);
     const formId = createResponse.formId;
@@ -175,15 +178,12 @@ export class FormsClient {
   async getForm(formId: string): Promise<GoogleFormResponse> {
     const token = await this.getAccessToken();
 
-    const result = await this.request<GoogleFormResponse>(
-      `${FORMS_API_BASE}/forms/${formId}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const result = await this.request<GoogleFormResponse>(`${FORMS_API_BASE}/forms/${formId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     assertValidFormResponse(result);
     return result;
@@ -198,10 +198,10 @@ export class FormsClient {
     const token = await this.getAccessToken();
 
     // Fetch current form to get existing item IDs
-    const current = await this.request<GoogleFormResponse>(
-      `${FORMS_API_BASE}/forms/${formId}`,
-      { method: 'GET', headers: { Authorization: `Bearer ${token}` } }
-    );
+    const current = await this.request<GoogleFormResponse>(`${FORMS_API_BASE}/forms/${formId}`, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     // Delete existing items in reverse order to maintain valid indices
     if (current.items && current.items.length > 0) {
@@ -209,17 +209,14 @@ export class FormsClient {
         .map((_item, index) => ({ deleteItem: { location: { index } } }))
         .reverse();
 
-      await this.request<{ replies: unknown[] }>(
-        `${FORMS_API_BASE}/forms/${formId}:batchUpdate`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ requests: deleteRequests }),
-        }
-      );
+      await this.request<{ replies: unknown[] }>(`${FORMS_API_BASE}/forms/${formId}:batchUpdate`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ requests: deleteRequests }),
+      });
     }
 
     // Re-create from definition
@@ -307,17 +304,14 @@ export class FormsClient {
     }
 
     if (requests.length > 0) {
-      await this.request<{ replies: unknown[] }>(
-        `${FORMS_API_BASE}/forms/${formId}:batchUpdate`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ requests }),
-        }
-      );
+      await this.request<{ replies: unknown[] }>(`${FORMS_API_BASE}/forms/${formId}:batchUpdate`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ requests }),
+      });
     }
   }
 

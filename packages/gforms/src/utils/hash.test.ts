@@ -2,15 +2,13 @@
  * Tests for content hashing utility
  */
 
-import { describe, it, expect } from 'vitest';
-import { hashFormDefinition } from './hash.js';
+import { describe, expect, it } from 'vitest';
 import type { FormDefinition } from '../schema/index.js';
+import { hashFormDefinition } from './hash.js';
 
 const baseDef: FormDefinition = {
   title: 'Test Form',
-  questions: [
-    { id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false },
-  ],
+  questions: [{ id: 'q1', type: 'text', title: 'Name', required: true, paragraph: false }],
 };
 
 describe('hashFormDefinition', () => {
@@ -33,9 +31,7 @@ describe('hashFormDefinition', () => {
   it('should return different hash when questions change', () => {
     const modified: FormDefinition = {
       ...baseDef,
-      questions: [
-        { id: 'q1', type: 'text', title: 'Name', required: false, paragraph: false },
-      ],
+      questions: [{ id: 'q1', type: 'text', title: 'Name', required: false, paragraph: false }],
     };
     expect(hashFormDefinition(baseDef)).not.toBe(hashFormDefinition(modified));
   });

@@ -229,11 +229,7 @@
           "description": "Show if field does not equal this value"
         }
       },
-      "oneOf": [
-        { "required": ["equals"] },
-        { "required": ["in"] },
-        { "required": ["notEquals"] }
-      ]
+      "oneOf": [{ "required": ["equals"] }, { "required": ["in"] }, { "required": ["notEquals"] }]
     },
     "TextValidation": {
       "type": "object",

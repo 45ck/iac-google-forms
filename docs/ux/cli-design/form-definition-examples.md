@@ -132,14 +132,14 @@ export default defineForm({
     // Detractors section (0-6)
     {
       type: 'section',
-      title: 'We\'d love to improve',
+      title: "We'd love to improve",
       description: 'Sorry to hear that. What could we do better?',
       showIf: { field: 'nps', in: ['0', '1', '2', '3', '4', '5', '6'] },
       questions: [
         {
           id: 'improvement',
           type: 'text',
-          title: 'What\'s the main reason for your score?',
+          title: "What's the main reason for your score?",
           paragraph: true,
           required: true,
         },
@@ -150,7 +150,7 @@ export default defineForm({
     {
       type: 'section',
       title: 'Thank you!',
-      description: 'We\'re glad you\'re enjoying our service!',
+      description: "We're glad you're enjoying our service!",
       showIf: { field: 'nps', in: ['9', '10'] },
       questions: [
         {
@@ -204,7 +204,16 @@ export default defineForm({
           id: 'department',
           type: 'dropdown',
           title: 'Department',
-          options: ['Engineering', 'Product', 'Design', 'Sales', 'Marketing', 'Operations', 'HR', 'Finance'],
+          options: [
+            'Engineering',
+            'Product',
+            'Design',
+            'Sales',
+            'Marketing',
+            'Operations',
+            'HR',
+            'Finance',
+          ],
         },
         {
           id: 'tenure',
@@ -296,7 +305,14 @@ export default defineForm({
           id: 'improvements',
           type: 'choice',
           title: 'What areas should we focus on improving? (Select all that apply)',
-          options: ['Communication', 'Career Growth', 'Compensation', 'Work-Life Balance', 'Tools & Technology', 'Team Collaboration'],
+          options: [
+            'Communication',
+            'Career Growth',
+            'Compensation',
+            'Work-Life Balance',
+            'Tools & Technology',
+            'Team Collaboration',
+          ],
           multiple: true,
         },
         {
@@ -384,7 +400,7 @@ export default defineForm({
       url: 'https://api.eventbrite.com/webhooks/gforms',
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ${EVENTBRITE_API_KEY}',
+        Authorization: 'Bearer ${EVENTBRITE_API_KEY}',
         'Content-Type': 'application/json',
       },
       secret: '${WEBHOOK_SECRET}',
@@ -404,7 +420,7 @@ export default defineForm({
   settings: {
     collectEmail: true,
     limitOneResponse: true,
-    confirmationMessage: 'You\'re registered! Check your email for confirmation.',
+    confirmationMessage: "You're registered! Check your email for confirmation.",
   },
 });
 ```
@@ -514,16 +530,18 @@ export default defineForm({
     },
     {
       type: 'email',
-      to: isProduction
-        ? ['support@company.com']
-        : ['dev-team@company.com'],
+      to: isProduction ? ['support@company.com'] : ['dev-team@company.com'],
       subject: `New Contact Form Submission${isProduction ? '' : ' (DEV)'}`,
     },
-    ...(process.env.SLACK_WEBHOOK_URL ? [{
-      type: 'webhook' as const,
-      url: process.env.SLACK_WEBHOOK_URL,
-      method: 'POST' as const,
-    }] : []),
+    ...(process.env.SLACK_WEBHOOK_URL
+      ? [
+          {
+            type: 'webhook' as const,
+            url: process.env.SLACK_WEBHOOK_URL,
+            method: 'POST' as const,
+          },
+        ]
+      : []),
   ],
 });
 ```

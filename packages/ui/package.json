@@ -17,10 +17,8 @@
     "test:coverage": "vitest run --coverage",
     "build": "tsc && vite build"
   },
-  "dependencies": {
-    "react": "^18.3.1"
-  },
   "devDependencies": {
+    "react": "^18.3.1",
     "@types/react": "^18.3.18"
   }
 }
