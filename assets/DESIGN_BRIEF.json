@@ -1,0 +1,48 @@
+{
+  "repo_name": "iac-google-forms",
+  "tagline": "Define Google Forms as code. Diff, review, deploy.",
+  "one_sentence_purpose": "Infrastructure as Code for Google Forms with output integrations to Google Sheets, email, and webhooks",
+  "target_users": "DevOps engineers and developers who want version-controlled, repeatable Google Forms deployments",
+  "keywords": ["infrastructure-as-code", "Google Forms", "TypeScript", "CLI", "automation"],
+  "visual_metaphors": [
+    "form fields arranged on a circuit board grid",
+    "code editor window transforming into a form layout",
+    "pipeline flow from TypeScript definition to deployed form"
+  ],
+  "avoid": ["no mascots", "no photorealism", "no Google logo usage", "no generic cloud imagery"],
+  "style_adjectives": ["clean", "technical", "structured", "modern", "precise"],
+  "palette_hint": {
+    "bg_light": "#ffffff",
+    "bg_dark": "#0d1117",
+    "primary": "#4285f4",
+    "accent": "#34a853",
+    "ink": "#c9d1d9"
+  },
+  "assets_needed": [
+    {
+      "path": "assets/banner.light.png",
+      "type": "readme_banner",
+      "desc": "Wide banner on white background showing form fields as code blocks flowing through a deployment pipeline"
+    },
+    {
+      "path": "assets/banner.dark.png",
+      "type": "readme_banner",
+      "desc": "Wide banner on dark background (#0d1117) showing form fields as code blocks flowing through a deployment pipeline"
+    },
+    {
+      "path": "assets/logo.light.png",
+      "type": "square_logo",
+      "desc": "Square logo on white background with stylized form-as-code icon"
+    },
+    {
+      "path": "assets/logo.dark.png",
+      "type": "square_logo",
+      "desc": "Square logo on dark background with stylized form-as-code icon"
+    },
+    {
+      "path": "assets/social-preview.png",
+      "type": "github_social_preview",
+      "desc": "GitHub social preview card with project name and tagline"
+    }
+  ]
+}

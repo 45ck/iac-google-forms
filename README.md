@@ -1,5 +1,11 @@
 # iac-google-forms
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/banner.dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="assets/banner.light.png" />
+  <img src="assets/banner.light.png" alt="iac-google-forms banner" width="100%" />
+</picture>
+
 Infrastructure as Code for Google Forms with output integrations (Google Sheets, email, webhooks). Define forms in TypeScript, review diffs, and deploy via CLI.
 
 ## What this repo contains
